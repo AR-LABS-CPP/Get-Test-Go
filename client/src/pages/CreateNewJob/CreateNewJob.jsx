@@ -24,6 +24,7 @@ const CreateNewAssessment = () => {
     const [formVals, setFormVals] = useState(initialValues)
     const [errors, setErrors] = useState({})
     const [jobTypes, setJobTypes] = useState([])
+    const [assessments, setAssessments] = useState([])
     const [formSaved, setFormSaved] = useState(false)
 
     const handleFormChange = (e) => {
@@ -60,9 +61,20 @@ const CreateNewAssessment = () => {
     useEffect(() => {
         axios.get("http://localhost:4321/job/types").then(response => {
             setJobTypes(response.data)
+        }).catch(error => {
+            console.log(error)
+        })
+
+        axios.post("http://localhost:4321/assessment/recruiter/assessments", {
+            recruiter_email: recruiterEmail
+        }).then(response => {
+            setAssessments(response.data)
+        }).catch(error => {
+            console.log(error)
         })
 
         console.log(jobTypes)
+        console.log(assessments)
     }, [])
 
     useEffect(() => {
@@ -126,6 +138,13 @@ const CreateNewAssessment = () => {
                 </select>
 
                 <label htmlFor="requiredAssessments" className="font-semibold mt-3">Required Assessments</label>
+                <select onChange={handleFormChange} name="requiredAssessments" id="assessments" className="mt-1 border-[1px] py-2 px-1">
+                    {
+                        assessments.map(assessment => {
+                            return <option key={assessment.assessment_name} value={assessment.assessment_name}>{assessment.assessment_name}</option>
+                        })
+                    }
+                </select>
             </form>
 
             <div className="flex w-[70%] md:w-[50%] lg:w-[50%] justify-center mt-10">
