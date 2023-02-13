@@ -25,7 +25,28 @@ const CreateNewAssessment = () => {
     const [errors, setErrors] = useState({})
     const [jobTypes, setJobTypes] = useState([])
     const [assessments, setAssessments] = useState([])
+    const [requiredAssessments, setRequiredAssessments] = useState([])
     const [formSaved, setFormSaved] = useState(false)
+
+    const handleRequiredAssessments = (e) => {
+        if (requiredAssessments.includes(e.target.value)) {
+            toast.error('Assessment is already added')
+        }
+        else {
+            setRequiredAssessments([...requiredAssessments, e.target.value])
+        }
+        console.log(requiredAssessments)
+    }
+
+    const handleDeleteRequiredAssessment = (e) => {
+        let oldRequiredAssessments = requiredAssessments
+
+        let newRequiredAssessments = oldRequiredAssessments.filter(reqAssessment => {
+            return reqAssessment != e.target.id
+        })
+
+        setRequiredAssessments(newRequiredAssessments)
+    }
 
     const handleFormChange = (e) => {
         const { name, value } = e.target
@@ -48,10 +69,11 @@ const CreateNewAssessment = () => {
             errors.jobDetails = "Job details are required"
         }
 
-        if(!vals.jobType) {
+        if (!vals.jobType) {
             errors.jobType = "Please re-select the job type"
         }
-        else if(vals.requiredAssessments.length === 0) {
+        
+        if(requiredAssessments.length === 0) {
             errors.requiredAssessments = "Job post must have at least one assessment"
         }
 
@@ -78,42 +100,38 @@ const CreateNewAssessment = () => {
     }, [])
 
     useEffect(() => {
-        // axios.get("http://localhost:4321/assessment/type").then(response => {
-        //     setAssessmentTypes(response.data)
-        // }).catch(error => {
-        //     console.log(error)
-        // })
-    }, [])
+        if (Object.keys(errors).length === 0 && formSaved) {
+            const payload = {
+                "jobName": formVals.jobName,
+                "jobDetails": formVals.jobDetails,
+                "jobType": formVals.jobType,
+                "requiredAssessments": requiredAssessments
+            }
 
-    useEffect(() => {
-        // if (Object.keys(errors).length === 0 && formSaved) {
-        //     const payload = {
-        //         "assessmentName": formVals.assessmentName,
-        //         "assessmentDetails": formVals.assessmentDetails,
-        //         "assessmentType": formVals.assessmentType,
-        //         "recruiterEmail": recruiterEmail
-        //     }
+            console.log(payload)
 
-        //     axios.post("http://localhost:4321/assessment/new", payload).then(_ => {
-        //         toast.success("Assessment created successfully")
-        //         timeout = setTimeout(() => {
-        //             console.log("Create New Assessment Screen Timeout cleared")
-        //             clearTimeout(timeout)
-        //             navigate("/add-questions", {
-        //                 state: {
-        //                     assessment_name: formVals.assessmentName
-        //                 }
-        //             })
-        //         })
-        //     }).catch(error => {
-        //         if (error.response.status === 409) {
-        //             toast.error(error.response.data)
-        //         }
-        //         else {
-        //             console.log(error)
-        //         }
-        //     })
-        // }
+            // axios.post("http://localhost:4321/assessment/new", payload).then(_ => {
+            //     toast.success("Assessment created successfully")
+            //     timeout = setTimeout(() => {
+            //         console.log("Create New Assessment Screen Timeout cleared")
+            //         clearTimeout(timeout)
+            //         navigate("/add-questions", {
+            //             state: {
+            //                 assessment_name: formVals.assessmentName
+            //             }
+            //         })
+            //     })
+            // }).catch(error => {
+            //     if (error.response.status === 409) {
+            //         toast.error(error.response.data)
+            //     }
+            //     else {
+            //         console.log(error)
+            //     }
+            // })
+
+            console.log('Form submitted!')
+        }
     }, [errors])
 
     return (
@@ -136,15 +154,30 @@ const CreateNewAssessment = () => {
                         })
                     }
                 </select>
+                <small className="text-red-500">{errors.jobType}</small>
 
                 <label htmlFor="requiredAssessments" className="font-semibold mt-3">Required Assessments</label>
-                <select onChange={handleFormChange} name="requiredAssessments" id="assessments" className="mt-1 border-[1px] py-2 px-1">
+                <select onChange={handleRequiredAssessments} name="requiredAssessments" id="assessments" className="mt-1 border-[1px] py-2 px-1">
                     {
                         assessments.map(assessment => {
                             return <option key={assessment.assessment_name} value={assessment.assessment_name}>{assessment.assessment_name}</option>
                         })
                     }
                 </select>
+                <small className="text-red-500">{errors.requiredAssessments}</small>
+
+                <span className="py-2"></span>
+
+                {
+                    requiredAssessments.map(reqAssessment => {
+                        return <div key={reqAssessment} className="flex justify-between items-center mt-3 border-[1px] rounded-md">
+                            <span id={reqAssessment} className="text-red-600 font-bold border-[1px] py-2 px-4 hover:bg-red-600 hover:text-white hover:cursor-pointer" onClick={handleDeleteRequiredAssessment}>X</span>
+                            <div className="flex justify-center w-full font-semibold">
+                                {reqAssessment}
+                            </div>
+                        </div>
+                    })
+                }
             </form>
 
             <div className="flex w-[70%] md:w-[50%] lg:w-[50%] justify-center mt-10">
