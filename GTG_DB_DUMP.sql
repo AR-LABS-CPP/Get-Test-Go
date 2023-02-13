@@ -1106,7 +1106,13 @@ ALTER TABLE ONLY public.get_test_go_recruiter_assessment
 
 -- Completed on 2023-02-13 18:56:15
 
---
--- PostgreSQL database dump complete
---
+create table get_test_go_job_types(
+	job_type_id serial primary key,
+	job_type_name varchar(50) unique not null,
+	job_type_details text not null
+);
 
+insert into get_test_go_job_types(job_type_name, job_type_details) values('ENTRY LEVEL', 'Entry level jobs require 0 to 5 years of experience.');
+insert into get_test_go_job_types(job_type_name, job_type_details) values('JUNIOR LEVEL', 'Junior level jobs require 1 to 3 years of experience');
+insert into get_test_go_job_types(job_type_name, job_type_details) values('MID LEVEL', 'Mid level jobs require 4 to 6 years of experience');
+insert into get_test_go_job_types(job_type_name, job_type_details) values('SENIOR LEVEL', 'Senior level jobs require 6+ years of experience');

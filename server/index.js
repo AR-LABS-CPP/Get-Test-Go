@@ -14,6 +14,7 @@ const cors = require("cors")
 
 const userRouter = require("./routes/UserRoute")
 const assessmentsRouter = require("./routes/AssessmentsRoute")
+const jobRouter = require('./routes/JobRoute')
 
 const app = express()
 const port = 4321
@@ -35,6 +36,7 @@ app.get("/", (_, res) => {
 
 app.use("/", userRouter)
 app.use("/assessment", assessmentsRouter)
+app.use("/job", jobRouter)
 
 app.listen(port, () => {
     console.log(`GetTestGo server running on port:${port}`)
