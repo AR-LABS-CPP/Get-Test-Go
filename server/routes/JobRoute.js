@@ -11,4 +11,8 @@ jobRoute.get("/types", (_, res) => {
     })
 })
 
+jobRoute.post("/new", (req, res) => {
+    
+})
+
 module.exports = jobRoute

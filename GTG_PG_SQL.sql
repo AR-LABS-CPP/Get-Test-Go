@@ -104,6 +104,21 @@ CREATE TABLE get_test_go_mcq_answer (
 	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
 );
 
+CREATE TABLE get_test_go_job(
+	job_id SERIAL PRIMARY KEY,
+	job_name varchar(100) UNIQUE NOT NULL,
+	job_details TEXT NOT NULL,
+	job_type int4 NOT NULL,
+	CONSTRAINT fk_job_type FOREIGN KEY(job_type) REFERENCES get_test_go_job_types(job_type_id)
+);
+
+CREATE TABLE get_test_go_job_assessment(
+	job_id int4 NOT NULL,
+	assessment_id int4 NOT NULL,
+	CONSTRAINT fk_job_id FOREIGN KEY(job_id) REFERENCES get_test_go_job(job_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY(assessment_id) REFERENCES get_test_go_assessment(assessment_id)
+);
+
 
 -- ####################################### VIEWS #######################################
 
