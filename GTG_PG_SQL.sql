@@ -117,16 +117,16 @@ AS SELECT get_test_go_assessment.assessment_id,
     get_test_go_assessment.assessment_name,
     get_test_go_question.question_id,
     get_test_go_question.question FROM get_test_go_assessment
-     JOIN get_test_go_assessment_question ON get_test_go_assessment_question.assessment_id = get_test_go_assessment.assessment_id
-     JOIN get_test_go_question ON get_test_go_assessment_question.question_id = get_test_go_question.question_id;
+    	JOIN get_test_go_assessment_question ON get_test_go_assessment_question.assessment_id = get_test_go_assessment.assessment_id
+    	JOIN get_test_go_question ON get_test_go_assessment_question.question_id = get_test_go_question.question_id;
 
 CREATE VIEW get_test_go_assessments_of_candidate
 AS SELECT get_test_go_candidate.candidate_id,
     get_test_go_candidate.email,
     get_test_go_assessment.assessment_id,
     get_test_go_assessment.assessment_name FROM get_test_go_candidate
-     JOIN get_test_go_candidate_assessment ON get_test_go_candidate.candidate_id = get_test_go_candidate_assessment.candidate_id
-     JOIN get_test_go_assessment ON get_test_go_candidate_assessment.assessment_id = get_test_go_assessment.assessment_id;
+		JOIN get_test_go_candidate_assessment ON get_test_go_candidate.candidate_id = get_test_go_candidate_assessment.candidate_id
+		JOIN get_test_go_assessment ON get_test_go_candidate_assessment.assessment_id = get_test_go_assessment.assessment_id;
 
 CREATE get_test_go_assessments_of_recruiter
 AS SELECT get_test_go_recruiter.recruiter_id,
@@ -134,8 +134,8 @@ AS SELECT get_test_go_recruiter.recruiter_id,
     get_test_go_assessment.assessment_id,
     get_test_go_assessment.assessment_name,
     get_test_go_assessment.assessment_details FROM get_test_go_recruiter
-     JOIN get_test_go_recruiter_assessment ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_assessment.recruiter_id
-     JOIN get_test_go_assessment ON get_test_go_recruiter_assessment.assessment_id = get_test_go_assessment.assessment_id;
+		JOIN get_test_go_recruiter_assessment ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_assessment.recruiter_id
+		JOIN get_test_go_assessment ON get_test_go_recruiter_assessment.assessment_id = get_test_go_assessment.assessment_id;
 
 CREATE OR REPLACE PROCEDURE add_assessment_mcq(IN name_of_assessment character varying, IN mcq_question text, IN option_one text, IN option_two text, IN option_three text, IN option_four text, IN correct_answer text)
  LANGUAGE plpgsql
