@@ -221,3 +221,28 @@ AS $procedure$
 	
 $procedure$
 ;
+
+CREATE OR REPLACE PROCEDURE add_job(IN name_of_job varchar(100), IN details_of_job TEXT, IN type_of_job varchar(30))
+ LANGUAGE plpgsql
+AS $procedure$
+	begin
+		INSERT INTO get_test_go_job(job_name, job_details, job_type) VALUES(name_of_job, details_of_job, 
+			(SELECT job_type_id FROM get_test_go_job_types WHERE job_type_name = type_of_job));
+		
+		commit;
+	end;
+$procedure$
+;
+
+CREATE OR REPLACE PROCEDURE add_job_assessment(IN name_of_job varchar(100), IN name_of_assessment varchar(100))
+ LANGUAGE plpgsql
+AS $procedure$
+	begin
+		INSERT INTO get_test_go_job_assessment(job_id, assessment_id) values(
+			(SELECT job_id FROM get_test_go_job WHERE job_name = name_of_job),
+			(SELECT assessment_id FROM get_test_go_assessment WHERE assessment_name = name_of_assessment));
+		
+		commit;
+	end;
+$procedure$
+;
