@@ -15,6 +15,34 @@ const getJobTypes = () => {
     })
 }
 
+const addNewJob = (job_name, job_details, job_type) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`call add_job('${job_name}', '${job_details}', '${job_type}')`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results)
+        })
+    })
+}
+
+const bindJobAndAssessment = (job_name, assessment_name) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`call add_job_assessment('${job_name}', '${assessment_name}')`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results)
+        })
+    })
+}
+
 module.exports = {
-    getJobTypes
+    getJobTypes,
+    addNewJob,
+    bindJobAndAssessment,
 }

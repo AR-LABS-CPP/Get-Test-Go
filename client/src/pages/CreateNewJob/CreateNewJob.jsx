@@ -110,25 +110,16 @@ const CreateNewAssessment = () => {
 
             console.log(payload)
 
-            // axios.post("http://localhost:4321/assessment/new", payload).then(_ => {
-            //     toast.success("Assessment created successfully")
-            //     timeout = setTimeout(() => {
-            //         console.log("Create New Assessment Screen Timeout cleared")
-            //         clearTimeout(timeout)
-            //         navigate("/add-questions", {
-            //             state: {
-            //                 assessment_name: formVals.assessmentName
-            //             }
-            //         })
-            //     })
-            // }).catch(error => {
-            //     if (error.response.status === 409) {
-            //         toast.error(error.response.data)
-            //     }
-            //     else {
-            //         console.log(error)
-            //     }
-            // })
+            axios.post("http://localhost:4321/assessment/new", payload).then(response => {
+                toast.success(response.data)
+                timeout = setTimeout(() => {
+                    console.log("Create New Job Screen Timeout cleared")
+                    clearTimeout(timeout)
+                    navigate("/post-job")
+                })
+            }).catch(error => {
+                console.log(error)
+            })
 
             console.log('Form submitted!')
         }
