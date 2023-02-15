@@ -15,7 +15,7 @@ CREATE TABLE get_test_go_candidate(
 CREATE TABLE get_test_go_job_types(
 	job_type_id serial4 PRIMARY KEY,
 	job_type_name varchar(50) UNIQUE NOT NULL,
-	job_type_details text NOT NULL,
+	job_type_details text NOT NULL
 );
 
 CREATE TABLE get_test_go_question_type(
@@ -49,7 +49,7 @@ CREATE TABLE get_test_go_candidate_assessment(
 CREATE TABLE get_test_go_question(
 	question_id serial4 PRIMARY KEY,
 	question_type int4 UNIQUE NOT NULL,
-	question_text TEXT NOT NULL,
+	question TEXT NOT NULL,
 	CONSTRAINT fk_question_type FOREIGN KEY (question_type) REFERENCES get_test_go_question_type(question_type_id)
 );
 
@@ -128,12 +128,14 @@ AS SELECT get_test_go_candidate.candidate_id,
 		JOIN get_test_go_candidate_assessment ON get_test_go_candidate.candidate_id = get_test_go_candidate_assessment.candidate_id
 		JOIN get_test_go_assessment ON get_test_go_candidate_assessment.assessment_id = get_test_go_assessment.assessment_id;
 
-CREATE get_test_go_assessments_of_recruiter
-AS SELECT get_test_go_recruiter.recruiter_id,
-    get_test_go_recruiter.email,
-    get_test_go_assessment.assessment_id,
-    get_test_go_assessment.assessment_name,
-    get_test_go_assessment.assessment_details FROM get_test_go_recruiter
+create VIEW get_test_go_assessments_of_recruiter
+AS 
+	SELECT get_test_go_recruiter.recruiter_id,
+	    get_test_go_recruiter.email,
+	    get_test_go_assessment.assessment_id,
+	    get_test_go_assessment.assessment_name,
+	    get_test_go_assessment.assessment_details 
+	FROM get_test_go_recruiter
 		JOIN get_test_go_recruiter_assessment ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_assessment.recruiter_id
 		JOIN get_test_go_assessment ON get_test_go_recruiter_assessment.assessment_id = get_test_go_assessment.assessment_id;
 
