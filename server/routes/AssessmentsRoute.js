@@ -42,6 +42,10 @@ assessmentsRouter.post("/new", (req, res) => {
     })
 })
 
+// assessmentsRouter.post("/view", (req, res) => {
+    
+// })
+
 assessmentsRouter.post("/question/add/mcq", (req, res) => {
     assessmentModel.assessmentQuestionExists(req.body.assessmentName, req.body.assessmentQuestion).then(response => {
         if(response === false) {

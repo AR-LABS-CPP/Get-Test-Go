@@ -159,6 +159,19 @@ const assessmentQuestionExists = (assessment_name, question) => {
     })
 }
 
+const getAssessmentQuestions = (assessment_name) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT question_id, question FROM ${assessment_with_questions_view_name} WHERE assessment_name = ${assessment_name}`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,

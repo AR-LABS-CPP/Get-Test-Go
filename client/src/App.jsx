@@ -24,6 +24,7 @@ import ViewJobs from './pages/ViewJobs/ViewJobs'
 import RecruiterMainPage from './pages/RecruiterMainPage/RecruiterMainPage'
 import CandidateMainPage from './pages/CandidateMainPage/CandidateMainPage'
 import CreateNewAssessment from './pages/CreateNewAssessment/CreateNewAssessment'
+import ViewAssessment from "./pages/ViewAssessment/ViewAssessment"
 import CreateNewJob from './pages/CreateNewJob/CreateNewJob'
 import AddQuestions from './pages/AddQuestions/AddQuestions'
 
@@ -63,6 +64,7 @@ const App = () => {
         <Route path='/signup-screen' element={<CheckLogin><SignUp /></CheckLogin>} />
         <Route path='/assessments' element={<Auth><Assessments /></Auth>} />
         <Route path='/create-assessment' element={<Auth><CreateNewAssessment /></Auth>} />
+        <Route path='/view-assessment' element={<Auth><ViewAssessment /></Auth>} />
         <Route path='/create-job' element={<Auth><CreateNewJob /></Auth>} />
         <Route path='/add-questions' element={<Auth><AddQuestions /></Auth>} />
         <Route path='/post-job' element={<Auth><PostJob /></Auth>} />

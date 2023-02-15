@@ -29,6 +29,14 @@ const Assessments = () => {
         })
     }
 
+    const handleViewAssessmentDetails = (assessment_name) => {
+        navigate("/view-assessment", {
+            state: {
+                assessmentName: assessment_name
+            }
+        })
+    }
+
     useEffect(() => {
         getRecruiterAssessments()
     }, [])
@@ -42,13 +50,14 @@ const Assessments = () => {
             </div>
             <div className="p-3 grid grid-cols-8 gap-x-3 place-items-center">
                 {
-                    recruiterAssessments.length === 0 ? <div>No Assessments have been created yet.</div>
+                    recruiterAssessments.length === 0 ? <div className="flex w-fill justify-center">No Assessments have been created yet.</div>
                         :
                         recruiterAssessments.map(assessment => {
                             return <AssessmentCard
                                 cardTitle={assessment.assessment_name}
                                 cardDescription={assessment.assessment_details}
                                 additionalStyling="col-span-2"
+                                viewClickHandler={() => handleViewAssessmentDetails(assessment.assessment_name)}
                                 key={assessment.assessment_name} />
                         })
                 }
