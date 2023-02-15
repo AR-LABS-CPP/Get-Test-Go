@@ -43,14 +43,14 @@ const Assessments = () => {
 
     return (
         <>
-            <div className="flex justify-center">
+            <div className="flex flex-col items-center">
                 <button className="bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 text-white px-20 rounded-lg py-3 mt-10 mb-10" onClick={() => navigate("/create-assessment")}>
                     Create New Assessment
                 </button>
             </div>
             <div className="p-3 grid grid-cols-8 gap-x-3 place-items-center">
                 {
-                    recruiterAssessments.length === 0 ? <div className="flex w-fill justify-center">No Assessments have been created yet.</div>
+                    recruiterAssessments.length === 0 ? <div className="text-xl font-bold col-span-12">No Assessments have been created yet.</div>
                         :
                         recruiterAssessments.map(assessment => {
                             return <AssessmentCard
