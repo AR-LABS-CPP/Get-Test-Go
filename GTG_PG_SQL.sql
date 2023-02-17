@@ -263,3 +263,18 @@ AS $$
 	      RETURN assessment_count;
         END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE create_recruiter_assessment(
+	IN recruiter_email VARCHAR(150),
+	IN name_of_assessment TEXT, 
+	IN details_of_assessment TEXT, 
+	IN type_of_assessment INT4
+)
+ LANGUAGE plpgsql
+AS $procedure$
+	begin
+		INSERT INTO get_test_go_recruiter_assessment(recruiter_id, assessment_name, assessment_details, assessment_type)
+		VALUES((SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email), name_of_assessment, details_of_assessment, type_of_assessment);
+		commit;
+	end;
+$procedure$;

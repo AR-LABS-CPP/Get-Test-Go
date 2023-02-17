@@ -60,8 +60,12 @@ assessmentsRouter.post("/new", (req, res) => {
     // }).catch(error => {
     //     res.status(500).send(error)
     // })
-
     
+    assessmentModel.recruiterAssessmentExists(req.body.recruiterEmail, req.body.assessmentName).then(response => {
+        res.status(200).send(response)
+    }).catch(error => {
+        res.status(500).send(error)
+    })
 })
 
 assessmentsRouter.post("/question/add/mcq", (req, res) => {
