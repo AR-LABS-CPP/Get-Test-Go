@@ -251,19 +251,6 @@ AS $procedure$
 $procedure$
 ;
 
-CREATE OR REPLACE FUNCTION recruiterAssessmentExists(recruiter_email VARCHAR(150), name_of_assessment TEXT)
-RETURNS integer 
-AS $$
-		DECLARE assessment_count integer;
-        BEGIN
-	       SELECT COUNT(*) INTO assessment_count FROM get_test_go_recruiter_assessment
-	       WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
-	       AND assessment_name = name_of_assessment;
-	      
-	      RETURN assessment_count;
-        END;
-$$ LANGUAGE plpgsql;
-
 CREATE OR REPLACE PROCEDURE create_recruiter_assessment(
 	IN recruiter_email VARCHAR(150),
 	IN name_of_assessment TEXT, 

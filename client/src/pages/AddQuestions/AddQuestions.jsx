@@ -109,6 +109,7 @@ const AddQuestions = () => {
         if (Object.keys(mcqErrors).length === 0 && formSaved) {
             const payload = {
                 "assessmentName": state.assessment_name,
+                "recruiterEmail": state.recruiter_email,
                 "assessmentQuestion": mcqQuestionVals.question,
                 "optionOne": mcqQuestionVals.optionOne,
                 "optionTwo": mcqQuestionVals.optionTwo,

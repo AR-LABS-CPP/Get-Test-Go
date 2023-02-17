@@ -44,8 +44,11 @@ assessmentsRouter.post("/new", (req, res) => {
 })
 
 assessmentsRouter.post("/question/add/mcq", (req, res) => {
-    assessmentModel.assessmentQuestionExists(req.body.assessmentName, req.body.assessmentQuestion).then(response => {
-        if(response === false) {
+    assessmentModel.assessmentQuestionExists(req.body.recruiterEmail, req.body.assessmentName, req.body.assessmentQuestion).then(response => {
+        if(response) {
+            res.status(409).send("Given question already exists in the assessment")
+        }
+        else {
             assessmentModel.addMCQ(
                 req.body.assessmentName, 
                 req.body.assessmentQuestion, 
@@ -59,9 +62,6 @@ assessmentsRouter.post("/question/add/mcq", (req, res) => {
             }).catch(error => {
                 res.status(500).send(error)
             })
-        }
-        else {
-            res.status(409).send("Given question already exists in the assessment")
         }
     }).catch(error => {
         res.status(500).send(error)

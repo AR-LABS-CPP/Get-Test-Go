@@ -76,7 +76,8 @@ const CreateNewAssessment = () => {
                     clearTimeout(timeout)
                     navigate("/add-questions", {
                         state: {
-                            assessment_name: formVals.assessmentName
+                            assessment_name: formVals.assessmentName,
+                            recruiter_email: recruiterEmail
                         }
                     })
                 })
