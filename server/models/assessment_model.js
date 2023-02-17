@@ -80,7 +80,7 @@ const bindCandidateAndAssessment = (candidate_email, assessment_name) => {
 
 const recruiterAssessmentExists = (recruiter_email, assessment_name) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM recruiterAssessmentExists('${recruiter_email}', '${assessment_name}')`, (error, results) => {
+        pool.query(`SELECT * FROM recruiter_assessment_exists('${recruiter_email}', '${assessment_name}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
