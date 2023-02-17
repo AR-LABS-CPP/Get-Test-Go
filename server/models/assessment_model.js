@@ -86,7 +86,7 @@ const recruiterAssessmentExists = (recruiter_email, assessment_name) => {
                 reject(error)
             }
 
-            resolve(results.rows[0].recruiterassessmentexists > 0)
+            resolve(results.rows[0].recruiter_assessment_exists > 0)
         })
     })
 }
@@ -106,7 +106,7 @@ const getRecruiterAssessments = (recruiter_email) => {
 
 const addMCQ = (recruiterEmail, assessmentName, mcq_question, option_one, option_two, option_three, option_four, correct_answer) => {
     return new Promise((resolve, reject) => {
-        pool.query(`call add_assessment_mcq('${assessmentName}', '${mcq_question}', '${option_one}', '${option_two}', '${option_three}', '${option_four}', '${correct_answer}')`, (error, results) => {
+        pool.query(`call add_assessment_mcq('${recruiterEmail}', '${assessmentName}', '${mcq_question}', '${option_one}', '${option_two}', '${option_three}', '${option_four}', '${correct_answer}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
