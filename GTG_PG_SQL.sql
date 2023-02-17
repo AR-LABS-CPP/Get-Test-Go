@@ -60,6 +60,15 @@ CREATE TABLE get_test_go_recruiter_assessment(
 	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
 );
 
+CREATE TABLE get_test_go_recruiter_assessment_question(
+	recruiter_id int4 NOT NULL,
+	assessment_id int4 NOT NULL,
+	question_id int4 NOT NULL,
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_assessment(assessment_id),
+	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
+);
+
 CREATE TABLE get_test_go_true_false_answer(
 	true_false_id serial4 PRIMARY KEY,
 	question_id int4 NOT NULL,
