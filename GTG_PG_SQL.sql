@@ -198,7 +198,7 @@ AS $procedure$
 	end;
 $procedure$;
 
-CREATE OR REPLACE procedure add_assessment_true_false(IN name_of_assessment character varying, IN true_false_question text, IN answer boolean)
+CREATE OR REPLACE PROCEDURE add_assessment_true_false(IN name_of_assessment character varying, IN true_false_question text, IN answer boolean)
  LANGUAGE plpgsql
 AS $procedure$
 	begin
@@ -273,3 +273,33 @@ AS $procedure$
 		commit;
 	end;
 $procedure$;
+
+CREATE OR REPLACE FUNCTION recruiter_assessment_exists(recruiter_email VARCHAR(150), name_of_assessment TEXT)
+RETURNS integer 
+AS $$
+		DECLARE assessment_count integer;
+        BEGIN
+	       SELECT COUNT(*) INTO assessment_count FROM get_test_go_recruiter_assessment
+	       WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
+	       AND assessment_name = name_of_assessment;
+	      
+	      RETURN assessment_count;
+        END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION assessment_question_exists(recruiter_email varchar(150), name_of_assessment TEXT, question_text TEXT)
+RETURNS integer
+AS $$
+		DECLARE assessment_question_count integer;
+		BEGIN
+			SELECT COUNT(*) INTO assessment_question_count FROM get_test_go_recruiter_assessment
+			JOIN get_test_go_assessment_question
+				ON get_test_go_recruiter_assessment.assessment_id = get_test_go_assessment_question.assessment_id
+			JOIN get_test_go_question
+				ON get_test_go_assessment_question.question_id = get_test_go_question.question_id
+			WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
+			AND assessment_name = name_of_assessment;
+		
+			RETURN assessment_question_count;
+		END;
+$$ LANGUAGE plpgsql;
