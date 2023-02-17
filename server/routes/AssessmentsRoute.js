@@ -20,49 +20,24 @@ assessmentsRouter.get("/question/types", (_, res) => {
 })
 
 assessmentsRouter.post("/new", (req, res) => {
-    // assessmentModel.assessmentExists(req.body.assessmentName).then(response => {
-    //     // Response is either TRUE or FALSE
-    //     if(response) {
-    //         assessmentModel.recruiterAssessmentExists(req.body.recruiterEmail, req.body.assessmentName).then(response => {
-    //             // Response is either TRUE or FALSE
-    //             if(response) {
-    //                 res.status(200).send("Assessment with the same name already exists.")
-    //             }
-    //             else {
-    //                 assessmentModel.bindRecruiterAndAssessment(req.body.recruiterEmail, req.body.assessmentName).then(response => {
-    //                     res.status(200).send(response)
-    //                 }).catch(error => {
-    //                     res.status(500).send(error)
-    //                 })
-    //             }
-    //         }).catch(error => {
-    //             res.status(500).send(error)
-    //         })
-    //     }
-    //     else {
-    //         let assessmentType = req.body.assessmentType === "GENERAL" ? 1 : 2
-
-    //         assessmentModel.addNewAssessment(
-    //             req.body.assessmentName, 
-    //             req.body.assessmentDetails, 
-    //             assessmentType
-    //         ).then(_ => {
-    //             assessmentModel.bindRecruiterAndAssessment(req.body.recruiterEmail, req.body.assessmentName).then(response => {
-    //                 res.status(200).send(response)
-    //             }).catch(error => {
-    //                 res.status(500).send(error)
-    //             })
-    //         }).catch(error => {
-    //             console.log(error)
-    //             res.status(500).send(error)
-    //         })
-    //     }
-    // }).catch(error => {
-    //     res.status(500).send(error)
-    // })
+    let assessmentType = req.body.assessmentType === "GENERAL" ? 1 : 2
     
     assessmentModel.recruiterAssessmentExists(req.body.recruiterEmail, req.body.assessmentName).then(response => {
-        res.status(200).send(response)
+        if(response) {
+           res.status(409).send("Assessment with the same name already exists") 
+        }
+        else {
+            assessmentModel.createRecruiterAssessment(
+                req.body.recruiterEmail, 
+                req.body.assessmentName, 
+                req.body.assessmentDetails, 
+                assessmentType
+            ).then(response => {
+                res.status(200).send(response)
+            }).catch(error => {
+                res.status(500).send(error)
+            })
+        }
     }).catch(error => {
         res.status(500).send(error)
     })

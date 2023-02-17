@@ -2,6 +2,7 @@ const pool = require("../db")
 
 // TABLES
 const assessment_type_table_name = "get_test_go_assessment_type"
+const recruiter_table_name = "get_test_go_recruiter"
 const recruiter_assessment_table_name = "get_test_go_recruiter_assessment"
 const question_type_table_name = "get_test_go_question_type"
 
@@ -92,7 +93,7 @@ const recruiterAssessmentExists = (recruiter_email, assessment_name) => {
 
 const getRecruiterAssessments = (recruiter_email) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT assessment_name, assessment_details FROM get_test_go_assessments_of_recruiter WHERE email = '${recruiter_email}'`, (error, results) => {
+        pool.query(`SELECT assessment_name, assessment_details FROM ${recruiter_assessment_table_name} WHERE recruiter_id = (SELECT recruiter_id FROM ${recruiter_table_name} WHERE email = '${recruiter_email}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
@@ -172,6 +173,19 @@ const getAssessmentQuestions = (assessment_name) => {
     })
 }
 
+const createRecruiterAssessment = (recruiterEmail, assessmentName, assessmentDetails, assessmentType) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`call create_recruiter_assessment('${recruiterEmail}', '${assessmentName}', '${assessmentDetails}', ${assessmentType})`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -183,5 +197,6 @@ module.exports = {
     addMCQ,
     addTrueFalse,
     assessmentExists,
-    assessmentQuestionExists
+    assessmentQuestionExists,
+    createRecruiterAssessment
 }
