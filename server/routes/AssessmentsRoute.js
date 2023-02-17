@@ -60,6 +60,8 @@ assessmentsRouter.post("/new", (req, res) => {
     // }).catch(error => {
     //     res.status(500).send(error)
     // })
+
+    
 })
 
 assessmentsRouter.post("/question/add/mcq", (req, res) => {
