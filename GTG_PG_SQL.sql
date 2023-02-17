@@ -55,8 +55,10 @@ CREATE TABLE get_test_go_question(
 
 CREATE TABLE get_test_go_recruiter_assessment(
 	recruiter_id int4 NOT NULL,
-	assessment_id int4 NOT NULL,
-	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_assessment(assessment_id),
+	assessment_id serial NOT NULL,
+	assessment_name TEXT UNIQUE NOT NULL,
+	assessment_details TEXT DEFAULT 'No details provided',
+	assessment_type int4 NOT NULL,
 	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
 );
 
