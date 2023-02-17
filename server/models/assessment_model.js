@@ -2,7 +2,7 @@ const pool = require("../db")
 
 // TABLES
 const assessment_type_table_name = "get_test_go_assessment_type"
-const assessment_table_name = "get_test_go_assessment"
+const recruiter_assessment_table_name = "get_test_go_recruiter_assessment"
 const question_type_table_name = "get_test_go_question_type"
 
 // VIEWS
@@ -23,7 +23,7 @@ const getAssessmentTypes = () => {
 
 const getAssessmentId = (assessmentName) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT assessment_id FROM ${assessment_table_name} WHERE assessment_name = '${assessmentName}'`, (error, results) => {
+        pool.query(`SELECT assessment_id FROM ${recruiter_assessment_table_name} WHERE assessment_name = '${assessmentName}'`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
@@ -49,7 +49,7 @@ const getQuestionTypes = () => {
 
 const addNewAssessment = (assessment_name, assessment_details, assessment_type) => {
     return new Promise((resolve, reject) => {
-        pool.query(`INSERT INTO ${assessment_table_name}(assessment_name, assessment_details, assessment_type) VALUES('${assessment_name}', '${assessment_details}', '${assessment_type}')`, (error, results) => {
+        pool.query(`INSERT INTO ${recruiter_assessment_table_name}(assessment_name, assessment_details, assessment_type) VALUES('${assessment_name}', '${assessment_details}', '${assessment_type}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
@@ -79,13 +79,13 @@ const bindCandidateAndAssessment = (candidate_email, assessment_name) => {
 
 const recruiterAssessmentExists = (recruiter_email, assessment_name) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM get_test_go_assessments_of_recruiter WHERE email = '${recruiter_email}' AND assessment_name = '${assessment_name}'`, (error, results) => {
+        pool.query(`SELECT * FROM recruiterAssessmentExists('${recruiter_email}', '${assessment_name}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
             }
 
-            resolve(results.rows.length > 0)
+            resolve(results.rows[0].recruiterassessmentexists > 0)
         })
     })
 }
