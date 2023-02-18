@@ -185,7 +185,7 @@ AS $procedure$
 		)
 		INSERT INTO get_test_go_question(question_type, question) VALUES(1, mcq_question);
 		
-		INSERT INTO get_test_go_recruiter_assesment_question(recruiter_id, assessment_id, question_id)
+		INSERT INTO get_test_go_recruiter_assessment_question(recruiter_id, assessment_id, question_id)
 		VALUES((SELECT recruiter_id FROM CTE_recruiter_id), (SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE assessment_name = name_of_assessment AND recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id)), (SELECT question_id FROM get_test_go_question WHERE question = mcq_question));
 				
 		INSERT INTO get_test_go_mcq_answer(question_id, option_one, option_two, option_three, option_four, correct_answer)
