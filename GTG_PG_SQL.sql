@@ -327,10 +327,7 @@ $$ LANGUAGE SQL STABLE
 CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_mcq_question_with_answer
 AS
 	WITH CTE_recruiter_assessments AS(
-		SELECT
-			*
-		FROM get_test_go_recruiter_assessment
-		WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')
+		SELECT * FROM get_test_go_recruiter_assessment
 	),
 	CTE_recruiter_assessments_questions AS (
 		SELECT
@@ -365,3 +362,6 @@ AS
 	FROM CTE_recruiter_assessments_questions
 	JOIN get_test_go_mcq_answer
 		ON CTE_recruiter_assessments_questions.question_id = get_test_go_mcq_answer.question_id
+		
+SELECT * FROM get_test_go_recruiter_assessment_mcq_question_with_answer
+WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')
