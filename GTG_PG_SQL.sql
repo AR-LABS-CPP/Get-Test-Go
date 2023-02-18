@@ -31,14 +31,6 @@ CREATE TABLE get_test_go_recruiter(
 	"password" text NOT NULL
 );
 
-CREATE TABLE get_test_go_assessment(
-	assessment_id serial4 PRIMARY KEY,
-	assessment_name varchar(100) UNIQUE NOT NULL,
-	assessment_details text NOT NULL,
-	assessment_type int4 NULL,
-	CONSTRAINT fk_assessment_type FOREIGN KEY (assessment_type) REFERENCES get_test_go_assessment_type(assessment_type_id)
-);
-
 CREATE TABLE get_test_go_candidate_assessment(
 	candidate_id int4 NULL,
 	assessment_id int4 NULL,
@@ -55,7 +47,7 @@ CREATE TABLE get_test_go_question(
 
 CREATE TABLE get_test_go_recruiter_assessment(
 	recruiter_id int4 NOT NULL,
-	assessment_id serial NOT NULL,
+	assessment_id serial UNIQUE NOT NULL,
 	assessment_name TEXT UNIQUE NOT NULL,
 	assessment_details TEXT DEFAULT 'No details provided',
 	assessment_type int4 NOT NULL,
@@ -67,7 +59,7 @@ CREATE TABLE get_test_go_recruiter_assessment_question(
 	assessment_id int4 NOT NULL,
 	question_id int4 NOT NULL,
 	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
-	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_assessment(assessment_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id),
 	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
 );
 
@@ -78,11 +70,11 @@ CREATE TABLE get_test_go_true_false_answer(
 	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
 );
 
-CREATE TABLE get_test_go_assessment_question(
+CREATE TABLE get_test_go_recruiter_assessment_question(
 	assessment_question_id serial4 PRIMARY KEY,
 	assessment_id int4 NOT NULL,
 	question_id int4 NOT NULL,
-	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_assessment(assessment_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id),
 	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
 );
 

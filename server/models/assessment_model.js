@@ -148,7 +148,7 @@ const assessmentExists = (assessmentName) => {
 
 const assessmentQuestionExists = (recruiter_email, assessment_name, question) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT COUNT(*) FROM ${recruiter_assessment_table_name} WHERE recruiter_id = (SELECT recruiter_id FROM ${recruiter_table_name} WHERE email = '${recruiter_email}') AND assessment_name = '${assessment_name}' AND question ILIKE '${question}'`, (error, results) => {
+        pool.query(``, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
