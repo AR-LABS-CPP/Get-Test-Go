@@ -298,3 +298,28 @@ AS $$
 			RETURN assessment_question_count;
 		END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_recruiter_assessment_mcq_questions(recruiter_email varchar(150), name_of_assessment TEXT)
+RETURNS SETOF RECORD AS
+$$
+	WITH CTE_recruiter_mcq_questions AS(
+		SELECT
+			get_test_go_recruiter_assessment.recruiter_id,
+			get_test_go_recruiter_assessment.assessment_id,
+			get_test_go_recruiter_assessment.assessment_name,
+			get_test_go_recruiter_assessment.assessment_details,
+			get_test_go_recruiter_assessment.assessment_type,
+			get_test_go_question.question_id,
+			get_test_go_question.question,
+			get_test_go_question.question_type
+		FROM get_test_go_recruiter_assessment
+		JOIN get_test_go_recruiter_assessment_question
+			ON get_test_go_recruiter_assessment.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
+		JOIN get_test_go_question
+			ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
+		WHERE get_test_go_question.question_type = 1
+	)
+	SELECT * FROM CTE_recruiter_mcq_questions
+	JOIN get_test_go_mcq_answer
+		ON get_test_go_mcq_answer.question_id  = CTE_recruiter_mcq_questions.question_id
+$$ LANGUAGE SQL STABLE
