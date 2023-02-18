@@ -63,8 +63,6 @@ assessmentsRouter.post("/question/add/mcq", (req, res) => {
             }).catch(error => {
                 res.status(500).send(error)
             })
-
-            res.status(200).send(response)
         }
     }).catch(error => {
         res.status(500).send(error)

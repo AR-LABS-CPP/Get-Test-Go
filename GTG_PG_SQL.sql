@@ -180,14 +180,12 @@ CREATE OR REPLACE PROCEDURE add_assessment_mcq(IN recruiter_email VARCHAR(150), 
 LANGUAGE plpgsql
 AS $procedure$
 	BEGIN
+		INSERT INTO get_test_go_question(question_type, question) VALUES(1, mcq_question);
 		WITH CTE_recruiter_id AS(
 			SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email
 		)
-		INSERT INTO get_test_go_question(question_type, question) VALUES(1, mcq_question);
-		
 		INSERT INTO get_test_go_recruiter_assessment_question(recruiter_id, assessment_id, question_id)
-		VALUES((SELECT recruiter_id FROM CTE_recruiter_id), (SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE assessment_name = name_of_assessment AND recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id)), (SELECT question_id FROM get_test_go_question WHERE question = mcq_question));
-				
+		VALUES((SELECT recruiter_id FROM CTE_recruiter_id), (SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE assessment_name = name_of_assessment AND recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id)), (SELECT question_id FROM get_test_go_question WHERE question = mcq_question));		
 		INSERT INTO get_test_go_mcq_answer(question_id, option_one, option_two, option_three, option_four, correct_answer)
 		VALUES((SELECT question_id FROM get_test_go_question WHERE question = mcq_question), option_one, option_two, option_three, option_four, correct_answer);
 		
