@@ -94,4 +94,15 @@ assessmentsRouter.post("/recruiter/assessments", (req, res) => {
     })
 })
 
+assessmentsRouter.post("/recruiter/assessment/questions", (req, res) => {
+    assessmentModel.getRecruiterAssessmentMCQQuestions(
+        req.body.recruiterEmail, 
+        req.body.assessmentName
+    ).then(response => {
+        res.status(200).send(response)
+    }).catch(error => {
+        res.status(500).send(error)
+    })
+})
+
 module.exports = assessmentsRouter

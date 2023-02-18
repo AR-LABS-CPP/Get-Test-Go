@@ -161,7 +161,20 @@ const assessmentQuestionExists = (recruiter_email, assessment_name, question) =>
     })
 }
 
-const getAssessmentQuestions = (assessment_name) => {
+const getRecruiterAssessmentMCQQuestions = (recruiter_email, assessment_name) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_recruiter_assessment_mcq_questions('${recruiter_email}', '${assessment_name}')`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
+const getRecruiterAssessmentTrueFalseQuestions = (recruiter_email, assessment_name) => {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT question_id, question FROM ${assessment_with_questions_view_name} WHERE assessment_name = ${assessment_name}`, (error, results) => {
             if(error) {
@@ -199,5 +212,6 @@ module.exports = {
     addTrueFalse,
     assessmentExists,
     assessmentQuestionExists,
-    createRecruiterAssessment
+    createRecruiterAssessment,
+    getRecruiterAssessmentMCQQuestions
 }

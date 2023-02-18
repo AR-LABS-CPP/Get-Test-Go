@@ -323,3 +323,45 @@ $$
 	JOIN get_test_go_mcq_answer
 		ON get_test_go_mcq_answer.question_id  = CTE_recruiter_mcq_questions.question_id
 $$ LANGUAGE SQL STABLE
+
+CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_mcq_question_with_answer
+AS
+	WITH CTE_recruiter_assessments AS(
+		SELECT
+			*
+		FROM get_test_go_recruiter_assessment
+		WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')
+	),
+	CTE_recruiter_assessments_questions AS (
+		SELECT
+			CTE_recruiter_assessments.recruiter_id,
+			CTE_recruiter_assessments.assessment_id,
+			CTE_recruiter_assessments.assessment_name,
+			CTE_recruiter_assessments.assessment_details,
+			CTE_recruiter_assessments.assessment_type,
+			get_test_go_question.question_id,
+			get_test_go_question.question_type,
+			get_test_go_question.question
+		FROM CTE_recruiter_assessments
+		JOIN get_test_go_recruiter_assessment_question
+			ON CTE_recruiter_assessments.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
+		JOIN get_test_go_question
+			ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
+		WHERE get_test_go_question.question_type = 1 -- MCQ Question
+	)
+	SELECT 
+		CTE_recruiter_assessments_questions.recruiter_id,
+		CTE_recruiter_assessments_questions.assessment_name,
+		CTE_recruiter_assessments_questions.assessment_details,
+		CTE_recruiter_assessments_questions.assessment_type,
+		CTE_recruiter_assessments_questions.question_id,
+		CTE_recruiter_assessments_questions.question_type,
+		CTE_recruiter_assessments_questions.question,
+		get_test_go_mcq_answer.option_one,
+		get_test_go_mcq_answer.option_two,
+		get_test_go_mcq_answer.option_three,
+		get_test_go_mcq_answer.option_four,
+		get_test_go_mcq_answer.correct_answer
+	FROM CTE_recruiter_assessments_questions
+	JOIN get_test_go_mcq_answer
+		ON CTE_recruiter_assessments_questions.question_id = get_test_go_mcq_answer.question_id
