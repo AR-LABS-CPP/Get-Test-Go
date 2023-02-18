@@ -290,11 +290,11 @@ AS $$
 		DECLARE assessment_question_count integer;
 		BEGIN
 			SELECT COUNT(*) INTO assessment_question_count FROM get_test_go_recruiter_assessment
-			JOIN get_test_go_assessment_question
-				ON get_test_go_recruiter_assessment.assessment_id = get_test_go_assessment_question.assessment_id
+			JOIN get_test_go_recruiter_assessment_question
+				ON get_test_go_recruiter_assessment.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
 			JOIN get_test_go_question
-				ON get_test_go_assessment_question.question_id = get_test_go_question.question_id
-			WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
+				ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
+			WHERE get_test_go_recruiter_assessment.recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
 			AND assessment_name = name_of_assessment;
 		
 			RETURN assessment_question_count;

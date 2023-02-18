@@ -50,6 +50,7 @@ assessmentsRouter.post("/question/add/mcq", (req, res) => {
         }
         else {
             assessmentModel.addMCQ(
+                req.body.recruiterEmail,
                 req.body.assessmentName, 
                 req.body.assessmentQuestion, 
                 req.body.optionOne, 
@@ -62,6 +63,8 @@ assessmentsRouter.post("/question/add/mcq", (req, res) => {
             }).catch(error => {
                 res.status(500).send(error)
             })
+
+            res.status(200).send(response)
         }
     }).catch(error => {
         res.status(500).send(error)

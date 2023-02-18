@@ -148,14 +148,15 @@ const assessmentExists = (assessmentName) => {
 
 const assessmentQuestionExists = (recruiter_email, assessment_name, question) => {
     return new Promise((resolve, reject) => {
-        pool.query(``, (error, results) => {
+        pool.query(`SELECT * FROM assessment_question_exists('${recruiter_email}', '${assessment_name}', '${question}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
             }
             
             // An array is returned with an object having the count
-            resolve(results.rows[0].count > 0)
+            // resolve(results.rows[0].count > 0)
+            resolve(results.rows[0].assessment_question_exists > 0)
         })
     })
 }
