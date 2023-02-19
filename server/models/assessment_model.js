@@ -176,7 +176,7 @@ const getRecruiterAssessmentMCQQuestions = (recruiter_email, assessment_name) =>
 
 const getRecruiterAssessmentTrueFalseQuestions = (recruiter_email, assessment_name) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT question_id, question FROM ${assessment_with_questions_view_name} WHERE assessment_name = ${assessment_name}`, (error, results) => {
+        pool.query(`SELECT * FROM get_test_go_recruiter_assessment_tf_question_with_answer WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = '${recruiter_email}') AND assessment_name = '${assessment_name}'`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
@@ -213,5 +213,6 @@ module.exports = {
     assessmentExists,
     assessmentQuestionExists,
     createRecruiterAssessment,
-    getRecruiterAssessmentMCQQuestions
+    getRecruiterAssessmentMCQQuestions,
+    getRecruiterAssessmentTrueFalseQuestions
 }

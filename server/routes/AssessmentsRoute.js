@@ -95,11 +95,24 @@ assessmentsRouter.post("/recruiter/assessments", (req, res) => {
 })
 
 assessmentsRouter.post("/recruiter/questions", (req, res) => {
+    let recruiterQuestions = []
+
     assessmentModel.getRecruiterAssessmentMCQQuestions(
         req.body.recruiterEmail, 
         req.body.assessmentName
     ).then(response => {
-        res.status(200).send(response)
+        recruiterQuestions.push(response)
+
+        assessmentModel.getRecruiterAssessmentTrueFalseQuestions(
+            req.body.recruiterEmail,
+            req.body.assessmentName
+        ).then(response => {
+            recruiterQuestions.push(response)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+
+        res.status(200).send(recruiterQuestions)
     }).catch(error => {
         res.status(500).send(error)
     })

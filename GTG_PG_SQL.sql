@@ -193,15 +193,18 @@ AS $procedure$
 	end;
 $procedure$;
 
-CREATE OR REPLACE PROCEDURE add_assessment_true_false(IN name_of_assessment character varying, IN true_false_question text, IN answer boolean)
+CREATE OR REPLACE PROCEDURE add_assessment_true_false(IN recruiter_email VARCHAR(150), IN name_of_assessment character varying, IN true_false_question text, IN answer boolean)
  LANGUAGE plpgsql
 AS $procedure$
-	begin
-		insert into get_test_go_question(question_type, question) values(2, true_false_question);
-		insert into get_test_go_assessment_question(assessment_id, question_id)
-			values((select assessment_id from get_test_go_assessment where assessment_name = name_of_assessment), (select question_id from get_test_go_question where question = true_false_question));
-		insert into get_test_go_true_false_answer(question_id, answer)
-			values((select question_id from get_test_go_question where question = true_false_question), answer);
+	BEGIN
+		INSERT INTO get_test_go_question(question_type, question) VALUES(2, true_false_question);
+		WITH CTE_recruiter_id AS(
+			SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email
+		)
+		INSERT INTO get_test_go_recruiter_assessment_question(recruiter_id, assessment_id, question_id)
+		VALUES((SELECT recruiter_id FROM CTE_recruiter_id), (SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE assessment_name = name_of_assessment AND recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id)), (SELECT question_id FROM get_test_go_question WHERE question = mcq_question));
+		INSERT INTO get_test_go_true_false_answer(question_id, answer)
+		VALUES((SELECT question_id FROM get_test_go_question WHERE question = true_false_question), answer);
 		
 		commit;
 	end;
