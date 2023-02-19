@@ -108,28 +108,13 @@ const CreateNewAssessment = () => {
                 "jobType": formVals.jobType,
                 "requiredAssessments": requiredAssessments
             }
-
-            console.log(payload)
-
+            
             axios.post("http://localhost:4321/job/new", payload).then(response => {
                 toast.success(response.data)
             }).catch(error => {
                 console.log(error)
                 toast.error(error)
             })
-
-            // axios.post("http://localhost:4321/assessment/new", payload).then(response => {
-            //     toast.success(response.data)
-            //     timeout = setTimeout(() => {
-            //         console.log("Create New Job Screen Timeout cleared")
-            //         clearTimeout(timeout)
-            //         navigate("/post-job")
-            //     })
-            // }).catch(error => {
-            //     console.log(error)
-            // })
-
-            // console.log('Form submitted!')
         }
     }, [errors])
 
