@@ -51,6 +51,7 @@ CREATE TABLE get_test_go_recruiter_assessment(
 	assessment_name TEXT UNIQUE NOT NULL,
 	assessment_details TEXT DEFAULT 'No details provided',
 	assessment_type int4 NOT NULL,
+	CONSTRAINT fk_assessment_type FOREIGN KEY (assessment_type) REFERENCES get_test_go_assessment_type(assessment_type_id),
 	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
 );
 
@@ -89,19 +90,23 @@ CREATE TABLE get_test_go_mcq_answer(
 	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
 );
 
-CREATE TABLE get_test_go_job(
-	job_id SERIAL PRIMARY KEY,
-	job_name varchar(100) UNIQUE NOT NULL,
+CREATE TABLE get_test_go_recruiter_job(
+	recruiter_id int4 NOT NULL,
+	job_id SERIAL UNIQUE NOT NULL,
+	job_name TEXT UNIQUE NOT NULL,
 	job_details TEXT NOT NULL,
 	job_type int4 NOT NULL,
-	CONSTRAINT fk_job_type FOREIGN KEY(job_type) REFERENCES get_test_go_job_types(job_type_id)
+	CONSTRAINT fk_job_type FOREIGN KEY (job_type) REFERENCES get_test_go_job_types(job_type_id),
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
 );
 
-CREATE TABLE get_test_go_job_assessment(
+CREATE TABLE get_test_go_recruiter_job_assessment(
+	recruiter_id int4 NOT NULL,
 	job_id int4 NOT NULL,
 	assessment_id int4 NOT NULL,
-	CONSTRAINT fk_job_id FOREIGN KEY(job_id) REFERENCES get_test_go_job(job_id),
-	CONSTRAINT fk_assessment_id FOREIGN KEY(assessment_id) REFERENCES get_test_go_assessment(assessment_id)
+	CONSTRAINT fk_job_id FOREIGN KEY (job_id) REFERENCES get_test_go_recruiter_job(job_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id),
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
 );
 
 INSERT INTO get_test_go_assessment_type(assessment_type_name, assessment_type_details)
