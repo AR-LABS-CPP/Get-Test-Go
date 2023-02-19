@@ -101,27 +101,27 @@ const CreateNewAssessment = () => {
 
     useEffect(() => {
         if (Object.keys(errors).length === 0 && formSaved) {
-            const payload = {
-                "jobName": formVals.jobName,
-                "jobDetails": formVals.jobDetails,
-                "jobType": formVals.jobType,
-                "requiredAssessments": requiredAssessments
-            }
+            // const payload = {
+            //     "jobName": formVals.jobName,
+            //     "jobDetails": formVals.jobDetails,
+            //     "jobType": formVals.jobType,
+            //     "requiredAssessments": requiredAssessments
+            // }
 
-            console.log(payload)
+            // console.log(payload)
 
-            axios.post("http://localhost:4321/assessment/new", payload).then(response => {
-                toast.success(response.data)
-                timeout = setTimeout(() => {
-                    console.log("Create New Job Screen Timeout cleared")
-                    clearTimeout(timeout)
-                    navigate("/post-job")
-                })
-            }).catch(error => {
-                console.log(error)
-            })
+            // axios.post("http://localhost:4321/assessment/new", payload).then(response => {
+            //     toast.success(response.data)
+            //     timeout = setTimeout(() => {
+            //         console.log("Create New Job Screen Timeout cleared")
+            //         clearTimeout(timeout)
+            //         navigate("/post-job")
+            //     })
+            // }).catch(error => {
+            //     console.log(error)
+            // })
 
-            console.log('Form submitted!')
+            // console.log('Form submitted!')
         }
     }, [errors])
 

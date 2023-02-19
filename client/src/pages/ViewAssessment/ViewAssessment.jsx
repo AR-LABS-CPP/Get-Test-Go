@@ -1,8 +1,23 @@
+import { useEffect, useState } from "react";
+import axios from "axios"
 import { useLocation } from "react-router-dom";
 import QuestionBox from "../../components/QuestionBox/QuestionBox";
 
 const ViewAssessment = (props) => {
     const { state } = useLocation()
+
+    const [assessmentQuestions, setAssessmentQuestions] = useState([])
+
+    useEffect(() => {
+        axios.post("http://localhost:4321/assessment/recruiter/questions", {
+            assessmentName: state.assessmentName,
+            recruiterEmail: state.recruiterEmail
+        }).then(response => {
+            setAssessmentQuestions(response.data)
+        }).catch(error => {
+            console.log(error)
+        })
+    }, [])
 
     return (
         <div className="flex flex-col items-center mt-5">
@@ -11,7 +26,11 @@ const ViewAssessment = (props) => {
                     {state.assessmentName}
                 </div>
 
-                <QuestionBox isMCQ={true} />
+                <pre>
+                    {
+                        JSON.stringify(assessmentQuestions)
+                    }
+                </pre>
             </div>
         </div>
     )

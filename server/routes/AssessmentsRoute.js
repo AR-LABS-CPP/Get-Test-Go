@@ -94,7 +94,7 @@ assessmentsRouter.post("/recruiter/assessments", (req, res) => {
     })
 })
 
-assessmentsRouter.post("/recruiter/assessment/questions", (req, res) => {
+assessmentsRouter.post("/recruiter/questions", (req, res) => {
     assessmentModel.getRecruiterAssessmentMCQQuestions(
         req.body.recruiterEmail, 
         req.body.assessmentName

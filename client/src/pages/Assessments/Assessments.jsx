@@ -32,7 +32,8 @@ const Assessments = () => {
     const handleViewAssessmentDetails = (assessment_name) => {
         navigate("/view-assessment", {
             state: {
-                assessmentName: assessment_name
+                assessmentName: assessment_name,
+                recruiterEmail: jwt.decode(localStorage.getItem("token")).email
             }
         })
     }
