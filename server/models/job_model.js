@@ -16,12 +16,22 @@ const getJobTypes = () => {
     })
 }
 
-const addNewJob = (recruiter_email, job_name, job_details, job_type) => {
+const addNewJob = (recruiter_email, job_name, job_details, job_type, requiredAssessments) => {
     return new Promise((resolve, reject) => {
         pool.query(`call add_recruiter_job('${recruiter_email}', '${job_name}', '${job_details}', '${job_type}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
+            }
+
+            for(let idx = 0; idx < requiredAssessments.length; idx++) {
+                bindJobAndAssessment(
+                    recruiter_email, 
+                    job_name, 
+                    requiredAssessments[idx]
+                ).catch(error => {
+                    reject(error)
+                })
             }
 
             resolve(results)
@@ -42,9 +52,9 @@ const jobAlreadyExists = (recruiter_email, job_name) => {
     })
 }
 
-const bindJobAndAssessment = (job_name, assessment_name) => {
+const bindJobAndAssessment = (recruiter_email, job_name, assessment_name) => {
     return new Promise((resolve, reject) => {
-        pool.query(`call add_job_assessment('${job_name}', '${assessment_name}')`, (error, results) => {
+        pool.query(`call add_recruiter_job_assessment('${recruiter_email}', '${job_name}', '${assessment_name}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)

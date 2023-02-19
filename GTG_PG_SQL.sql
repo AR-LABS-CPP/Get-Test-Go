@@ -266,9 +266,9 @@ AS $procedure$
 			SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email
 		)
 		INSERT INTO get_test_go_recruiter_job_assessment(recruiter_id, job_id, assessment_id)
-		VALUES(CTE_recruiter_id.recruiter_id,
-		(SELECT job_id FROM get_test_go_recruiter_job WHERE recruiter_id = CTE_recruiter_id.recruiter_id AND job_name = name_of_job),
-		(SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE recruiter_id = CTE_recruiter_id.recruiter_id AND assessment_name = name_of_assessment));
+		VALUES((SELECT recruiter_id FROM CTE_recruiter_id),
+		(SELECT job_id FROM get_test_go_recruiter_job WHERE recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id) AND job_name = name_of_job),
+		(SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id) AND assessment_name = name_of_assessment));
 		
 		commit;
 	end;

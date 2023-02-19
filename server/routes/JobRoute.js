@@ -21,9 +21,10 @@ jobRoute.post("/new", (req, res) => {
                 req.body.recruiterEmail,
                 req.body.jobName,
                 req.body.jobDetails,
-                req.body.jobType
-            ).then(response => {
-                res.status(200).send(response)
+                req.body.jobType,
+                req.body.requiredAssessments
+            ).then(_ => {
+                res.status(200).send("Job created successfully")
             }).catch(error => {
                 res.status(500).send(error)
             })
