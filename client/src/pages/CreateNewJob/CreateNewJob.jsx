@@ -101,14 +101,22 @@ const CreateNewAssessment = () => {
 
     useEffect(() => {
         if (Object.keys(errors).length === 0 && formSaved) {
-            // const payload = {
-            //     "jobName": formVals.jobName,
-            //     "jobDetails": formVals.jobDetails,
-            //     "jobType": formVals.jobType,
-            //     "requiredAssessments": requiredAssessments
-            // }
+            const payload = {
+                "recruiterEmail": recruiterEmail,
+                "jobName": formVals.jobName,
+                "jobDetails": formVals.jobDetails,
+                "jobType": formVals.jobType,
+                "requiredAssessments": requiredAssessments
+            }
 
-            // console.log(payload)
+            console.log(payload)
+
+            axios.post("http://localhost:4321/job/new", payload).then(response => {
+                toast.success(response.data)
+            }).catch(error => {
+                console.log(error)
+                toast.error(error)
+            })
 
             // axios.post("http://localhost:4321/assessment/new", payload).then(response => {
             //     toast.success(response.data)

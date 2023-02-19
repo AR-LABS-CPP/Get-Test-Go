@@ -239,24 +239,36 @@ AS $procedure$
 	
 $procedure$;
 
-CREATE OR REPLACE PROCEDURE add_job(IN name_of_job varchar(100), IN details_of_job TEXT, IN type_of_job varchar(30))
+CREATE OR REPLACE PROCEDURE add_recruiter_job(
+	IN recruiter_email CHARACTER VARYING, 
+	IN name_of_job varchar(100), 
+	IN details_of_job TEXT, 
+	IN type_of_job varchar(30)
+)
  LANGUAGE plpgsql
 AS $procedure$
 	begin
-		INSERT INTO get_test_go_job(job_name, job_details, job_type) VALUES(name_of_job, details_of_job, 
-			(SELECT job_type_id FROM get_test_go_job_types WHERE job_type_name = type_of_job));
+		INSERT INTO get_test_go_recruiter_job(recruiter_id, job_name, job_details, job_type)
+		VALUES((SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email), 
+		name_of_job, 
+		details_of_job,
+		(SELECT job_type_id FROM get_test_go_job_types WHERE job_type_name = type_of_job));
 		
 		commit;
 	end;
 $procedure$;
 
-CREATE OR REPLACE PROCEDURE add_job_assessment(IN name_of_job varchar(100), IN name_of_assessment varchar(100))
+CREATE OR REPLACE PROCEDURE add_recruiter_job_assessment(IN recruiter_email CHARACTER VARYING, IN name_of_job CHARACTER VARYING, IN name_of_assessment CHARACTER VARYING)
  LANGUAGE plpgsql
 AS $procedure$
-	begin
-		INSERT INTO get_test_go_job_assessment(job_id, assessment_id) values(
-			(SELECT job_id FROM get_test_go_job WHERE job_name = name_of_job),
-			(SELECT assessment_id FROM get_test_go_assessment WHERE assessment_name = name_of_assessment));
+	BEGIN
+		WITH CTE_recruiter_id AS (
+			SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email
+		)
+		INSERT INTO get_test_go_recruiter_job_assessment(recruiter_id, job_id, assessment_id)
+		VALUES(CTE_recruiter_id.recruiter_id,
+		(SELECT job_id FROM get_test_go_recruiter_job WHERE recruiter_id = CTE_recruiter_id.recruiter_id AND job_name = name_of_job),
+		(SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE recruiter_id = CTE_recruiter_id.recruiter_id AND assessment_name = name_of_assessment));
 		
 		commit;
 	end;

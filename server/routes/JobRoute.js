@@ -12,6 +12,26 @@ jobRoute.get("/types", (_, res) => {
 })
 
 jobRoute.post("/new", (req, res) => {
+    jobModel.jobAlreadyExists(req.body.recruiterEmail, req.body.jobName).then(response => {
+        if(response) {
+            res.status(409).send("A job with the same name already exists")
+        }
+        else {
+            jobModel.addNewJob(
+                req.body.recruiterEmail,
+                req.body.jobName,
+                req.body.jobDetails,
+                req.body.jobType
+            ).then(response => {
+                res.status(200).send(response)
+            }).catch(error => {
+                res.status(500).send(error)
+            })
+        }
+    }).catch(error => {
+        res.status(500).send(error)
+    })
+
     // jobModel.jobAlreadyExists(req.body.jobName).then(response => {
     //     if(response === false) {
     //         jobModel.addNewJob(req.body.jobName, req.body.jobDetails, req.body.jobType).then(_ => {

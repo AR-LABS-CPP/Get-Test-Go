@@ -16,9 +16,9 @@ const getJobTypes = () => {
     })
 }
 
-const addNewJob = (job_name, job_details, job_type) => {
+const addNewJob = (recruiter_email, job_name, job_details, job_type) => {
     return new Promise((resolve, reject) => {
-        pool.query(`call add_job('${job_name}', '${job_details}', '${job_type}')`, (error, results) => {
+        pool.query(`call add_recruiter_job('${recruiter_email}', '${job_name}', '${job_details}', '${job_type}')`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
@@ -29,15 +29,15 @@ const addNewJob = (job_name, job_details, job_type) => {
     })
 }
 
-const jobAlreadyExists = (job_name) => {
+const jobAlreadyExists = (recruiter_email, job_name) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT COUNT(*) FROM ${job_table_name} WHERE job_name ILIKE '${job_name}'`, (error, results) => {
+        pool.query(`SELECT COUNT(*) FROM get_test_go_recruiter_job WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = '${recruiter_email}') AND job_name = '${job_name}'`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
             }
 
-            resolve(results.rowCount > 0)
+            resolve(results.rows[0].count > 0)
         })
     })
 }
