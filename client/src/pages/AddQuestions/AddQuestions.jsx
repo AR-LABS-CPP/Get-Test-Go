@@ -135,6 +135,7 @@ const AddQuestions = () => {
     useEffect(() => {
         if (Object.keys(tfErrors).length === 0 && formSaved) {
             const payload = {
+                "recruiterEmail": state.recruiter_email,
                 "assessmentName": state.assessment_name,
                 "assessmentQuestion": trueFalseQuestionVals.question,
                 "answer": trueFalseQuestionVals.answer

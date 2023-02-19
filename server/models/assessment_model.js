@@ -117,9 +117,9 @@ const addMCQ = (recruiterEmail, assessmentName, mcq_question, option_one, option
     })
 }
 
-const addTrueFalse = (assessmentName, true_false_question, answer) => {
+const addTrueFalse = (recruiterEmail, assessmentName, true_false_question, answer) => {
     return new Promise((resolve, reject) => {
-        pool.query(`call add_assessment_true_false('${assessmentName}', '${true_false_question}', ${answer})`, (error, results) => {
+        pool.query(`call add_assessment_true_false('${recruiterEmail}', '${assessmentName}', '${true_false_question}', ${answer})`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)

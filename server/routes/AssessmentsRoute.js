@@ -70,16 +70,21 @@ assessmentsRouter.post("/question/add/mcq", (req, res) => {
 })
 
 assessmentsRouter.post("/question/add/truefalse", (req, res) => {
-    assessmentModel.assessmentQuestionExists(req.body.assessmentName, req.body.assessmentQuestion).then(response => {
-        if(response === false) {
-            assessmentModel.addTrueFalse(req.body.assessmentName, req.body.assessmentQuestion, req.body.answer).then(response => {
+    assessmentModel.assessmentQuestionExists(req.body.recruiterEmail, req.body.assessmentName, req.body.assessmentQuestion).then(response => {
+        if(response) {
+            res.status(409).send("Given question already exists in the assessment")
+        }
+        else {
+            assessmentModel.addTrueFalse(
+                req.body.recruiterEmail,
+                req.body.assessmentName, 
+                req.body.assessmentQuestion, 
+                req.body.answer
+            ).then(response => {
                 res.status(200).send(response)
             }).catch(error => {
                 res.status(500).send(error)
             })
-        }
-        else {
-            res.status(409).send("Given question already exists in the assessment")
         }
     }).catch(error => {
         res.status(500).send(error)
