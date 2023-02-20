@@ -313,7 +313,7 @@ AS $$
 			JOIN get_test_go_question
 				ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
 			WHERE get_test_go_recruiter_assessment.recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
-			AND assessment_name = name_of_assessment;
+			AND assessment_name = name_of_assessment AND question = question_text;
 		
 			RETURN assessment_question_count;
 		END;
