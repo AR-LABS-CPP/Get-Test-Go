@@ -66,12 +66,22 @@ const bindJobAndAssessment = (recruiter_email, job_name, assessment_name) => {
 }
 
 const getRecruiterJobs = (recruiter_email) => {
-    
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_recruiter_job_with_type_name WHERE email = '${recruiter_email}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
 }
 
 module.exports = {
     getJobTypes,
     addNewJob,
     bindJobAndAssessment,
-    jobAlreadyExists
+    jobAlreadyExists,
+    getRecruiterJobs
 }
