@@ -35,7 +35,15 @@ jobRoute.post("/new", (req, res) => {
 })
 
 jobRoute.post("/recruiter/jobs", (req, res) => {
-    jobModel.getRecruiterJobs(req.body.recruiterEmail).then(response => {
+    jobModel.getRecruiterJobs(req.body.recruiter_email).then(response => {
+        res.status(200).send(response)
+    }).catch(error => {
+        res.status(500).send(error)
+    })
+})
+
+jobRoute.post("/recruiter/details", (req, res) => {
+    jobModel.getJobDetails(req.body.jobName, req.body.recruiterEmail).then(response => {
         res.status(200).send(response)
     }).catch(error => {
         res.status(500).send(error)

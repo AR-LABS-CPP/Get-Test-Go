@@ -20,7 +20,7 @@ import Assessments from './pages/Assessments/Assessments'
 import PostJob from './pages/PostJob/PostJob'
 import Recruit from './pages/Recruit/Recruit'
 import Results from './pages/Results/Results'
-import ViewJobs from './pages/ViewJobs/ViewJobs'
+import ViewJob from './pages/ViewJob/ViewJob'
 import RecruiterMainPage from './pages/RecruiterMainPage/RecruiterMainPage'
 import CandidateMainPage from './pages/CandidateMainPage/CandidateMainPage'
 import CreateNewAssessment from './pages/CreateNewAssessment/CreateNewAssessment'
@@ -70,7 +70,7 @@ const App = () => {
         <Route path='/post-job' element={<Auth><PostJob /></Auth>} />
         <Route path='/recruit' element={<Auth><Recruit /></Auth>} />
         <Route path='/results' element={<Auth><Results /></Auth>} />
-        <Route path='/view-jobs' element={<Auth><ViewJobs /></Auth>} />
+        <Route path='/view-job' element={<Auth><ViewJob /></Auth>} />
         <Route path='/recruiter-main-page' element={<Auth><RecruiterMainPage /></Auth>} />
         <Route path='/candidate-main-page' element={<Auth><CandidateMainPage /></Auth>} />
       </Routes>
