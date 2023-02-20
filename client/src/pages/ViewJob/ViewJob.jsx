@@ -16,8 +16,8 @@ const ViewJob = () => {
         }).then(response => {
             setJobDetails(response.data)
 
-            setJobDesc(jobDetails[0].job_details)
-            setRecruiterEmail(jobDetails[0].email)
+            setJobDesc(response.data[0].job_details)
+            setRecruiterEmail(response.data[0].email)
         }).catch(error => {
             console.log(error)
         })
@@ -49,12 +49,6 @@ const ViewJob = () => {
                         })
                     }
                 </div>
-
-                <pre>
-                    {
-                        JSON.stringify(jobDetails)
-                    }
-                </pre>
             </div>
         </div>
     )
