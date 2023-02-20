@@ -1,7 +1,7 @@
 const pool = require("../db")
 
-const job_table_name = "get_test_go_job"
 const job_types_table_name = "get_test_go_job_types"
+const recruiter_job_table_name = "get_test_go_recruiter_job"
 
 const getJobTypes = () => {
     return new Promise((resolve, reject) => {
@@ -63,6 +63,10 @@ const bindJobAndAssessment = (recruiter_email, job_name, assessment_name) => {
             resolve(results)
         })
     })
+}
+
+const getRecruiterJobs = (recruiter_email) => {
+    
 }
 
 module.exports = {
