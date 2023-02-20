@@ -19,12 +19,15 @@ const ViewJob = () => {
     }, [])
 
     return (
+        // Continue from here
         <div className="flex flex-col items-center mt-5">
             <div className="w-full px-6">
-                <div className="bg-white border-[1px] border-gray-300 shadow-md rounded-md text-4xl font-semibold py-8 text-center">
-                    {state.jobName}
+                <div className="bg-white border-[1px] p-4 flex flex-col">
+                    <p className="text-xl font-bold">{state.jobName}</p>
+                    <span className="py-1"></span>
+                    <p>{jobDetails[0].job_details}</p>
                 </div>
-
+                
                 <pre>
                     {
                         JSON.stringify(jobDetails)
