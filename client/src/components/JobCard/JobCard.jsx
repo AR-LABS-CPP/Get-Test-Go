@@ -6,8 +6,7 @@ const JobCard = (props) => {
             </p>
             <p className="p-2 h-24 text-center overflow-ellipsis">{props.cardDescription}</p>
             <div className="flex justify-center items-center p-3 gap-x-3">
-                <button className="w-full bg-emerald-600 hover:bg-emerald-500 py-2 text-white rounded-md" onClick={props.viewClickHandler}>View</button>
-                <button className="w-full bg-amber-600 hover:bg-amber-500 py-2 text-white rounded-md" onClick={props.editClickHandler}>Edit</button>
+                <button className="w-1/2 bg-emerald-600 hover:bg-emerald-500 py-2 text-white rounded-md" onClick={props.viewClickHandler}>View</button>
             </div>
         </div>
     )

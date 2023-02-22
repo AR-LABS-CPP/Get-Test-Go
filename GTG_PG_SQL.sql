@@ -71,13 +71,13 @@ CREATE TABLE get_test_go_true_false_answer(
 	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
 );
 
-CREATE TABLE get_test_go_recruiter_assessment_question(
-	assessment_question_id serial4 PRIMARY KEY,
-	assessment_id int4 NOT NULL,
-	question_id int4 NOT NULL,
-	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id),
-	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
-);
+-- CREATE TABLE get_test_go_recruiter_assessment_question(
+-- 	assessment_question_id serial4 PRIMARY KEY,
+-- 	assessment_id int4 NOT NULL,
+-- 	question_id int4 NOT NULL,
+-- 	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id),
+-- 	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
+-- );
 
 CREATE TABLE get_test_go_mcq_answer(
 	mcq_id serial4 PRIMARY KEY,

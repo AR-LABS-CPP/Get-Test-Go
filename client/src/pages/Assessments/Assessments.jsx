@@ -49,7 +49,7 @@ const Assessments = () => {
                     Create New Assessment
                 </button>
             </div>
-            <div className="p-3 grid grid-cols-8 gap-x-3 place-items-center">
+            <div className="container m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 place-items-center gap-3">
                 {
                     recruiterAssessments.length === 0 ? <div className="text-xl font-bold col-span-12">No Assessments have been created yet.</div>
                         :
@@ -57,7 +57,7 @@ const Assessments = () => {
                             return <AssessmentCard
                                 cardTitle={assessment.assessment_name}
                                 cardDescription={assessment.assessment_details}
-                                additionalStyling="col-span-2"
+                                additionalStyling="max-w-xs"
                                 viewClickHandler={() => handleViewAssessmentDetails(assessment.assessment_name)}
                                 key={assessment.assessment_name} />
                         })

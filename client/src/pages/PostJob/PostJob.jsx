@@ -38,13 +38,12 @@ const PostJob = () => {
                 </button>
             </div>
 
-            <div className="p-3 grid grid-cols-8 gap-x-3 place-items-center">
+            <div className="container m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 place-items-center gap-3">
                 {
                     recruiterJobs.length === 0 ? <div className="text-xl font-bold col-span-12">No Jobs have been created yet.</div>
                         :
                         recruiterJobs.map(recruiterJob => {
                             return <JobCard
-                                additionalStyling="col-span-2"
                                 key={recruiterJob.job_name + recruiterJob.job_details}
                                 cardTitle={recruiterJob.job_name}
                                 cardDescription={recruiterJob.job_details}
