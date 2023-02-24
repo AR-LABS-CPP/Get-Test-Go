@@ -1,6 +1,7 @@
 const JobCard = (props) => {
     return (
-        <div className={`w-full h-56 flex flex-col justify-around border-[1px] border-gray-300 shadow-lg h-92 m-2 rounded-lg overflow-hidden ${props.additionalStyling}`}>
+        <div className={`w-full h-full flex flex-col justify-around border-[1px] border-gray-300 shadow-lg h-92 m-2 rounded-lg overflow-hidden ${props.additionalStyling}`}>
+            <p>{props.badgeText}</p>
             <p className="p-2 text-center text-2xl font-bold text-gray-600">
                 {props.cardTitle}
             </p>

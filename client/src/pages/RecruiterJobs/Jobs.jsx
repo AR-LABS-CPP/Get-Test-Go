@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import JobCard from "../../components/JobCard/JobCard"
 
-const PostJob = () => {
+const Jobs = () => {
     const navigate = useNavigate()
 
     let recruiterEmail = jwt.decode(localStorage.getItem("token")).email
@@ -45,6 +45,7 @@ const PostJob = () => {
                         recruiterJobs.map(recruiterJob => {
                             return <JobCard
                                 key={recruiterJob.job_name + recruiterJob.job_details}
+                                badgeText={recruiterJob.job_type}
                                 cardTitle={recruiterJob.job_name}
                                 cardDescription={recruiterJob.job_details}
                                 viewClickHandler={() => handleViewJobDetails(recruiterJob.job_name)} />
@@ -55,4 +56,4 @@ const PostJob = () => {
     )
 }
 
-export default PostJob
+export default Jobs

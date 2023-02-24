@@ -17,7 +17,7 @@ import NavBar from "./components/NavBar/NavBar"
 import Login from './pages/Login/Login'
 import SignUp from './pages/SignUp/SignUp'
 import Assessments from './pages/Assessments/Assessments'
-import PostJob from './pages/PostJob/PostJob'
+import Jobs from './pages/RecruiterJobs/Jobs'
 import Recruit from './pages/Recruit/Recruit'
 import Results from './pages/Results/Results'
 import ViewJob from './pages/ViewJob/ViewJob'
@@ -67,7 +67,7 @@ const App = () => {
         <Route path='/view-assessment' element={<Auth><ViewAssessment /></Auth>} />
         <Route path='/create-job' element={<Auth><CreateNewJob /></Auth>} />
         <Route path='/add-questions' element={<Auth><AddQuestions /></Auth>} />
-        <Route path='/post-job' element={<Auth><PostJob /></Auth>} />
+        <Route path='/recruiter-jobs' element={<Auth><Jobs /></Auth>} />
         <Route path='/recruit' element={<Auth><Recruit /></Auth>} />
         <Route path='/results' element={<Auth><Results /></Auth>} />
         <Route path='/view-job' element={<Auth><ViewJob /></Auth>} />

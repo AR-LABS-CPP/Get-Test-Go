@@ -41,7 +41,7 @@ const NavBar = () => {
                 getUserType() === "RECRUITER" ?
                     <div className="flex w-full md:w-[60%] items-center md:justify-end mt-3 md:mt-0 lg:mt-0">
                         <NavBarLink title="Home" navigateURL='/recruiter-main-page' />
-                        <NavBarLink title='Jobs' navigateURL='/post-job' />
+                        <NavBarLink title='Jobs' navigateURL='/recruiter-jobs' />
                         <NavBarLink title='Recruit' navigateURL='/recruit' />
                         <NavBarLink title='Assessments' navigateURL='/assessments' />
                         <NavBarLink title='Log out' clickHandler={logoutHandler} />

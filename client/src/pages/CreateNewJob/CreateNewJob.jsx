@@ -64,6 +64,9 @@ const CreateNewAssessment = () => {
         if (!vals.jobName) {
             errors.jobName = "Job name is required"
         }
+        else if(vals.jobName.length > 50) {
+            errors.jobName = "Job name must be less than 50 characters"
+        }
 
         if (!vals.jobDetails) {
             errors.jobDetails = "Job details are required"
