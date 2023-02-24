@@ -70,7 +70,7 @@ const App = () => {
         <Route path='/recruiter-jobs' element={<Auth><Jobs /></Auth>} />
         <Route path='/recruit' element={<Auth><Recruit /></Auth>} />
         <Route path='/results' element={<Auth><Results /></Auth>} />
-        <Route path='/view-job' element={<Auth><ViewJob /></Auth>} />
+        <Route path='/view-recruiter-job' element={<Auth><ViewJob /></Auth>} />
         <Route path='/recruiter-main-page' element={<Auth><RecruiterMainPage /></Auth>} />
         <Route path='/candidate-main-page' element={<Auth><CandidateMainPage /></Auth>} />
       </Routes>
