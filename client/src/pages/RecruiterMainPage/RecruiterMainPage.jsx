@@ -1,9 +1,12 @@
 import jwt from "jsonwebtoken"
+import { useNavigate } from "react-router-dom"
 import useTilg from "tilg"
 import DashboardCard from "../../components/DashboardCard/DashboardCard"
 
-const RecruiterMainPage = () => {
+const RecruiterMainPage = () => {    
     useTilg()
+
+    const navigate = useNavigate()
 
     let firstName = ''
     let lastName = ''
@@ -29,7 +32,9 @@ const RecruiterMainPage = () => {
             </div>
 
             <div className="flex justify-center">
-                <button className="bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 text-white px-20 rounded-lg py-3 mt-20 mb-10">Create New Job</button>
+                <button className="bg-blue-600 hover:bg-blue-500 focus:bg-blue-500 text-white px-20 rounded-lg py-3 mt-10 mb-10" onClick={() => navigate("/create-job")}>
+                    Create New Job
+                </button>
             </div>
         </>
     )
