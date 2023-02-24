@@ -329,11 +329,13 @@ AS
 			CTE_recruiter_assessments.assessment_id,
 			CTE_recruiter_assessments.assessment_name,
 			CTE_recruiter_assessments.assessment_details,
-			CTE_recruiter_assessments.assessment_type,
+			get_test_go_assessment_type.assessment_type_name,
 			get_test_go_question.question_id,
 			get_test_go_question.question_type,
 			get_test_go_question.question
 		FROM CTE_recruiter_assessments
+		JOIN get_test_go_assessment_type
+			ON CTE_recruiter_assessments.assessment_type = get_test_go_assessment_type.assessment_type_id
 		JOIN get_test_go_recruiter_assessment_question
 			ON CTE_recruiter_assessments.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
 		JOIN get_test_go_question
@@ -344,9 +346,9 @@ AS
 		CTE_recruiter_assessments_questions.recruiter_id,
 		CTE_recruiter_assessments_questions.assessment_name,
 		CTE_recruiter_assessments_questions.assessment_details,
-		CTE_recruiter_assessments_questions.assessment_type,
+		CTE_recruiter_assessments_questions.assessment_type_name,
 		CTE_recruiter_assessments_questions.question_id,
-		CTE_recruiter_assessments_questions.question_type,
+		get_test_go_question_type.question_type_name,
 		CTE_recruiter_assessments_questions.question,
 		get_test_go_mcq_answer.option_one,
 		get_test_go_mcq_answer.option_two,
@@ -356,6 +358,8 @@ AS
 	FROM CTE_recruiter_assessments_questions
 	JOIN get_test_go_mcq_answer
 		ON CTE_recruiter_assessments_questions.question_id = get_test_go_mcq_answer.question_id
+	JOIN get_test_go_question_type
+		ON CTE_recruiter_assessments_questions.question_type = get_test_go_question_type.question_type_id
 
 CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_tf_question_with_answer
 AS
@@ -368,11 +372,13 @@ AS
 			CTE_recruiter_assessments.assessment_id,
 			CTE_recruiter_assessments.assessment_name,
 			CTE_recruiter_assessments.assessment_details,
-			CTE_recruiter_assessments.assessment_type,
+			get_test_go_assessment_type.assessment_type_name,
 			get_test_go_question.question_id,
 			get_test_go_question.question_type,
 			get_test_go_question.question
 		FROM CTE_recruiter_assessments
+		JOIN get_test_go_assessment_type
+			ON CTE_recruiter_assessments.assessment_type = get_test_go_assessment_type.assessment_type_id
 		JOIN get_test_go_recruiter_assessment_question
 			ON CTE_recruiter_assessments.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
 		JOIN get_test_go_question
@@ -383,14 +389,16 @@ AS
 		CTE_recruiter_assessments_questions.recruiter_id,
 		CTE_recruiter_assessments_questions.assessment_name,
 		CTE_recruiter_assessments_questions.assessment_details,
-		CTE_recruiter_assessments_questions.assessment_type,
+		CTE_recruiter_assessments_questions.assessment_type_name,
 		CTE_recruiter_assessments_questions.question_id,
-		CTE_recruiter_assessments_questions.question_type,
+		get_test_go_question_type.question_type_name,
 		CTE_recruiter_assessments_questions.question,
 		get_test_go_true_false_answer.answer
 	FROM CTE_recruiter_assessments_questions
 	JOIN get_test_go_true_false_answer
 		ON CTE_recruiter_assessments_questions.question_id = get_test_go_true_false_answer.question_id
+	JOIN get_test_go_question_type
+		ON CTE_recruiter_assessments_questions.question_type = get_test_go_question_type.question_type_id
 
 SELECT * FROM get_test_go_recruiter_assessment_mcq_question_with_answer
 WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')

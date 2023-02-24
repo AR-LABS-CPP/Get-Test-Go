@@ -1,9 +1,6 @@
 const AssessmentCard = (props) => {
     return (
         <div className={`w-full h-56 flex flex-col justify-around border-[1px] border-gray-300 shadow-lg h-92 m-2 rounded-lg overflow-hidden ${props.additionalStyling}`}>
-            {/* <div className="card-image-holder">
-                <img className="aspect-video object-fit" src={props.cardImage} alt="job_image" />
-            </div> */}
             <p className="p-2 text-center text-2xl font-bold text-gray-600">
                 {props.cardTitle}
             </p>
