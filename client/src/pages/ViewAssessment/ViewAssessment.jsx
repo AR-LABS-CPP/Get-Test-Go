@@ -26,11 +26,19 @@ const ViewAssessment = (props) => {
                     {state.assessmentName}
                 </div>
 
-                <pre>
-                    {
-                        JSON.stringify(assessmentQuestions)
-                    }
-                </pre>
+                {
+                    assessmentQuestions 
+                    ? 
+                    <p>No Questions have Been Added Yet</p>
+                    :
+                    assessmentQuestions.map(assessmentQuestion => {
+                        return <div>
+                            <p>{assessmentQuestion.recruiter_id}</p>
+                            <p>{assessmentQuestion.assessment_name}</p>
+                            
+                        </div>
+                    })
+                }
             </div>
         </div>
     )
