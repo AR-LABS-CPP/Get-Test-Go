@@ -8,7 +8,6 @@ const ViewJob = () => {
     const [jobDetails, setJobDetails] = useState([])
     const [jobDesc, setJobDesc] = useState("")
     const [recruiterEmail, setRecruiterEmail] = useState("")
-    const [jobType, setJobType] = useState("")
 
     useEffect(() => {
         axios.post("http://localhost:4321/job/recruiter/details", {
@@ -29,15 +28,18 @@ const ViewJob = () => {
         <div className="flex flex-col items-center mt-5">
             <div className="w-full px-6">
                 <div className="bg-white border-[1px] p-4 flex flex-col">
-                    <p className="text-xl font-bold">{state.jobName}</p>
-                    <span className="py-1"></span>
-                    <p>{jobDesc}</p>
+                    <p className="text-3xl font-bold text-center">{state.jobName}</p>
 
                     <span className="py-2"></span>
                     <div className="w-full flex justify-center">
-                        <p className="border-[1px] p-3 rounded-md shadow-md">{recruiterEmail}</p>
+                        <p className="border-[1px] p-3 rounded-md shadow-md">By: {recruiterEmail}</p>
                     </div>
                 </div>
+
+                <p className="mt-10 text-lg font-semibold text-center">Job Details</p>
+                <div className="mt-3 mb-6 flex-grow border-t border-gray-500"></div>
+
+                <p>{jobDesc}</p>
 
                 <p className="mt-10 text-lg font-semibold text-center">Required Assessments</p>
                 <div className="mt-3 mb-6 flex-grow border-t border-gray-500"></div>
