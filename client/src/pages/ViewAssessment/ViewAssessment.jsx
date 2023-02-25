@@ -39,7 +39,7 @@ const ViewAssessment = (props) => {
                             return (
                                 assessmentQuestionsSet.map(q => {
                                     if (q.question_type_name === "MCQ") {
-                                        return <div className="border-[1px]">
+                                        return <div key={q.question} className="border-[1px]">
                                             <p>{q.question}</p>
                                             <p>{q.option_one}</p>
                                             <p>{q.option_two}</p>
@@ -49,7 +49,7 @@ const ViewAssessment = (props) => {
                                         </div>
                                     }
                                     else if (q.question_type_name === "TrueFalse") {
-                                        return <div className="border-[1px]">
+                                        return <div key={q.question} className="border-[1px]">
                                             <p>{q.question}</p>
                                             {
                                                 q.answer ? "True" : "False"

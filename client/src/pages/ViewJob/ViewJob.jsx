@@ -47,7 +47,7 @@ const ViewJob = () => {
                 <div className="flex gap-x-2 justify-center">
                     {
                         jobDetails.map(jobDetail => {
-                            return <div className="border-[1px] min-w-[250px] flex justify-center p-4 rounded-md shadow-md">
+                            return <div key={`${jobDetail.assessment_name} + 1`} className="border-[1px] min-w-[250px] flex justify-center p-4 rounded-md shadow-md">
                                 {jobDetail.assessment_name}
                             </div>
                         })
