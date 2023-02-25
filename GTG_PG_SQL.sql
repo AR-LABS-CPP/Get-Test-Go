@@ -600,6 +600,243 @@ AS
 			CTE_recruiter_assessments.assessment_details,
 			CTE_recruiter_assessments.assessment_type,
 			get_test_go_question.question_id,
+			get_test_go_question_type.question_type_name,
+			get_test_go_question.question
+		FROM CTE_recruiter_assessments
+		JOIN get_test_go_recruiter_assessment_question
+			ON CTE_recruiter_assessments.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
+		JOIN get_test_go_question
+			ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
+		JOIN get_test_go_question_type
+			ON get_Test_go_question.question_type = get_test_go_question_type.question_type_id
+		WHERE get_test_go_question.question_type = 1 -- MCQ Question
+	)
+	SELECT 
+		CTE_recruiter_assessments_questions.recruiter_id,
+		CTE_recruiter_assessments_questions.assessment_name,
+		CTE_recruiter_assessments_questions.assessment_details,
+		CTE_recruiter_assessments_questions.assessment_type,
+		CTE_recruiter_assessments_questions.question_id,
+		CTE_recruiter_assessments_questions.question_type_name,
+		CTE_recruiter_assessments_questions.question,
+		get_test_go_mcq_answer.option_one,
+		get_test_go_mcq_answer.option_two,
+		get_test_go_mcq_answer.option_three,
+		get_test_go_mcq_answer.option_four,
+		get_test_go_mcq_answer.correct_answer
+	FROM CTE_recruiter_assessments_questions
+	JOIN get_test_go_mcq_answer
+		ON CTE_recruiter_assessments_questions.question_id = get_test_go_mcq_answer.question_id
+
+CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_tf_question_with_answer
+AS
+	WITH CTE_recruiter_assessments AS (
+		SELECT * FROM get_test_go_recruiter_assessment
+	),
+	CTE_recruiter_assessments_questions AS (
+		SELECT
+			CTE_recruiter_assessments.recruiter_id,
+			CTE_recruiter_assessments.assessment_id,
+			CTE_recruiter_assessments.assessment_name,
+			CTE_recruiter_assessments.assessment_details,
+			CTE_recruiter_assessments.assessment_type,
+			get_test_go_question.question_id,
+			get_test_go_question_type.question_type_name,
+			get_test_go_question.question
+		FROM CTE_recruiter_assessments
+		JOIN get_test_go_recruiter_assessment_question
+			ON CTE_recruiter_assessments.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
+		JOIN get_test_go_question
+			ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
+		JOIN get_test_go_question_type
+			ON get_Test_go_question.question_type = get_test_go_question_type.question_type_id
+		WHERE get_test_go_question.question_type = 2 -- True False Question
+	)
+	SELECT
+		CTE_recruiter_assessments_questions.recruiter_id,
+		CTE_recruiter_assessments_questions.assessment_name,
+		CTE_recruiter_assessments_questions.assessment_details,
+		CTE_recruiter_assessments_questions.assessment_type,
+		CTE_recruiter_assessments_questions.question_id,
+		CTE_recruiter_assessments_questions.question_type_name,
+		CTE_recruiter_assessments_questions.question,
+		get_test_go_true_false_answer.answer
+	FROM CTE_recruiter_assessments_questions
+	JOIN get_test_go_true_false_answer
+		ON CTE_recruiter_assessments_questions.question_id = get_test_go_true_false_answer.question_id
+				
+SELECT * FROM get_test_go_recruiter_assessment_mcq_question_with_answer
+WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')
+		
+----------------------------------------------------------------------------------------------------------------------
+-- BELOW QUERIES ARE DUPLICATE BUT ARE COPED IN CASE IF SOMETHING IS MISSING FROM THE ABOVE CODE
+----------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE get_test_go_recruiter_assessment_question(
+	recruiter_id int4 NOT NULL,
+	assessment_id int4 NOT NULL,
+	question_id int4 NOT NULL,
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_assessment(assessment_id),
+	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
+);
+
+CREATE VIEW get_test_go_recruiter_assessment_and_question
+AS
+	SELECT 
+		get_test_go_recruiter.recruiter_id,
+		get_test_go_recruiter.email,
+		get_test_go_assessment.assessment_id,
+		get_test_go_assessment.assessment_details,
+		get_test_go_question.question_id,
+		get_test_go_question.question_type,
+		get_test_go_question.question 
+	FROM get_test_go_recruiter_assessment_question
+	JOIN get_test_go_recruiter
+		ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_assessment_question.recruiter_id
+	JOIN get_test_go_assessment
+		ON get_test_go_assessment.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
+	JOIN get_test_go_question
+		ON get_test_go_question.question_id = get_test_go_recruiter_assessment_question.question_id
+		
+CREATE TABLE get_test_go_recruiter_assessment(
+	recruiter_id int4 NOT NULL,
+	assessment_id serial NOT NULL,
+	assessment_name TEXT UNIQUE NOT NULL,
+	assessment_details TEXT DEFAULT 'No details provided',
+	assessment_type int4 NOT NULL,
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
+	CONSTRAINT fk_assessment_type FOREIGN KEY (assessment_type) REFERENCES get_test_go_assessment_type(assessment_type_id)
+);
+
+CREATE OR REPLACE FUNCTION recruiter_assessment_exists(recruiter_email VARCHAR(150), name_of_assessment TEXT)
+RETURNS integer 
+AS $$
+		DECLARE assessment_count integer;
+        BEGIN
+	       SELECT COUNT(*) INTO assessment_count FROM get_test_go_recruiter_assessment
+	       WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
+	       AND assessment_name = name_of_assessment;
+	      
+	      RETURN assessment_count;
+        END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION assessment_question_exists(recruiter_email varchar(150), name_of_assessment TEXT, question_text TEXT)
+RETURNS integer
+AS $$
+		DECLARE assessment_question_count integer;
+		BEGIN
+			SELECT COUNT(*) INTO assessment_question_count FROM get_test_go_recruiter_assessment
+			JOIN get_test_go_recruiter_assessment_question
+				ON get_test_go_recruiter_assessment.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
+			JOIN get_test_go_question
+				ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
+			WHERE get_test_go_recruiter_assessment.recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
+			AND assessment_name = name_of_assessment;
+		
+			RETURN assessment_question_count;
+		END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE create_recruiter_assessment(
+	IN recruiter_email VARCHAR(150),
+	IN name_of_assessment TEXT, 
+	IN details_of_assessment TEXT, 
+	IN type_of_assessment INT4
+)
+ LANGUAGE plpgsql
+AS $procedure$
+	begin
+		INSERT INTO get_test_go_recruiter_assessment(recruiter_id, assessment_name, assessment_details, assessment_type)
+		VALUES((SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email), name_of_assessment, details_of_assessment, type_of_assessment);
+		commit;
+	end;
+$procedure$;
+
+CREATE OR REPLACE PROCEDURE add_assessment_mcq(IN recruiter_email VARCHAR(150), IN name_of_assessment character varying, IN mcq_question text, IN option_one text, IN option_two text, IN option_three text, IN option_four text, IN correct_answer text)
+LANGUAGE plpgsql
+AS $procedure$
+	BEGIN
+		INSERT INTO get_test_go_question(question_type, question) VALUES(1, mcq_question);
+		WITH CTE_recruiter_id AS(
+			SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email
+		)
+		INSERT INTO get_test_go_recruiter_assessment_question(recruiter_id, assessment_id, question_id)
+		VALUES((SELECT recruiter_id FROM CTE_recruiter_id), (SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE assessment_name = name_of_assessment AND recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id)), (SELECT question_id FROM get_test_go_question WHERE question = mcq_question));		
+		INSERT INTO get_test_go_mcq_answer(question_id, option_one, option_two, option_three, option_four, correct_answer)
+		VALUES((SELECT question_id FROM get_test_go_question WHERE question = mcq_question), option_one, option_two, option_three, option_four, correct_answer);
+		
+		commit;
+	end;
+$procedure$;
+
+CREATE TABLE get_test_go_recruiter_assessment_question(
+	recruiter_id int4 NOT NULL,
+	assessment_id int4 NOT NULL,
+	question_id int4 NOT NULL,
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id),
+	CONSTRAINT fk_question_id FOREIGN KEY (question_id) REFERENCES get_test_go_question(question_id)
+);
+
+CREATE OR REPLACE FUNCTION get_recruiter_assessment_mcq_questions(recruiter_email varchar(150), name_of_assessment TEXT)
+RETURNS SETOF RECORD AS
+$$
+	WITH CTE_recruiter_assessments AS(
+		SELECT
+			*
+		FROM get_test_go_recruiter_assessment
+		WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email)
+	),
+	CTE_recruiter_assessments_questions AS (
+		SELECT
+			CTE_recruiter_assessments.recruiter_id,
+			CTE_recruiter_assessments.assessment_id,
+			CTE_recruiter_assessments.assessment_name,
+			CTE_recruiter_assessments.assessment_details,
+			CTE_recruiter_assessments.assessment_type,
+			get_test_go_question.question_id,
+			get_test_go_question.question_type,
+			get_test_go_question.question
+		FROM CTE_recruiter_assessments
+		JOIN get_test_go_recruiter_assessment_question
+			ON CTE_recruiter_assessments.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
+		JOIN get_test_go_question
+			ON get_test_go_recruiter_assessment_question.question_id = get_test_go_question.question_id
+		WHERE get_test_go_question.question_type = 1 -- MCQ Question
+	)
+	SELECT 
+		CTE_recruiter_assessments_questions.recruiter_id,
+		CTE_recruiter_assessments_questions.assessment_name,
+		CTE_recruiter_assessments_questions.assessment_details,
+		CTE_recruiter_assessments_questions.assessment_type,
+		CTE_recruiter_assessments_questions.question_id,
+		CTE_recruiter_assessments_questions.question_type,
+		CTE_recruiter_assessments_questions.question,
+		get_test_go_mcq_answer.option_one,
+		get_test_go_mcq_answer.option_two,
+		get_test_go_mcq_answer.option_three,
+		get_test_go_mcq_answer.option_four,
+		get_test_go_mcq_answer.correct_answer
+	FROM CTE_recruiter_assessments_questions
+	JOIN get_test_go_mcq_answer
+		ON CTE_recruiter_assessments_questions.question_id = get_test_go_mcq_answer.question_id
+$$ LANGUAGE SQL STABLE
+
+CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_mcq_question_with_answer
+AS
+	WITH CTE_recruiter_assessments AS(
+		SELECT * FROM get_test_go_recruiter_assessment
+	),
+	CTE_recruiter_assessments_questions AS (
+		SELECT
+			CTE_recruiter_assessments.recruiter_id,
+			CTE_recruiter_assessments.assessment_id,
+			CTE_recruiter_assessments.assessment_name,
+			CTE_recruiter_assessments.assessment_details,
+			CTE_recruiter_assessments.assessment_type,
+			get_test_go_question.question_id,
 			get_test_go_question.question_type,
 			get_test_go_question.question
 		FROM CTE_recruiter_assessments
