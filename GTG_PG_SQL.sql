@@ -448,7 +448,31 @@ AS
 		ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_job.recruiter_id
 	JOIN get_test_go_job_types
 		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
-		
+
+----------------------------------------------------------------------------------------------------------------------
+-- BELOW QUERIES ARE FROM THE 'Get_test_Go_Addon' Database for IQ and EQ
+----------------------------------------------------------------------------------------------------------------------
+
+CREATE TABLE iq_question(
+	question_id SERIAL PRIMARY KEY,
+	question TEXT UNIQUE NOT NULL,
+	option_one TEXT NOT NULL,
+	option_two TEXT NOT NULL,
+	option_three TEXT NOT NULL,
+	option_four TEXT NOT NULL,
+	correct_answer TEXT NOT NULL
+);
+
+CREATE TABLE eq_question(
+	question_id SERIAL PRIMARY KEY,
+	question TEXT UNIQUE NOT NULL,
+	option_one TEXT NOT NULL,
+	option_two TEXT NOT NULL,
+	option_three TEXT NOT NULL,
+	option_four TEXT NOT NULL,
+	correct_answer TEXT NOT NULL
+);
+
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE DUPLICATE BUT ARE COPED IN CASE IF SOMETHING IS MISSING FROM THE ABOVE CODE
 ----------------------------------------------------------------------------------------------------------------------

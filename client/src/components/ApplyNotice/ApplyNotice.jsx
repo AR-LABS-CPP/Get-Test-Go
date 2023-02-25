@@ -1,10 +1,18 @@
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const ApplyNotice = (props) => {
     const navigate = useNavigate()
 
+    const { state } = useLocation()
+
     const handleYes = () => {
-        navigate('/job-application')
+        navigate('/job-application', {
+            state: {
+                jobName: state.jobName,
+                candidateEmail: state.candidateEmail,
+                recruiterEmail: state.recruiterEmail
+            }
+        })
     }
 
     const handleNo = () => {
