@@ -49,7 +49,7 @@ const NavBar = () => {
                     :
                     <div className="flex w-full md:w-[60%] items-center md:justify-end mt-3 md:mt-0 lg:mt-0">
                         <NavBarLink title='Home' navigateURL='/candidate-main-page' />
-                        <NavBarLink title='View Jobs' navigateURL='/view-jobs' />
+                        <NavBarLink title='View Jobs' navigateURL='/candidate-jobs' />
                         <NavBarLink title='Results' navigateURL='/results' />
                         <NavBarLink title='Log out' clickHandler={logoutHandler} />
                     </div>

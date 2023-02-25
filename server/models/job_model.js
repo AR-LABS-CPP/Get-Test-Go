@@ -3,6 +3,17 @@ const pool = require("../db")
 const job_types_table_name = "get_test_go_job_types"
 const recruiter_job_table_name = "get_test_go_recruiter_job"
 
+const getAllJobs = () => {
+    return new Promise('SELECT * FROM get_test_go_recruiter_job_with_details', (error, results) => {
+        if(error) {
+            console.log(error)
+            reject(error)
+        }
+
+        resolve(results.rows)
+    })
+}
+
 const getJobTypes = () => {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT job_type_name, job_type_details FROM ${job_types_table_name}`, (error, results) => {
@@ -93,6 +104,7 @@ const getJobDetails = (job_name, recruiter_email) => {
 
 module.exports = {
     getJobTypes,
+    getAllJobs,
     addNewJob,
     bindJobAndAssessment,
     jobAlreadyExists,

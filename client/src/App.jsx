@@ -27,6 +27,7 @@ import CreateNewAssessment from './pages/CreateNewAssessment/CreateNewAssessment
 import ViewAssessment from "./pages/ViewAssessment/ViewAssessment"
 import CreateNewJob from './pages/CreateNewJob/CreateNewJob'
 import AddQuestions from './pages/AddQuestions/AddQuestions'
+import CandidateJobs from "./pages/CandidateJobs/CandidateJobs"
 
 const App = () => {
   const Auth = ({ children }) => {
@@ -68,6 +69,7 @@ const App = () => {
         <Route path='/create-job' element={<Auth><CreateNewJob /></Auth>} />
         <Route path='/add-questions' element={<Auth><AddQuestions /></Auth>} />
         <Route path='/recruiter-jobs' element={<Auth><Jobs /></Auth>} />
+        <Route path='/candidate-jobs' element={<Auth><CandidateJobs /></Auth>} />
         <Route path='/recruit' element={<Auth><Recruit /></Auth>} />
         <Route path='/results' element={<Auth><Results /></Auth>} />
         <Route path='/view-recruiter-job' element={<Auth><ViewJob /></Auth>} />

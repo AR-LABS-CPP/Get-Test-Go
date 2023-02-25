@@ -431,6 +431,23 @@ AS
 	JOIN get_test_go_recruiter_assessment
 		ON get_test_go_recruiter_job_assessment.assessment_id = get_test_go_recruiter_assessment.assessment_id
 		
+CREATE OR REPLACE VIEW get_test_go_recruiter_job_with_details
+AS 
+	SELECT
+		get_test_go_recruiter.recruiter_id,
+		get_test_go_recruiter.first_name,
+		get_test_go_recruiter.last_name,
+		get_test_go_recruiter.email,
+		get_test_go_recruiter_job.job_id,
+		get_test_go_recruiter_job.job_details,
+		get_test_go_job_types.job_type_name,
+		get_test_go_job_types.job_type_details
+	FROM get_test_go_recruiter
+	JOIN get_test_go_recruiter_job
+		ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_job.recruiter_id
+	JOIN get_test_go_job_types
+		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
+		
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE DUPLICATE BUT ARE COPED IN CASE IF SOMETHING IS MISSING FROM THE ABOVE CODE
 ----------------------------------------------------------------------------------------------------------------------

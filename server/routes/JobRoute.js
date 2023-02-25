@@ -2,6 +2,7 @@ const express = require("express")
 const jobRoute = express.Router()
 
 const jobModel = require("../models/job_model.js")
+const userModel = require("../models/user_model.js")
 
 jobRoute.get("/types", (_, res) => {
     jobModel.getJobTypes().then(response => {
@@ -11,9 +12,17 @@ jobRoute.get("/types", (_, res) => {
     })
 })
 
+jobRoute.post("/all", (req, res) => {
+    userModel.emailExists(req.body.candidateEmail).then(_ => {
+        jobModel.getAllJobs()
+            .then(response => res.status(200).send(response))
+            .catch(error => res.status(500).send(error))
+    })
+})
+
 jobRoute.post("/new", (req, res) => {
     jobModel.jobAlreadyExists(req.body.recruiterEmail, req.body.jobName).then(response => {
-        if(response) {
+        if (response) {
             res.status(409).send("A job with the same name already exists")
         }
         else {
