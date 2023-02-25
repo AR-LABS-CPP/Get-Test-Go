@@ -12,7 +12,7 @@ const Jobs = () => {
     const [recruiterJobs, setRecruiterJobs] = useState([])
 
     const handleViewJobDetails = (job_name) => {
-        navigate("/view-job", {
+        navigate("/view-recruiter-job", {
             state: {
                 jobName: job_name,
                 recruiterEmail: recruiterEmail
