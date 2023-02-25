@@ -93,7 +93,11 @@ const recruiterAssessmentExists = (recruiter_email, assessment_name) => {
 
 const getRecruiterAssessments = (recruiter_email) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT assessment_name, assessment_details FROM ${recruiter_assessment_table_name} WHERE recruiter_id = (SELECT recruiter_id FROM ${recruiter_table_name} WHERE email = '${recruiter_email}')`, (error, results) => {
+        pool.query(`SELECT assessment_name, assessment_details, assessment_type_name FROM get_test_go_recruiter_assessment
+                    JOIN get_test_go_assessment_type
+                        ON get_test_go_recruiter_assessment.assessment_type = get_test_go_assessment_type.assessment_type_id
+                    WHERE recruiter_id = (SELECT recruiter_id FROM ${recruiter_table_name} WHERE email = '${recruiter_email}')`, 
+            (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)

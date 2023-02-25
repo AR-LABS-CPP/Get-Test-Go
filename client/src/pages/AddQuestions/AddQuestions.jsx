@@ -1,12 +1,12 @@
 import axios from "axios"
-import useTilg from "tilg"
+
 import { useEffect } from "react"
 import { useState } from "react"
 import { toast, Toaster } from "react-hot-toast"
 import { useLocation, useNavigate } from "react-router-dom"
 
 const AddQuestions = () => {
-    useTilg()
+    
 
     const navigate = useNavigate()
     const { state } = useLocation()

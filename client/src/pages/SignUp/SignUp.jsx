@@ -10,7 +10,7 @@
 */
 
 import { useState, useEffect } from "react"
-import useTilg from "tilg"
+
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import StyledButton from "../../components/StyledButton/StyledButton"
@@ -18,7 +18,7 @@ import InputBox from "../../components/InputBox/InputBox"
 import { toast, Toaster } from "react-hot-toast"
 
 const SignUp = () => {
-  useTilg()
+  
 
   let timeout = null
 

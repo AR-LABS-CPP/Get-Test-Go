@@ -1,4 +1,3 @@
-import useTilg from "tilg"
 import axios from "axios"
 import jwt from "jsonwebtoken"
 import { useNavigate } from "react-router-dom"
@@ -6,8 +5,6 @@ import AssessmentCard from "../../components/AssessmentCard/AssessmentCard"
 import { useEffect, useState } from "react"
 
 const Assessments = () => {
-    useTilg()
-
     const navigate = useNavigate()
 
     const [recruiterAssessments, setRecruiterAssessments] = useState([])
@@ -24,6 +21,8 @@ const Assessments = () => {
             recruiter_email: email
         }).then(response => {
             setRecruiterAssessments(response.data)
+
+            console.log(response.data)
         }).catch(error => {
             console.log(error)
         })
@@ -57,6 +56,7 @@ const Assessments = () => {
                             return <AssessmentCard
                                 cardTitle={assessment.assessment_name}
                                 cardDescription={assessment.assessment_details}
+                                badgeText={assessment.assessment_type_name}
                                 additionalStyling="max-w-xs"
                                 viewClickHandler={() => handleViewAssessmentDetails(assessment.assessment_name)}
                                 key={assessment.assessment_name} />

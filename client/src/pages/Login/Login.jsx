@@ -14,12 +14,12 @@ import StyledButton from "../../components/StyledButton/StyledButton"
 import InputBox from "../../components/InputBox/InputBox"
 import { useState } from "react"
 import { useEffect } from "react"
-import useTilg from "tilg"
+
 import axios from "axios"
 import { Toaster, toast } from "react-hot-toast"
 
 const Login = () => {
-  useTilg()
+  
 
   const navigate = useNavigate()
 

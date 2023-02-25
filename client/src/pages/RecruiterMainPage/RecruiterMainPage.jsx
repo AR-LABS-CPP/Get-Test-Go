@@ -1,10 +1,10 @@
 import jwt from "jsonwebtoken"
 import { useNavigate } from "react-router-dom"
-import useTilg from "tilg"
+
 import DashboardCard from "../../components/DashboardCard/DashboardCard"
 
 const RecruiterMainPage = () => {    
-    useTilg()
+    
 
     const navigate = useNavigate()
 

@@ -47,7 +47,6 @@ const Jobs = () => {
                                 key={recruiterJob.job_name + recruiterJob.job_details}
                                 badgeText={recruiterJob.job_type_name}
                                 cardTitle={recruiterJob.job_name}
-                                cardDescription={recruiterJob.job_details}
                                 viewClickHandler={() => handleViewJobDetails(recruiterJob.job_name)} />
                         })
                 }

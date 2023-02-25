@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken"
-import useTilg from "tilg"
+
 import { useState } from "react"
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import NavBarLink from "../NavBarLink/NavBarLink"
 
 const NavBar = () => {
-    useTilg()
+    
 
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
