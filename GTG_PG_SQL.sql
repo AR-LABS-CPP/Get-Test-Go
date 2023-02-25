@@ -141,20 +141,6 @@ AS
 	JOIN get_test_go_question
 		ON get_test_go_question.question_id = get_test_go_recruiter_assessment_question.question_id
 
-CREATE OR REPLACE PROCEDURE add_assessment_mcq(IN name_of_assessment character varying, IN mcq_question text, IN option_one text, IN option_two text, IN option_three text, IN option_four text, IN correct_answer text)
- LANGUAGE plpgsql
-AS $procedure$
-	begin
-		insert into get_test_go_question(question_type, question) values(1, mcq_question);
-		insert into get_test_go_assessment_question(assessment_id, question_id) 
-			values((select assessment_id from get_test_go_assessment where assessment_name = name_of_assessment), (select question_id from get_test_go_question where question = mcq_question));
-		insert into get_test_go_mcq_answer(question_id, option_one, option_two, option_three, option_four, correct_answer)
-			values((select question_id from get_test_go_question where question = mcq_question), option_one, option_two, option_three, option_four, correct_answer);
-		
-		commit;
-	end;
-$procedure$;
-
 CREATE OR REPLACE PROCEDURE add_assessment_mcq(IN recruiter_email VARCHAR(150), IN name_of_assessment character varying, IN mcq_question text, IN option_one text, IN option_two text, IN option_three text, IN option_four text, IN correct_answer text)
 LANGUAGE plpgsql
 AS $procedure$
