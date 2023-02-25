@@ -25,6 +25,16 @@ const CandidateJobs = () => {
         })
     }
 
+    const handleApplyForJob = (job_name, recruiter_email) => {
+        navigate("/apply-notice", {
+            state: {
+                jobName: job_name,
+                recruiterEmail: recruiter_email,
+                candidateEmail: getCandidateEmail()
+            }
+        })
+    }
+
     // Fetch all the jobs available in the database
     useEffect(() => {
         axios.post("http://localhost:4321/job/all", {
@@ -51,7 +61,9 @@ const CandidateJobs = () => {
                                     key={job.job_name + job.job_type_details}
                                     badgeText={job.job_type_name}
                                     cardTitle={job.job_name}
-                                    viewClickHandler={() => handleViewJobDetails(job.job_name, job.email)} />
+                                    applyButton={true}
+                                    viewClickHandler={() => handleViewJobDetails(job.job_name, job.email)}
+                                    applyClickHandler={() => handleApplyForJob(job.job_name, job.email)} />
                             })
                     }
                 </div>

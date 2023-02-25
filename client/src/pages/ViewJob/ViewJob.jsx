@@ -19,7 +19,7 @@ const ViewJob = () => {
 
             setJobDesc(response.data[0].job_details)
             setRecruiterEmail(response.data[0].email)
-        }).catch(error => {
+        }).catch(_ => {
             toast.error("Unable to view job details, please try again")
         })
     }, [])
