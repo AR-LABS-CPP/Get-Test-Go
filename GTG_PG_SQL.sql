@@ -439,6 +439,7 @@ AS
 		get_test_go_recruiter.last_name,
 		get_test_go_recruiter.email,
 		get_test_go_recruiter_job.job_id,
+		get_test_go_recruiter_job.job_name,
 		get_test_go_recruiter_job.job_details,
 		get_test_go_job_types.job_type_name,
 		get_test_go_job_types.job_type_details

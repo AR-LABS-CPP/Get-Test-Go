@@ -4,13 +4,15 @@ const job_types_table_name = "get_test_go_job_types"
 const recruiter_job_table_name = "get_test_go_recruiter_job"
 
 const getAllJobs = () => {
-    return new Promise('SELECT * FROM get_test_go_recruiter_job_with_details', (error, results) => {
-        if(error) {
-            console.log(error)
-            reject(error)
-        }
-
-        resolve(results.rows)
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM get_test_go_recruiter_job_with_details', (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+    
+            resolve(results.rows)
+        })
     })
 }
 
