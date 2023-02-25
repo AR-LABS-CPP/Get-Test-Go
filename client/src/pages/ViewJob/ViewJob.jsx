@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
+import { toast, Toaster } from "react-hot-toast"
 import { useLocation } from "react-router-dom"
 
 const ViewJob = () => {
@@ -14,18 +15,18 @@ const ViewJob = () => {
             jobName: state.jobName,
             recruiterEmail: state.recruiterEmail
         }).then(response => {
-            console.log(response.data)
             setJobDetails(response.data)
 
             setJobDesc(response.data[0].job_details)
             setRecruiterEmail(response.data[0].email)
         }).catch(error => {
-            console.log(error)
+            toast.error("Unable to view job details, please try again")
         })
     }, [])
 
     return (
         <div className="flex flex-col items-center mt-5">
+            <Toaster />
             <div className="w-full px-6">
                 <div className="bg-white border-[1px] p-4 flex flex-col">
                     <p className="text-3xl font-bold text-center">{state.jobName}</p>

@@ -1,7 +1,7 @@
 import axios from "axios"
 import jwt from "jsonwebtoken"
 import { useEffect, useState } from "react"
-import { toast } from "react-hot-toast"
+import { toast, Toaster } from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 
 import JobCard from "../../components/JobCard/JobCard"
@@ -31,13 +31,14 @@ const CandidateJobs = () => {
             candidateEmail: getCandidateEmail()
         }).then(response => {
             setAvailableJobs(response.data)
-        }).catch(error => {
+        }).catch(_ => {
             toast.error("Unable to get jobs, please try again")
         })
     }, [])
 
     return (
         <>
+            <Toaster />
             <p className="mt-10 text-4xl font-semibold text-center">Jobs for you</p>
             <div className="flex-grow mx-5  mt-6 border-t border-gray-500"></div>
             <div className="flex flex-col justify-center items-center">
