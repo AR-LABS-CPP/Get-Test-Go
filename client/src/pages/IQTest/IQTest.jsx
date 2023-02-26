@@ -14,11 +14,12 @@ const IQTest = () => {
     const [selectedOption, setSelectedOption] = useState("")
     const [buttonText, setButtonText] = useState("Next")
     const [errorText, setErrorText] = useState("")
-
     const [assessmentInfo, setAssessmentInfo] = useState({
         sectionName: "IQ",
         totalQuestions: 0,
     })
+    const [secondsLeft, setSecondsLeft] = useState(120)
+    const [timeOver, setTimeOver] = useState(false)
 
     useEffect(() => {
         axios.post("http://localhost:4321/assessment/iq/questions", {
@@ -40,14 +41,38 @@ const IQTest = () => {
     }, [])
 
     useEffect(() => {
+        if(secondsLeft === 0) {
+            setTimeOver(true)
+        }
+    }, [secondsLeft])
+
+    useEffect(() => {
+        setSecondsLeft(120)
+
         if (activeQuestion === (questions.length - 1)) {
             setButtonText("Finish")
         }
         else {
             setButtonText("Next")
         }
+
+        let intervalId = setInterval(() => {
+            setSecondsLeft((prevSeconds) => prevSeconds - 1);
+        }, 1000);
+
         console.log("ACTIVE QUESTION USE-EFFECT TRIGGERED")
+    
+        // cleanup function to clear interval when component unmounts
+        return () => clearInterval(intervalId);
     }, [activeQuestion])
+
+    const formatTime = (timeInSeconds) => {
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = timeInSeconds % 60;
+        return `${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`;
+    };
 
     const handleNextQuestion = () => {
         if (buttonText === "Finish") {
@@ -100,13 +125,14 @@ const IQTest = () => {
         axios.post("http://localhost:4321/assessment/iq/calculate_score", {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
-            if(response.data.score > 2) {
+            if (response.data.score > 2) {
                 navigate('/eq-test', {
                     state: {
                         jobName: state.jobName,
                         candidateEmail: state.candidateEmail,
                         recruiterEmail: state.recruiterEmail
-                    }
+                    },
+                    replace: true
                 })
             }
         }).catch(error => {
@@ -130,7 +156,7 @@ const IQTest = () => {
                 </div>
                 <div className="flex flex-col">
                     <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
-                    {/* <p className="text-center py-2 font-bold">{`0${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}</p> */}
+                    <p className="text-center py-2 font-bold">{formatTime(secondsLeft)}</p>
                 </div>
             </div>
 
