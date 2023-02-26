@@ -1,6 +1,7 @@
 const express = require("express")
 const assessmentsRouter = express.Router()
 
+const userModel = require("../models/user_model")
 const assessmentModel = require("../models/assessment_model")
 
 assessmentsRouter.get("/type", (_, res) => {
@@ -86,6 +87,18 @@ assessmentsRouter.post("/question/add/truefalse", (req, res) => {
                 res.status(500).send(error)
             })
         }
+    }).catch(error => {
+        res.status(500).send(error)
+    })
+})
+
+assessmentsRouter.post("/iq/questions", (req, res) => {
+    userModel.emailExists(req.body.candidateEmail).then(_ => {
+        assessmentModel.getIQQuestions().then(response => {
+            res.status(200).send(response)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
     }).catch(error => {
         res.status(500).send(error)
     })

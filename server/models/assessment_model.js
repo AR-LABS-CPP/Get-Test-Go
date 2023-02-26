@@ -1,4 +1,5 @@
 const { pool } = require("../db")
+const { addonPool } = require("../db")
 
 // TABLES
 const assessment_type_table_name = "get_test_go_assessment_type"
@@ -204,6 +205,19 @@ const createRecruiterAssessment = (recruiterEmail, assessmentName, assessmentDet
     })
 }
 
+const getIQQuestions = () => {
+    return new Promise((resolve, reject) => {
+        addonPool.query('SELECT * FROM iq_question', (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -218,5 +232,6 @@ module.exports = {
     assessmentQuestionExists,
     createRecruiterAssessment,
     getRecruiterAssessmentMCQQuestions,
-    getRecruiterAssessmentTrueFalseQuestions
+    getRecruiterAssessmentTrueFalseQuestions,
+    getIQQuestions
 }
