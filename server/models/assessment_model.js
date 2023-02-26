@@ -1,4 +1,4 @@
-const pool = require("../db")
+const { pool } = require("../db")
 
 // TABLES
 const assessment_type_table_name = "get_test_go_assessment_type"

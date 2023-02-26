@@ -1,4 +1,4 @@
-const pool = require("../db")
+const {pool} = require("../db")
 
 const job_types_table_name = "get_test_go_job_types"
 const recruiter_job_table_name = "get_test_go_recruiter_job"

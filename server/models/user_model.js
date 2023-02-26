@@ -1,14 +1,4 @@
-/*
-    Initial-Creation: 20-October-2022
-    Latest-Modification-Date: 8-December-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * Nothing
-*/
-const pool = require("../db")
+const {pool} = require("../db")
 
 const setTableName = (user) => {
     if(user === "RECRUITER") {

@@ -109,6 +109,11 @@ CREATE TABLE get_test_go_recruiter_job_assessment(
 	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
 );
 
+CREATE TABLE get_test_go_assessment_passing_threshold(
+	id SERIAL PRIMARY KEY,
+	threshold INT NOT NULL
+);
+
 INSERT INTO get_test_go_assessment_type(assessment_type_name, assessment_type_details)
 VALUES('GENERAL', 'general tests can include IQ test, EQ test etc.');
 
@@ -472,6 +477,94 @@ CREATE TABLE eq_question(
 	option_four TEXT NOT NULL,
 	correct_answer TEXT NOT NULL
 );
+
+INSERT INTO iq_question(
+	question,
+	option_one,
+	option_two,
+	option_three,
+	option_four,
+	correct_answer
+) VALUES(
+	'Insert the word that completes the first word and begins the second. Ur (. . .) Al',
+	'Band',
+	'Bun',
+	'Bane',
+	'Ban',
+	'Ban'
+),
+(
+	'Insert the missing number. Rewarded = 80 Coordinate = 75 Opinionated = ?',
+	'87',
+	'82',
+	'88',
+	'81',
+	'87'
+),
+(
+	'Insert the word that means the same as the words outside the brackets. Stake (. . . .) Mail',
+	'Fast',
+	'Post',
+	'Past',
+	'Slow',
+	'Post'
+),
+(
+	'Insert the missing number. 6 10 18 34 ?',
+	'69',
+	'68',
+	'66',
+	'61',
+	'66'
+),
+(
+	'Insert the word that means the same as the words outside the brackets. Excavation (. . .) Possession',
+	'Meen',
+	'Mess',
+	'Man',
+	'Mine',
+	'Mine'
+),
+(
+	'Insert the word that means the same as the words outside the brackets. Boat (. . . .) Skill',
+	'Raft',
+	'Craft',
+	'Rite',
+	'All of the above',
+	'Craft'
+),
+(
+	'Insert the missing word. Sting (sits) Atoms Blank (. . . .) Crams',
+	'Bars',
+	'Beer',
+	'Bing',
+	'Bang',
+	'Bars'
+),
+(
+	'Insert the word that completes the first word and begins the second. Enc (. . . ) Les',
+	'Rack',
+	'Losse',
+	'Rust',
+	'Bust',
+	'Rust'
+),
+(
+	'Underline the odd-man-out.',
+	'Giraffe',
+	'Herring',
+	'Fox',
+	'Lion',
+	'Herring'
+),
+(
+	'Insert the word that completes the first word and begins the second. Brig (. . .) Iron',
+	'Nad',
+	'And',
+	'Rod',
+	'Rig',
+	'And'
+)
 
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE DUPLICATE BUT ARE COPED IN CASE IF SOMETHING IS MISSING FROM THE ABOVE CODE
