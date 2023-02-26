@@ -104,6 +104,10 @@ assessmentsRouter.post("/iq/questions", (req, res) => {
     })
 })
 
+assessmentModel.post("/iq/get_score", (req, res) => {
+    
+})
+
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {
     assessmentModel.getRecruiterAssessments(req.body.recruiter_email).then(response => {
         res.status(200).send(response)
