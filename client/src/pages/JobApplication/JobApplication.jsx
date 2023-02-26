@@ -1,9 +1,11 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
 
 const JobApplication = () => {
+    const navigate = useNavigate()
+
     const { state } = useLocation()
 
     const [questions, setQuestions] = useState([])
@@ -18,7 +20,7 @@ const JobApplication = () => {
         }).then(response => {
             setQuestions(response.data)
 
-            if(localStorage.getItem("CANDIDATE_ANSWERS")) {
+            if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                 localStorage.removeItem("CANDIDATE_ANSWERS")
             }
         }).catch(error => {
@@ -36,25 +38,27 @@ const JobApplication = () => {
     }, [activeQuestion])
 
     const handleNextQuestion = () => {
-        if(buttonText === "Finish") {
+        if (buttonText === "Finish") {
             handleFinish()
         }
         else {
-            if(selectedOption == "") {
+            if (selectedOption == "") {
                 setErrorText("Please select an option")
             }
             else {
-                if(localStorage.getItem("CANDIDATE_ANSWERS")) {
+                if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
                     newAnswers.push(selectedOption)
-    
+
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
-    
-                    console.log(localStorage.getItem("CANDIDATE_ANSWERS"))
+
+                    setSelectedOption("")
+                    setErrorText("")
+                    setActiveQuestion(prevValue => prevValue + 1)
                 }
                 else {
                     let answers = [selectedOption]
-    
+
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
 
                     setSelectedOption("")
@@ -70,29 +74,39 @@ const JobApplication = () => {
         console.log(selectedOption)
     }
 
-    const handlePreviousQuestion = () => {
-        setActiveQuestion(prevValue => prevValue - 1)
-    }
-
     const handleFinish = () => {
+        let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
+        newAnswers.push(selectedOption)
+
+        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
+
+        setSelectedOption("")
+        setErrorText("")
+
         console.log(JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")))
+
+        navigate("/candidate-jobs")
     }
 
     return (
         <div>
             <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
                 <div className="flex flex-col">
-                    <p className="rounded-tr-lg rounded-tl-lg md:rounded-tr-none lg:rounded-tr-none bg-blue-500 w-full text-white text-center py-2 font-bold">Total Time</p>
-                    <p className="text-center py-2 font-bold">00:00</p>
+                    <p className="rounded-tr-lg rounded-tl-lg md:rounded-tr-none lg:rounded-tr-none bg-blue-500 w-full text-white text-center py-2 font-bold">Section</p>
+                    <p className="text-center py-2 font-bold">IQ</p>
                 </div>
                 <div className="flex flex-col">
-                    <p className="bg-blue-500 w-full text-white text-center py-2 font-bold">Section</p>
-                    <p className="text-center py-2 font-bold">IQ</p>
+                    <p className="bg-blue-500 w-full text-white text-center py-2 font-bold">Total Questions</p>
+                    <p className="text-center py-2 font-bold">0</p>
                 </div>
                 <div className="flex flex-col">
                     <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
                     <p className="text-center py-2 font-bold">00:00</p>
                 </div>
+            </div>
+
+            <div className="w-full text-center">
+                <span className="text-sm text-red-500">{errorText}</span>
             </div>
 
             {
@@ -111,11 +125,6 @@ const JobApplication = () => {
             }
 
             <div className="w-full flex justify-center gap-x-3 text-white">
-                {
-                    activeQuestion > 0
-                    &&
-                    <button onClick={handlePreviousQuestion} className="bg-blue-600 hover:bg-blue-500 px-10 py-2 rounded-md">Prev</button>
-                }
                 <button onClick={handleNextQuestion} className="bg-blue-600 hover:bg-blue-500 px-10 py-2 rounded-md">
                     {
                         buttonText
