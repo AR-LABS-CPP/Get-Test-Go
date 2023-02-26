@@ -104,12 +104,22 @@ assessmentsRouter.post("/iq/questions", (req, res) => {
     })
 })
 
+assessmentsRouter.post("/eq/questions", (req, res) => {
+    userModel.emailExists(req.body.candidateEmail).then(_ => {
+        
+    })
+})
+
 assessmentsRouter.post("/iq/calculate_score", (req, res) => {
     assessmentModel.calculateIQScore(req.body.candidateAnswers).then(response => {
         res.status(200).send({score: response})
     }).catch(error => {
         res.status(500).send(error)
     })
+})
+
+assessmentsRouter.post("/eq/calculate_score", (req, res) => {
+    
 })
 
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {

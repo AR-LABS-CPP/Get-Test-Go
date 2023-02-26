@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
+import { Toaster, toast } from "react-hot-toast"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
 
 const JobApplication = () => {
@@ -13,6 +14,12 @@ const JobApplication = () => {
     const [selectedOption, setSelectedOption] = useState("")
     const [buttonText, setButtonText] = useState("Next")
     const [errorText, setErrorText] = useState("")
+
+    const [assessmentInfo, setAssessmentInfo] = useState({
+        sectionName: "IQ",
+        totalQuestions: 0,
+        timeRemainingForCurrentQuestion: "00:00"
+    })
 
     useEffect(() => {
         axios.post("http://localhost:4321/assessment/iq/questions", {
@@ -85,23 +92,30 @@ const JobApplication = () => {
 
         console.log(JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")))
 
-        navigate("/candidate-jobs")
+        axios.post("http://localhost:4321/assessment/iq/calculate_score", {
+            candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
+        }).then(response => {
+            toast.success(`Your Score is: ${response.data.score}`, )
+        }).catch(error => {
+            console.log(error)
+        })
     }
 
     return (
         <div>
+            <Toaster />
             <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
                 <div className="flex flex-col">
                     <p className="rounded-tr-lg rounded-tl-lg md:rounded-tr-none lg:rounded-tr-none bg-blue-500 w-full text-white text-center py-2 font-bold">Section</p>
-                    <p className="text-center py-2 font-bold">IQ</p>
+                    <p className="text-center py-2 font-bold">{assessmentInfo.sectionName}</p>
                 </div>
                 <div className="flex flex-col">
                     <p className="bg-blue-500 w-full text-white text-center py-2 font-bold">Total Questions</p>
-                    <p className="text-center py-2 font-bold">0</p>
+                    <p className="text-center py-2 font-bold">{assessmentInfo.totalQuestions}</p>
                 </div>
                 <div className="flex flex-col">
                     <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
-                    <p className="text-center py-2 font-bold">00:00</p>
+                    <p className="text-center py-2 font-bold">{assessmentInfo.timeRemainingForCurrentQuestion}</p>
                 </div>
             </div>
 
