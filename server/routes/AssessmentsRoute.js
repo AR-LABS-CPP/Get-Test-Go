@@ -106,7 +106,13 @@ assessmentsRouter.post("/iq/questions", (req, res) => {
 
 assessmentsRouter.post("/eq/questions", (req, res) => {
     userModel.emailExists(req.body.candidateEmail).then(_ => {
-        
+        assessmentModel.getEQQuestions().then(response => {
+            res.status(200).send(response)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+    }).catch(error => {
+        res.status(500).send(error)
     })
 })
 

@@ -218,6 +218,19 @@ const getIQQuestions = () => {
     })
 }
 
+const getEQQuestions = () => {
+    return new Promise((resolve, reject) => {
+        addonPool.query('SELECT * FROM eq_question', (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 const calculateScore = (answers, tableName) => {
     let score = 0
 
@@ -275,6 +288,7 @@ module.exports = {
     getRecruiterAssessmentMCQQuestions,
     getRecruiterAssessmentTrueFalseQuestions,
     getIQQuestions,
+    getEQQuestions,
     calculateIQScore,
     calculateEQScore
 }
