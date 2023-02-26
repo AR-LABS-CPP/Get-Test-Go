@@ -19,7 +19,6 @@ const IQTest = () => {
         totalQuestions: 0,
     })
     const [secondsLeft, setSecondsLeft] = useState(120)
-    const [timeOver, setTimeOver] = useState(false)
 
     useEffect(() => {
         axios.post("http://localhost:4321/assessment/iq/questions", {
@@ -42,7 +41,7 @@ const IQTest = () => {
 
     useEffect(() => {
         if(secondsLeft === 0) {
-            setTimeOver(true)
+            handleNextQuestion()
         }
     }, [secondsLeft])
 
@@ -79,13 +78,10 @@ const IQTest = () => {
             handleFinish()
         }
         else {
-            if (selectedOption == "") {
-                setErrorText("Please select an option")
-            }
-            else {
+            if(secondsLeft === 0) {
                 if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                    newAnswers.push(selectedOption)
+                    newAnswers.push("NULL")
 
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
 
@@ -94,13 +90,39 @@ const IQTest = () => {
                     setActiveQuestion(prevValue => prevValue + 1)
                 }
                 else {
-                    let answers = [selectedOption]
+                    let answers = ["NULL"]
 
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
 
                     setSelectedOption("")
                     setErrorText("")
                     setActiveQuestion(prevValue => prevValue + 1)
+                }
+            }
+            else {
+                if (selectedOption == "") {
+                    setErrorText("Please select an option")
+                }
+                else {
+                    if (localStorage.getItem("CANDIDATE_ANSWERS")) {
+                        let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
+                        newAnswers.push(selectedOption)
+    
+                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
+    
+                        setSelectedOption("")
+                        setErrorText("")
+                        setActiveQuestion(prevValue => prevValue + 1)
+                    }
+                    else {
+                        let answers = [selectedOption]
+    
+                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
+    
+                        setSelectedOption("")
+                        setErrorText("")
+                        setActiveQuestion(prevValue => prevValue + 1)
+                    }
                 }
             }
         }
