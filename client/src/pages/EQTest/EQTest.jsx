@@ -21,7 +21,7 @@ const IQTest = () => {
     })
 
     useEffect(() => {
-        axios.post("http://localhost:4321/assessment/iq/questions", {
+        axios.post("http://localhost:4321/assessment/eq/questions", {
             candidateEmail: state.candidateEmail
         }).then(response => {
             setQuestions(response.data)
@@ -100,15 +100,7 @@ const IQTest = () => {
         axios.post("http://localhost:4321/assessment/iq/calculate_score", {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
-            if(response.data.score > 2) {
-                navigate('/eq-test', {
-                    state: {
-                        jobName: state.jobName,
-                        candidateEmail: state.candidateEmail,
-                        recruiterEmail: state.recruiterEmail
-                    }
-                })
-            }
+            toast.success(`Your Score is: ${response.data.score}`, )
         }).catch(error => {
             console.log(error)
         })
