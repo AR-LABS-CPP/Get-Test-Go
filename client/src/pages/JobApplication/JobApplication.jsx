@@ -8,21 +8,26 @@ const JobApplication = () => {
 
     const [questions, setQuestions] = useState([])
     const [activeQuestion, setActiveQuestion] = useState(0)
-
+    const [selectedOption, setSelectedOption] = useState("")
     const [buttonText, setButtonText] = useState("Next")
+    const [errorText, setErrorText] = useState("")
 
     useEffect(() => {
         axios.post("http://localhost:4321/assessment/iq/questions", {
             candidateEmail: state.candidateEmail
         }).then(response => {
             setQuestions(response.data)
+
+            if(localStorage.getItem("CANDIDATE_ANSWERS")) {
+                localStorage.removeItem("CANDIDATE_ANSWERS")
+            }
         }).catch(error => {
             console.log(error)
         })
     }, [])
 
     useEffect(() => {
-        if(activeQuestion === (questions.length - 1)) {
+        if (activeQuestion === (questions.length - 1)) {
             setButtonText("Finish")
         }
         else {
@@ -31,7 +36,38 @@ const JobApplication = () => {
     }, [activeQuestion])
 
     const handleNextQuestion = () => {
-        setActiveQuestion(prevValue => prevValue + 1)
+        if(buttonText === "Finish") {
+            handleFinish()
+        }
+        else {
+            if(selectedOption == "") {
+                setErrorText("Please select an option")
+            }
+            else {
+                if(localStorage.getItem("CANDIDATE_ANSWERS")) {
+                    let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
+                    newAnswers.push(selectedOption)
+    
+                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
+    
+                    console.log(localStorage.getItem("CANDIDATE_ANSWERS"))
+                }
+                else {
+                    let answers = [selectedOption]
+    
+                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
+
+                    setSelectedOption("")
+                    setErrorText("")
+                    setActiveQuestion(prevValue => prevValue + 1)
+                }
+            }
+        }
+    }
+
+    const handleSelectOption = (evt) => {
+        setSelectedOption(evt.target.value)
+        console.log(selectedOption)
     }
 
     const handlePreviousQuestion = () => {
@@ -39,7 +75,7 @@ const JobApplication = () => {
     }
 
     const handleFinish = () => {
-
+        console.log(JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")))
     }
 
     return (
@@ -69,6 +105,7 @@ const JobApplication = () => {
                         optionTwo={q.option_two}
                         optionThree={q.option_three}
                         optionFour={q.option_four}
+                        handleQuestionOptionClick={handleSelectOption}
                     />
                 })
             }
@@ -77,7 +114,7 @@ const JobApplication = () => {
                 {
                     activeQuestion > 0
                     &&
-                    <button className="bg-blue-600 hover:bg-blue-500 px-10 py-2 rounded-md">Prev</button>
+                    <button onClick={handlePreviousQuestion} className="bg-blue-600 hover:bg-blue-500 px-10 py-2 rounded-md">Prev</button>
                 }
                 <button onClick={handleNextQuestion} className="bg-blue-600 hover:bg-blue-500 px-10 py-2 rounded-md">
                     {
