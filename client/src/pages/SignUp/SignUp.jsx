@@ -1,14 +1,3 @@
-/*
-    Initial-Creation: 20-October-2022
-    Latest-Modification-Date: 10-December-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * nothing
-*/
-
 import { useState, useEffect } from "react"
 
 import { useNavigate } from "react-router-dom"
