@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Toaster, toast } from "react-hot-toast"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
 
-const JobApplication = () => {
+const IQTest = () => {
     const navigate = useNavigate()
 
     const { state } = useLocation()
@@ -18,7 +18,6 @@ const JobApplication = () => {
     const [assessmentInfo, setAssessmentInfo] = useState({
         sectionName: "IQ",
         totalQuestions: 0,
-        timeRemainingForCurrentQuestion: "00:00"
     })
 
     useEffect(() => {
@@ -26,6 +25,11 @@ const JobApplication = () => {
             candidateEmail: state.candidateEmail
         }).then(response => {
             setQuestions(response.data)
+
+            setAssessmentInfo({
+                ...assessmentInfo,
+                totalQuestions: response.data.length
+            })
 
             if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                 localStorage.removeItem("CANDIDATE_ANSWERS")
@@ -42,6 +46,7 @@ const JobApplication = () => {
         else {
             setButtonText("Next")
         }
+        console.log("ACTIVE QUESTION USE-EFFECT TRIGGERED")
     }, [activeQuestion])
 
     const handleNextQuestion = () => {
@@ -104,6 +109,8 @@ const JobApplication = () => {
     return (
         <div>
             <Toaster />
+
+            {/* Can make a separate component to avoid markup repitition */}
             <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
                 <div className="flex flex-col">
                     <p className="rounded-tr-lg rounded-tl-lg md:rounded-tr-none lg:rounded-tr-none bg-blue-500 w-full text-white text-center py-2 font-bold">Section</p>
@@ -115,7 +122,7 @@ const JobApplication = () => {
                 </div>
                 <div className="flex flex-col">
                     <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
-                    <p className="text-center py-2 font-bold">{assessmentInfo.timeRemainingForCurrentQuestion}</p>
+                    {/* <p className="text-center py-2 font-bold">{`0${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}</p> */}
                 </div>
             </div>
 
@@ -149,4 +156,4 @@ const JobApplication = () => {
     )
 }
 
-export default JobApplication
+export default IQTest

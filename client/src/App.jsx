@@ -28,7 +28,7 @@ import ViewAssessment from "./pages/ViewAssessment/ViewAssessment"
 import CreateNewJob from './pages/CreateNewJob/CreateNewJob'
 import AddQuestions from './pages/AddQuestions/AddQuestions'
 import CandidateJobs from "./pages/CandidateJobs/CandidateJobs"
-import JobApplication from "./pages/JobApplication/JobApplication"
+import IQTest from "./pages/IQTest/IQTest"
 import ApplyNotice from "./components/ApplyNotice/ApplyNotice"
 
 const App = () => {
@@ -73,7 +73,7 @@ const App = () => {
         <Route path='/recruiter-jobs' element={<Auth><Jobs /></Auth>} />
         <Route path='/candidate-jobs' element={<Auth><CandidateJobs /></Auth>} />
         <Route path='/apply-notice' element={<Auth><ApplyNotice /></Auth>} />
-        <Route path='/job-application' element={<Auth><JobApplication /></Auth>} />
+        <Route path='/iq-test' element={<Auth><IQTest /></Auth>} />
         <Route path='/recruit' element={<Auth><Recruit /></Auth>} />
         <Route path='/results' element={<Auth><Results /></Auth>} />
         <Route path='/view-recruiter-job' element={<Auth><ViewJob /></Auth>} />
