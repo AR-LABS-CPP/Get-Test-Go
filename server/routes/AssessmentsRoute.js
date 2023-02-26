@@ -104,8 +104,12 @@ assessmentsRouter.post("/iq/questions", (req, res) => {
     })
 })
 
-assessmentModel.post("/iq/get_score", (req, res) => {
-    
+assessmentsRouter.post("/iq/calculate_score", (req, res) => {
+    assessmentModel.calculateIQScore(req.body.candidateAnswers).then(response => {
+        res.status(200).send({score: response})
+    }).catch(error => {
+        res.status(500).send(error)
+    })
 })
 
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {

@@ -218,6 +218,31 @@ const getIQQuestions = () => {
     })
 }
 
+const calculateIQScore = (answers) => {
+    let score = 0
+
+    return new Promise((resolve, reject) => {
+        addonPool.query('SELECT correct_answer FROM iq_question', (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+    
+            if(results.rows.length !== answers.length) {
+                reject("Unable to calculate score")
+            }
+
+            for(let idx = 0; idx < answers.length; idx++) {
+                if(results.rows[idx].correct_answer === answers[idx]) {
+                    score += 1
+                }
+            }
+
+            resolve(score)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -233,5 +258,6 @@ module.exports = {
     createRecruiterAssessment,
     getRecruiterAssessmentMCQQuestions,
     getRecruiterAssessmentTrueFalseQuestions,
-    getIQQuestions
+    getIQQuestions,
+    calculateIQScore
 }
