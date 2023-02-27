@@ -147,11 +147,31 @@ const EQTest = () => {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
             if (response.data.score > 2) {
+                let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
+                scores.push(["EQ", response.data.score, "PASSED"])
+
+                localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
+
                 navigate('/technical-test', {
                     state: {
                         jobName: state.jobName,
                         candidateEmail: state.candidateEmail,
                         recruiterEmail: state.recruiterEmail
+                    },
+                    replace: true
+                })
+            }
+            else if(response.data.score < 2) {
+                let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
+                scores.push(["EQ", response.data.score, "DIDN'T PASS"])
+
+                console.log(scores)
+
+                navigate("/scores", {
+                    state: {
+                        scoresArray: [
+                            scores
+                        ]
                     },
                     replace: true
                 })

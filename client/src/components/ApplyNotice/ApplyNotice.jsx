@@ -11,7 +11,8 @@ const ApplyNotice = (props) => {
                 jobName: state.jobName,
                 candidateEmail: state.candidateEmail,
                 recruiterEmail: state.recruiterEmail
-            }
+            },
+            replace: true
         })
     }
 

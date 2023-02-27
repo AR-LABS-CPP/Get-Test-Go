@@ -147,13 +147,29 @@ const IQTest = () => {
         axios.post("http://localhost:4321/assessment/iq/calculate_score", {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
+            if(localStorage.getItem("CANDIDATE_SCORES")) {
+                localStorage.removeItem("CANDIDATE_SCORES")
+            }
+
             if (response.data.score > 2) {
+                let scores = [["IQ", response.data.score, "PASSED"]]
+
+                localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
+
+                navigate("/eq-test", {
+                    state: {
+                        jobName: state.jobName,
+                        candidateEmail: state.candidateEmail,
+                        recruiterEmail: state.recruiterEmail
+                    },
+                    replace: true
+                })
+            }
+            else if(response.data.score < 2) {
                 navigate("/scores", {
                     state: {
                         scoresArray: [
-                            ["IQ", 10, "Passed"], 
-                            ["EQ", 8, "Passed"], 
-                            ["Technical", 12, "Didn't Pass"]
+                            ["IQ", response.data.score, "DIDN'T PASS"] 
                         ]
                     },
                     replace: true

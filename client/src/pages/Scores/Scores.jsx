@@ -6,6 +6,7 @@ const Scores = () => {
 
     return (
         <div className="w-full flex gap-y-7 flex-col justify-center items-center h-[91vh]">
+            <p className="font-bold text-4xl py-10">Your Result</p>
             {
                 state.scoresArray.map(s => {
                     return <ScoreCard
