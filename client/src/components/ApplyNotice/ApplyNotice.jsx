@@ -14,6 +14,13 @@ const ApplyNotice = (props) => {
             },
             replace: true
         })
+        // navigate('/technical-test', {
+        //     state: {
+        //         jobName: state.jobName,
+        //         candidateEmail: state.candidateEmail,
+        //         recruiterEmail: state.recruiterEmail
+        //     },
+        // })
     }
 
     const handleNo = () => {
