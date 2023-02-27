@@ -31,6 +31,7 @@ import CandidateJobs from "./pages/CandidateJobs/CandidateJobs"
 import ApplyNotice from "./components/ApplyNotice/ApplyNotice"
 import IQTest from "./pages/IQTest/IQTest"
 import EQTest from "./pages/EQTest/EQTest"
+import Scores from "./pages/Scores/Scores"
 
 const App = () => {
   const Auth = ({ children }) => {
@@ -76,6 +77,7 @@ const App = () => {
         <Route path='/apply-notice' element={<Auth><ApplyNotice /></Auth>} />
         <Route path='/iq-test' element={<Auth><IQTest /></Auth>} />
         <Route path='/eq-test' element={<Auth><EQTest /></Auth>} />
+        <Route path='/scores' element={<Auth><Scores /></Auth>} />
         <Route path='/recruit' element={<Auth><Recruit /></Auth>} />
         <Route path='/results' element={<Auth><Results /></Auth>} />
         <Route path='/view-recruiter-job' element={<Auth><ViewJob /></Auth>} />

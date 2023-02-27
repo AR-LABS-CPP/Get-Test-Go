@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
+import Scores from "../Scores/Scores"
 
 const IQTest = () => {
     const navigate = useNavigate()
@@ -147,11 +148,13 @@ const IQTest = () => {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
             if (response.data.score > 2) {
-                navigate('/eq-test', {
+                navigate("/scores", {
                     state: {
-                        jobName: state.jobName,
-                        candidateEmail: state.candidateEmail,
-                        recruiterEmail: state.recruiterEmail
+                        scoresArray: [
+                            ["IQ", 10, "Passed"], 
+                            ["EQ", 8, "Passed"], 
+                            ["Technical", 12, "Didn't Pass"]
+                        ]
                     },
                     replace: true
                 })
