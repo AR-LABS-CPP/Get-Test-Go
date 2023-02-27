@@ -564,7 +564,90 @@ INSERT INTO iq_question(
 	'Rod',
 	'Rig',
 	'And'
-)
+);
+
+INSERT INTO eq_question(question, option_one, option_two, option_three, option_four, correct_answer)
+VALUES 
+(
+	'Which of the following best describes emotional intelligence?', 
+	'The ability to read and understand one''s own emotions', 
+	'The ability to read and understand other people''s emotions', 
+	'The ability to manage one''s own emotions', 
+	'All of the above', 
+	'All of the above'
+),
+(
+	'Which of the following is an example of emotional self-awareness?', 
+	'Recognizing when you feel angry', 
+	'Recognizing when someone else is angry', 
+	'Controlling your anger when you feel it', 
+	'None of the above', 
+	'Recognizing when you feel angry'
+),
+(
+	'What is empathy?', 
+	'The ability to understand and share the feelings of others', 
+	'The ability to control one''s own emotions', 
+	'The ability to make decisions based on emotions', 
+	'None of the above', 
+	'The ability to understand and share the feelings of others'
+),
+(
+	'Which of the following is an example of emotional regulation?', 
+	'Taking a deep breath to calm down before responding to someone who has made you angry', 
+	'Yelling at someone who has made you angry', 
+	'Ignoring someone who has made you angry', 
+	'None of the above', 
+	'Taking a deep breath to calm down before responding to someone who has made you angry'
+),
+(
+	'What is social awareness?', 
+	'The ability to understand and navigate social situations', 
+	'The ability to understand and manage one''s own emotions', 
+	'The ability to understand and share the feelings of others', 
+	'None of the above', 
+	'The ability to understand and share the feelings of others'
+),
+(
+	'Which of the following is an example of emotional intelligence?', 
+	'Recognizing and managing your own emotions', 
+	'Speaking multiple languages', 
+	'Solving complex math problems', 
+	'All of the above', 
+	'Recognizing and managing your own emotions'
+),
+(
+	'What is emotional management?', 
+	'The ability to recognize and manage your own emotions', 
+	'The ability to recognize and manage the emotions of others', 
+	'The ability to understand and navigate social situations', 
+	'None of the above', 
+	'The ability to recognize and manage your own emotions'
+),
+(
+	'What is emotional self-control?', 
+	'The ability to regulate and manage one''s own emotions', 
+	'The ability to understand and manage other people''s emotions', 
+	'The ability to communicate effectively in social situations', 
+	'None of the above', 
+	'The ability to regulate and manage one''s own emotions'
+),
+(
+	'What is emotional expression?', 
+	'The ability to effectively communicate one''s own emotions', 
+	'The ability to read and understand other people''s emotions', 
+	'The ability to navigate complex social situations', 
+	'None of the above', 
+	'The ability to effectively communicate one''s own emotions'
+),
+(
+	'What is emotional perception?', 
+	'The ability to accurately recognize and identify emotions in oneself and others', 
+	'The ability to regulate and manage one''s own emotions', 
+	'The ability to communicate effectively in social situations', 
+	'None of the above', 
+	'The ability to accurately recognize and identify emotions in oneself and others'
+);
 
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE DUPLICATE BUT ARE COPED IN CASE IF SOMETHING IS MISSING FROM THE ABOVE CODE
