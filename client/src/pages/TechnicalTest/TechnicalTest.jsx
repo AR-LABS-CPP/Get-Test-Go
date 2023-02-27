@@ -6,8 +6,6 @@ import QuestionBox from "../../components/QuestionBox/QuestionBox"
 const TechnicalTest = (props) => {
     const navigate = useNavigate()
 
-    // const { state } = useLocation()
-
     const [questions, setQuestions] = useState(props.questions)
     const [activeQuestion, setActiveQuestion] = useState(0)
     const [mcqselectedOption, setMCQSelectedOption] = useState("")
@@ -56,13 +54,16 @@ const TechnicalTest = (props) => {
 
     const handleNextQuestion = () => {
         if (buttonText === "Finish") {
-            let currentAssessmentAnswers = []
+            if(questions[activeQuestion].question_type_name === "MCQ") {
+                let finalAsnwers = [...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")), mcqselectedOption]
 
-            currentAssessmentAnswers.push([
-                props.assessmentName,
-                ...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")),
-                10
-            ])
+                props.storeAnswersCB(props.assessmentName, finalAsnwers)
+            }
+            else if(questions[activeQuestion].question_type_name === "TrueFalse") {
+                let finalAsnwers = [...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")), tfSelectedOption]
+
+                props.storeAnswersCB(props.assessmentName, finalAsnwers)
+            }
 
             localStorage.removeItem("CANDIDATE_ANSWERS")
 
@@ -144,56 +145,7 @@ const TechnicalTest = (props) => {
             setTFSelectedOption(evt.target.value)
         }
     }
-
-    // const handleFinish = () => {
-    //     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-    //     newAnswers.push(selectedOption)
-
-    //     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
-
-    //     setSelectedOption("")
-    //     setErrorText("")
-
-    //     console.log(JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")))
-
-    //     axios.post("http://localhost:4321/assessment/technical/calculate_score", {
-    //         candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-    //     }).then(response => {
-    //         if (response.data.score > 2) {
-    //             let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
-    //             scores.push(["EQ", response.data.score, "PASSED"])
-
-    //             localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
-
-    //             navigate('/technical-test', {
-    //                 state: {
-    //                     jobName: state.jobName,
-    //                     candidateEmail: state.candidateEmail,
-    //                     recruiterEmail: state.recruiterEmail
-    //                 },
-    //                 replace: true
-    //             })
-    //         }
-    //         else if (response.data.score < 2) {
-    //             let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
-    //             scores.push([props.questions[0].assessment_name, response.data.score, "DIDN'T PASS"])
-
-    //             console.log(scores)
-
-    //             navigate("/scores", {
-    //                 state: {
-    //                     scoresArray: [
-    //                         scores
-    //                     ]
-    //                 },
-    //                 replace: true
-    //             })
-    //         }
-    //     }).catch(error => {
-    //         console.log(error)
-    //     })
-    // }
-
+    
     return (
         props.visible
         &&

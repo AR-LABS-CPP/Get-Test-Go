@@ -8,16 +8,7 @@ const TechnicalTestRouter = () => {
 
     const [assessments, setAssessments] = useState([])
     const [activeAssessment, setActiveAssessment] = useState(0)
-
-    const handleNextAssessment = () => {
-        if(activeAssessment === (assessments.length - 1)) {
-            console.log("Show the results please")
-        }
-        else {
-            setActiveAssessment((prevValue) => prevValue + 1)
-        }
-    }
-
+    
     useEffect(() => {
         axios.post("http://localhost:4321/job/assessments/questions", {
             recruiterEmail: state.recruiterEmail,
@@ -35,6 +26,20 @@ const TechnicalTestRouter = () => {
         })
     }, [])
 
+    const handleNextAssessment = () => {
+        if(activeAssessment === (assessments.length - 1)) {
+            console.log("Show the results please")
+        }
+        else {
+            setActiveAssessment((prevValue) => prevValue + 1)
+        }
+    }
+
+    const storeAnswers = (assessmentName, answers) => {
+        // Calculate the score and store it in local storage
+        console.log(assessmentName, answers)
+    }
+
     return (
         assessments.map((assessment, idx) => {
             return <TechnicalTest
@@ -44,6 +49,7 @@ const TechnicalTestRouter = () => {
             assessmentName={assessment[0].assessment_name} 
             totalQuestions={assessment.length}
             setActiveAssessmentCB={handleNextAssessment} 
+            storeAnswersCB={storeAnswers}
             />
         })
     )
