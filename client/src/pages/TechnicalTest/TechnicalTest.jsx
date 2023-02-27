@@ -8,6 +8,7 @@ const TechnicalTest = (props) => {
 
     // const { state } = useLocation()
 
+    const [questions, setQuestions] = useState(props.questions)
     const [activeQuestion, setActiveQuestion] = useState(0)
     const [mcqselectedOption, setMCQSelectedOption] = useState("")
     const [tfSelectedOption, setTFSelectedOption] = useState(true)
@@ -55,7 +56,17 @@ const TechnicalTest = (props) => {
 
     const handleNextQuestion = () => {
         if (buttonText === "Finish") {
-            props.handleNextAssessment()
+            let currentAssessmentAnswers = []
+
+            currentAssessmentAnswers.push([
+                props.assessmentName,
+                ...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")),
+                10
+            ])
+
+            localStorage.removeItem("CANDIDATE_ANSWERS")
+
+            props.setActiveAssessmentCB()
         }
         else {
             if (secondsLeft === 0) {
@@ -82,13 +93,19 @@ const TechnicalTest = (props) => {
                 }
             }
             else {
-                if (selectedOption == "") {
+                if(questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption === "") {
                     setErrorText("Please select an option")
                 }
                 else {
                     if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                         let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                        newAnswers.push(selectedOption)
+                        
+                        if(questions[activeQuestion].question_type_name === "MCQ") {
+                            newAnswers.push(mcqselectedOption)
+                        }
+                        else if(questions[activeQuestion].question_type_name === "TrueFalse") {
+                            newAnswers.push(tfSelectedOption)
+                        }
 
                         localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
 
@@ -98,7 +115,14 @@ const TechnicalTest = (props) => {
                         setActiveQuestion(prevValue => prevValue + 1)
                     }
                     else {
-                        let answers = [selectedOption]
+                        let answers = []
+
+                        if(questions[activeQuestion].question_type_name === "MCQ") {
+                            answers.push(mcqselectedOption)
+                        }
+                        else if(questions[activeQuestion].question_type_name === "TrueFalse") {
+                            answers.push(tfSelectedOption)
+                        }
 
                         localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
 
@@ -198,9 +222,11 @@ const TechnicalTest = (props) => {
                 props.questions.map((q, idx) => {
                     if (q.question_type_name === "MCQ") {
                         return <QuestionBox
+                            key={q + idx}
                             visible={idx === activeQuestion}
                             mcq={true}
                             truefalse={false}
+                            question={q.question}
                             optionOne={q.option_one}
                             optionTwo={q.option_two}
                             optionThree={q.option_three}
@@ -210,6 +236,7 @@ const TechnicalTest = (props) => {
                     }
                     else {
                         return <QuestionBox
+                            key={q + idx}
                             visible={idx === activeQuestion}
                             mcq={false}
                             truefalse={true}

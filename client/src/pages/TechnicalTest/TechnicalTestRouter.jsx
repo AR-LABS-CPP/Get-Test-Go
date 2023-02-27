@@ -11,7 +11,7 @@ const TechnicalTestRouter = () => {
 
     const handleNextAssessment = () => {
         if(activeAssessment === (assessments.length - 1)) {
-            // Do something
+            console.log("Show the results please")
         }
         else {
             setActiveAssessment((prevValue) => prevValue + 1)
@@ -24,6 +24,12 @@ const TechnicalTestRouter = () => {
             jobName: state.jobName
         }).then(response => {
             setAssessments(response.data)
+
+            console.log(response.data)
+
+            if(localStorage.getItem("CANDIDATE_ANSWERS")) {
+                localStorage.removeItem("CANDIDATE_ANSWERS")
+            }
         }).catch(error => {
             console.log(error)
         })
@@ -32,6 +38,7 @@ const TechnicalTestRouter = () => {
     return (
         assessments.map((assessment, idx) => {
             return <TechnicalTest
+            key={assessment + idx}
             questions={assessment} 
             visible={idx === activeAssessment}
             assessmentName={assessment[0].assessment_name} 
