@@ -2,6 +2,7 @@ const express = require("express")
 const jobRoute = express.Router()
 
 const jobModel = require("../models/job_model.js")
+const assessmentModel = require("../models/assessment_model.js")
 const userModel = require("../models/user_model.js")
 
 jobRoute.get("/types", (_, res) => {
@@ -49,6 +50,33 @@ jobRoute.post("/recruiter/jobs", (req, res) => {
     }).catch(error => {
         res.status(500).send(error)
     })
+})
+
+jobRoute.post("/assessments", async (req, res) => {
+    let assessmentQuestions = []
+
+    const recruiterJobAssessments = await jobModel.getRecruiterJobAssessments(req.body.recruiterEmail, req.body.jobName)
+
+    for(let assessment of recruiterJobAssessments) {
+        console.log(assessment)
+
+        const recruiterJobAssessmentMCQQuestions = await assessmentModel.getRecruiterAssessmentMCQQuestions(req.body.recruiterEmail, assessment.assessment_name)
+        const recruiterJobAssessmentTFQuestions = await assessmentModel.getRecruiterAssessmentTrueFalseQuestions(req.body.recruiterEmail, assessment.assessment_name)
+
+        console.log(recruiterJobAssessmentMCQQuestions)
+        console.log(recruiterJobAssessmentTFQuestions)
+
+        if(recruiterJobAssessmentMCQQuestions && recruiterJobAssessmentTFQuestions) {
+            assessmentQuestions.push([...recruiterJobAssessmentMCQQuestions, ...recruiterJobAssessmentTFQuestions])
+        }
+    }
+
+    if(assessmentQuestions.length !== 0) {
+        res.status(200).send(assessmentQuestions)
+    }
+    else {
+        res.status(500).send("Unable to fetch questions")
+    }
 })
 
 jobRoute.post("/recruiter/details", (req, res) => {

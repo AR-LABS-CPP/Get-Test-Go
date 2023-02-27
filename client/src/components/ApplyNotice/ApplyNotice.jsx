@@ -6,21 +6,21 @@ const ApplyNotice = (props) => {
     const { state } = useLocation()
 
     const handleYes = () => {
-        navigate('/iq-test', {
-            state: {
-                jobName: state.jobName,
-                candidateEmail: state.candidateEmail,
-                recruiterEmail: state.recruiterEmail
-            },
-            replace: true
-        })
-        // navigate('/technical-test', {
+        // navigate('/iq-test', {
         //     state: {
         //         jobName: state.jobName,
         //         candidateEmail: state.candidateEmail,
         //         recruiterEmail: state.recruiterEmail
         //     },
+        //     replace: true
         // })
+        navigate('/technical-test', {
+            state: {
+                jobName: state.jobName,
+                candidateEmail: state.candidateEmail,
+                recruiterEmail: state.recruiterEmail
+            },
+        })
     }
 
     const handleNo = () => {

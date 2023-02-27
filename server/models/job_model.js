@@ -91,6 +91,19 @@ const getRecruiterJobs = (recruiter_email) => {
     })
 }
 
+const getRecruiterJobAssessments = (recruiter_email, job_name) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT assessment_name from get_test_go_recruiter_job_with_required_assessments WHERE email = '${recruiter_email}' AND job_name = '${job_name}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 const getJobDetails = (job_name, recruiter_email) => {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * FROM get_test_go_recruiter_job_with_required_assessments WHERE email = '${recruiter_email}' AND job_name = '${job_name}'`, (error, results) => {
@@ -111,5 +124,6 @@ module.exports = {
     bindJobAndAssessment,
     jobAlreadyExists,
     getRecruiterJobs,
-    getJobDetails
+    getJobDetails,
+    getRecruiterJobAssessments
 }
