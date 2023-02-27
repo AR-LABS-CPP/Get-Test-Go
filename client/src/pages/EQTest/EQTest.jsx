@@ -1,10 +1,9 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Toaster, toast } from "react-hot-toast"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
 
-const IQTest = () => {
+const EQTest = () => {
     const navigate = useNavigate()
 
     const { state } = useLocation()
@@ -14,11 +13,11 @@ const IQTest = () => {
     const [selectedOption, setSelectedOption] = useState("")
     const [buttonText, setButtonText] = useState("Next")
     const [errorText, setErrorText] = useState("")
-
     const [assessmentInfo, setAssessmentInfo] = useState({
-        sectionName: "IQ",
+        sectionName: "EQ",
         totalQuestions: 0,
     })
+    const [secondsLeft, setSecondsLeft] = useState(120)
 
     useEffect(() => {
         axios.post("http://localhost:4321/assessment/eq/questions", {
@@ -40,27 +39,48 @@ const IQTest = () => {
     }, [])
 
     useEffect(() => {
+        if(secondsLeft === 0) {
+            handleNextQuestion()
+        }
+    }, [secondsLeft])
+
+    useEffect(() => {
+        setSecondsLeft(120)
+
         if (activeQuestion === (questions.length - 1)) {
             setButtonText("Finish")
         }
         else {
             setButtonText("Next")
         }
+
+        let intervalId = setInterval(() => {
+            setSecondsLeft((prevSeconds) => prevSeconds - 1);
+        }, 1000);
+
         console.log("ACTIVE QUESTION USE-EFFECT TRIGGERED")
+    
+        // cleanup function to clear interval when component unmounts
+        return () => clearInterval(intervalId);
     }, [activeQuestion])
+
+    const formatTime = (timeInSeconds) => {
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = timeInSeconds % 60;
+        return `${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}`;
+    };
 
     const handleNextQuestion = () => {
         if (buttonText === "Finish") {
             handleFinish()
         }
         else {
-            if (selectedOption == "") {
-                setErrorText("Please select an option")
-            }
-            else {
+            if(secondsLeft === 0) {
                 if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                    newAnswers.push(selectedOption)
+                    newAnswers.push("NULL")
 
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
 
@@ -69,13 +89,39 @@ const IQTest = () => {
                     setActiveQuestion(prevValue => prevValue + 1)
                 }
                 else {
-                    let answers = [selectedOption]
+                    let answers = ["NULL"]
 
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
 
                     setSelectedOption("")
                     setErrorText("")
                     setActiveQuestion(prevValue => prevValue + 1)
+                }
+            }
+            else {
+                if (selectedOption == "") {
+                    setErrorText("Please select an option")
+                }
+                else {
+                    if (localStorage.getItem("CANDIDATE_ANSWERS")) {
+                        let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
+                        newAnswers.push(selectedOption)
+    
+                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
+    
+                        setSelectedOption("")
+                        setErrorText("")
+                        setActiveQuestion(prevValue => prevValue + 1)
+                    }
+                    else {
+                        let answers = [selectedOption]
+    
+                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
+    
+                        setSelectedOption("")
+                        setErrorText("")
+                        setActiveQuestion(prevValue => prevValue + 1)
+                    }
                 }
             }
         }
@@ -97,10 +143,19 @@ const IQTest = () => {
 
         console.log(JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")))
 
-        axios.post("http://localhost:4321/assessment/iq/calculate_score", {
+        axios.post("http://localhost:4321/assessment/eq/calculate_score", {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
-            toast.success(`Your Score is: ${response.data.score}`, )
+            if (response.data.score > 2) {
+                navigate('/technical-test', {
+                    state: {
+                        jobName: state.jobName,
+                        candidateEmail: state.candidateEmail,
+                        recruiterEmail: state.recruiterEmail
+                    },
+                    replace: true
+                })
+            }
         }).catch(error => {
             console.log(error)
         })
@@ -108,8 +163,6 @@ const IQTest = () => {
 
     return (
         <div>
-            <Toaster />
-
             {/* Can make a separate component to avoid markup repitition */}
             <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
                 <div className="flex flex-col">
@@ -122,7 +175,7 @@ const IQTest = () => {
                 </div>
                 <div className="flex flex-col">
                     <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
-                    {/* <p className="text-center py-2 font-bold">{`0${minutes}:${seconds < 10 ? "0" + seconds : seconds}`}</p> */}
+                    <p className="text-center py-2 font-bold">{formatTime(secondsLeft)}</p>
                 </div>
             </div>
 
@@ -156,4 +209,4 @@ const IQTest = () => {
     )
 }
 
-export default IQTest
+export default EQTest

@@ -1,7 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import { Toaster, toast } from "react-hot-toast"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
 
 const IQTest = () => {
@@ -164,8 +163,6 @@ const IQTest = () => {
 
     return (
         <div>
-            <Toaster />
-
             {/* Can make a separate component to avoid markup repitition */}
             <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
                 <div className="flex flex-col">
