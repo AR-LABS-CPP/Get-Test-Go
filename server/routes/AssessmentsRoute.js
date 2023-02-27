@@ -132,6 +132,10 @@ assessmentsRouter.post("/eq/calculate_score", (req, res) => {
     })
 })
 
+assessmentsRouter.post("/technical/calculate_score", (_, res) => {
+    res.status(200).send(5)
+})
+
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {
     assessmentModel.getRecruiterAssessments(req.body.recruiter_email).then(response => {
         res.status(200).send(response)

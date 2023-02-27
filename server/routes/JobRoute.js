@@ -52,7 +52,7 @@ jobRoute.post("/recruiter/jobs", (req, res) => {
     })
 })
 
-jobRoute.post("/assessments", async (req, res) => {
+jobRoute.post("/assessments/questions", async (req, res) => {
     let assessmentQuestions = []
 
     const recruiterJobAssessments = await jobModel.getRecruiterJobAssessments(req.body.recruiterEmail, req.body.jobName)
