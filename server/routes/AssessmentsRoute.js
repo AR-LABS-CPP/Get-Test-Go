@@ -132,16 +132,26 @@ assessmentsRouter.post("/eq/calculate_score", (req, res) => {
     })
 })
 
-assessmentsRouter.post("/technical/calculate_score", (req, res) => {
-    assessmentModel.calculateTechnicalScore(
-        req.body.recruiterEmail, 
-        req.body.assessmentName, 
-        req.body.answers
-    ).then(response => {
-        res.status(200).send({score: response})
-    }).catch(error => {
-        res.status(500).send(error)
-    })
+assessmentsRouter.post("/technical/calculate_score", async (req, res) => {
+    let technicalAssessmentScores = []
+    let assessments = req.body.candidateAnswers
+
+    for(let i = 0; i < assessments.length; i++) {
+        try {
+            const assessmentScore = await assessmentModel.calculateTechnicalScore(
+                req.body.recruiterEmail, 
+                assessments[i][0], // Assessment Name 
+                assessments[i][1] // candidate's answers
+            )
+
+            technicalAssessmentScores.push([assessments[i][0], assessmentScore])
+        }
+        catch(err) {
+            res.status(500).send("CANNOT CALCULATE SCORES, PLEASE TRY AGAIN.")
+        }
+    }
+
+    res.status(200).send(technicalAssessmentScores)
 })
 
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {
