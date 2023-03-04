@@ -133,6 +133,8 @@ assessmentsRouter.post("/eq/calculate_score", (req, res) => {
 })
 
 assessmentsRouter.post("/technical/calculate_score", async (req, res) => {
+    console.log(req.body.candidateAnswers[0][1])
+
     let technicalAssessmentScores = []
     let assessments = req.body.candidateAnswers
 

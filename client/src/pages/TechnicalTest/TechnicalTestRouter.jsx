@@ -18,8 +18,8 @@ const TechnicalTestRouter = () => {
         }).then(response => {
             setAssessments(response.data)
 
-            if(localStorage.getItem("CANDIDATE_ANSWERS")) {
-                localStorage.removeItem("CANDIDATE_ANSWERS")
+            if(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
+                localStorage.removeItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")
             }
         }).catch(error => {
             console.log(error)
@@ -37,7 +37,14 @@ const TechnicalTestRouter = () => {
                 console.log(JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")))
             }
 
-            navigate("/candidate-jobs")
+            axios.post("http://localhost:4321/assessment/technical/calculate_score", {
+                recruiterEmail: state.recruiterEmail,
+                candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS"))
+            }).then(response => {
+                console.log(response)
+            }).catch(error => {
+                console.log(error)
+            })
         }
         else {
             setActiveAssessment((prevValue) => prevValue + 1)

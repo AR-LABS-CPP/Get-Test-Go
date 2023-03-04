@@ -191,6 +191,7 @@ const TechnicalTest = (props) => {
                             mcq={false}
                             truefalse={true}
                             question={q.question}
+                            handleQuestionOptionClick={handleSelectOption}
                         />
                     }
                 })

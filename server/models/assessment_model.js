@@ -284,19 +284,22 @@ const calculateTechnicalScore = (recruiterEmail, assessmentName, answers) => {
             }
 
             for(let idx = 0; idx < answers.length; idx++) {
-                if(results.rows[idx].question_type_name === "TrueFalse") {
-                    // If the user selected true and the answers from the database in string format is "true"
-                    if(answers[idx] === true && results.rows[idx].correct_answer === "true") {
-                        score += 1
-                    }
-                    else if(answers[idx] === false && results.rows[idx].correct_answer === "false") {
-                        score += 1
-                    }
-                }
-                else {
-                    if(results.rows[idx].correct_answer === answers[idx]) {
-                        score += 1
-                    }
+                // if(results.rows[idx].question_type_name === "TrueFalse") {
+                //     // If the user selected true and the answers from the database in string format is "true"
+                //     if(answers[idx] === true && results.rows[idx].correct_answer === "true") {
+                //         score += 1
+                //     }
+                //     else if(answers[idx] === false && results.rows[idx].correct_answer === "false") {
+                //         score += 1
+                //     }
+                // }
+                // else {
+                //     if(results.rows[idx].correct_answer === answers[idx]) {
+                //         score += 1
+                //     }
+                // }
+                if(results.rows[idx].correct_answer === answers[idx]) {
+                    score += 1
                 }
             }
 
