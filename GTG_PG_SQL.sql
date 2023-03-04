@@ -885,7 +885,28 @@ AS
 				
 SELECT * FROM get_test_go_recruiter_assessment_mcq_question_with_answer
 WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')
-		
+
+CREATE OR REPLACE VIEW get_test_go_recruiter_technical_assessment_with_answers
+AS
+	SELECT
+	recruiter_id, 
+	assessment_name, 
+	assessment_type_name, 
+	question_type_name, 
+	question,
+	correct_answer
+	FROM get_test_go_recruiter_assessment_mcq_question_with_answer
+	UNION ALL
+	SELECT
+		recruiter_id, 
+		assessment_name, 
+		assessment_type_name, 
+		question_type_name, 
+		question,
+		CAST(answer AS VARCHAR) AS correct_answer
+	FROM get_test_go_recruiter_assessment_tf_question_with_answer
+	ORDER BY question_type_name
+
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE DUPLICATE BUT ARE COPED IN CASE IF SOMETHING IS MISSING FROM THE ABOVE CODE
 ----------------------------------------------------------------------------------------------------------------------

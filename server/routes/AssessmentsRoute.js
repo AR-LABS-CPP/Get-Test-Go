@@ -132,8 +132,16 @@ assessmentsRouter.post("/eq/calculate_score", (req, res) => {
     })
 })
 
-assessmentsRouter.post("/technical/calculate_score", (_, res) => {
-    res.status(200).send(5)
+assessmentsRouter.post("/technical/calculate_score", (req, res) => {
+    assessmentModel.calculateTechnicalScore(
+        req.body.recruiterEmail, 
+        req.body.assessmentName, 
+        req.body.answers
+    ).then(response => {
+        res.status(200).send({score: response})
+    }).catch(error => {
+        res.status(500).send(error)
+    })
 })
 
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {

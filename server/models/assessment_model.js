@@ -7,9 +7,6 @@ const recruiter_table_name = "get_test_go_recruiter"
 const recruiter_assessment_table_name = "get_test_go_recruiter_assessment"
 const question_type_table_name = "get_test_go_question_type"
 
-// VIEWS
-const assessment_with_questions_view_name = "get_test_go_assessment_with_question"
-
 const getAssessmentTypes = () => {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT assessment_type_name, assessment_type_details FROM ${assessment_type_table_name}`, (error, results) => {
@@ -272,6 +269,42 @@ const calculateEQScore = (answers) => {
     })
 }
 
+const calculateTechnicalScore = (recruiterEmail, assessmentName, answers) => {
+    let score = 0
+
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_recruiter_technical_assessment_with_answers WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = '${recruiterEmail}') AND assessment_name = '${assessmentName}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            if(results.rows.length !== answers.length) {
+                reject("Unable to calculate score")
+            }
+
+            for(let idx = 0; idx < answers.length; idx++) {
+                if(results.rows[idx].question_type_name === "TrueFalse") {
+                    // If the user selected true and the answers from the database in string format is "true"
+                    if(answers[idx] === true && results.rows[idx].correct_answer === "true") {
+                        score += 1
+                    }
+                    else if(answers[idx] === false && results.rows[idx].correct_answer === "false") {
+                        score += 1
+                    }
+                }
+                else {
+                    if(results.rows[idx].correct_answer === answers[idx]) {
+                        score += 1
+                    }
+                }
+            }
+
+            resolve(score)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -290,5 +323,6 @@ module.exports = {
     getIQQuestions,
     getEQQuestions,
     calculateIQScore,
-    calculateEQScore
+    calculateEQScore,
+    calculateTechnicalScore
 }
