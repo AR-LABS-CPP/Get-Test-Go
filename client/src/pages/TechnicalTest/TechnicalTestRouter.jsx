@@ -1,22 +1,22 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import TechnicalTest from "./TechnicalTest"
 
 const TechnicalTestRouter = () => {
+    const navigate = useNavigate()
+
     const { state } = useLocation()
 
     const [assessments, setAssessments] = useState([])
     const [activeAssessment, setActiveAssessment] = useState(0)
-    
+
     useEffect(() => {
         axios.post("http://localhost:4321/job/assessments/questions", {
             recruiterEmail: state.recruiterEmail,
             jobName: state.jobName
         }).then(response => {
             setAssessments(response.data)
-
-            console.log(response.data)
 
             if(localStorage.getItem("CANDIDATE_ANSWERS")) {
                 localStorage.removeItem("CANDIDATE_ANSWERS")
@@ -26,9 +26,18 @@ const TechnicalTestRouter = () => {
         })
     }, [])
 
+    const getCandidateEmail = () => {
+        return jwt.decode(localStorage.getItem("token"))
+            && jwt.decode(localStorage.getItem("token")).email
+    }
+
     const handleNextAssessment = () => {
         if(activeAssessment === (assessments.length - 1)) {
-            console.log("Show the results please")
+            if(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
+                console.log(JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")))
+            }
+
+            navigate("/candidate-jobs")
         }
         else {
             setActiveAssessment((prevValue) => prevValue + 1)
@@ -36,12 +45,23 @@ const TechnicalTestRouter = () => {
     }
 
     const storeAnswers = (assessmentName, answers) => {
-        // Calculate the score and store it in local storage
-        console.log(assessmentName, answers)
+        if(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
+            let previousTestsAnswers = JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS"))
+
+            previousTestsAnswers.push([assessmentName, answers])
+
+            localStorage.setItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS", JSON.stringify(previousTestsAnswers))
+        }
+        else {
+            let testAnswers = []
+            testAnswers.push([assessmentName, answers])
+
+            localStorage.setItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS", JSON.stringify(testAnswers))
+        }
     }
 
     return (
-        assessments.map((assessment, idx) => {
+        assessments.length > 0 && assessments.map((assessment, idx) => {
             return <TechnicalTest
             key={assessment + idx}
             questions={assessment} 

@@ -38,8 +38,6 @@ const TechnicalTest = (props) => {
             setSecondsLeft((prevSeconds) => prevSeconds - 1);
         }, 1000);
 
-        console.log("ACTIVE QUESTION USE-EFFECT TRIGGERED")
-
         // cleanup function to clear interval when component unmounts
         return () => clearInterval(intervalId);
     }, [activeQuestion])

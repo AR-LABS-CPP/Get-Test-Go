@@ -7,8 +7,6 @@ import { useNavigate } from "react-router-dom"
 import { Toaster, toast } from "react-hot-toast"
 
 const CreateNewAssessment = () => {
-    
-
     let timeout = null
     let recruiterEmail = jwt.decode(localStorage.getItem("token")).email
 
