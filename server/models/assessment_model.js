@@ -273,7 +273,7 @@ const calculateTechnicalScore = (recruiterEmail, assessmentName, answers) => {
     let score = 0
 
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM get_test_go_recruiter_technical_assessment_with_answers WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = '${recruiterEmail}') AND assessment_name = '${assessmentName}'`, (error, results) => {
+        pool.query(`SELECT * FROM get_test_go_recruiter_technical_assessment_with_answers WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = '${recruiterEmail}') AND assessment_name = '${assessmentName}' AND assessment_type_name = 'TECHNICAL'`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)
@@ -284,20 +284,31 @@ const calculateTechnicalScore = (recruiterEmail, assessmentName, answers) => {
             }
 
             for(let idx = 0; idx < answers.length; idx++) {
-                // if(results.rows[idx].question_type_name === "TrueFalse") {
-                //     // If the user selected true and the answers from the database in string format is "true"
-                //     if(answers[idx] === true && results.rows[idx].correct_answer === "true") {
-                //         score += 1
-                //     }
-                //     else if(answers[idx] === false && results.rows[idx].correct_answer === "false") {
-                //         score += 1
-                //     }
-                // }
-                // else {
-                //     if(results.rows[idx].correct_answer === answers[idx]) {
-                //         score += 1
-                //     }
-                // }
+                if(results.rows[idx].correct_answer === answers[idx]) {
+                    score += 1
+                }
+            }
+
+            resolve(score)
+        })
+    })
+}
+
+const calculateGeneralScore = (recruiterEmail, assessmentName, answers) => {
+    let score = 0
+
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_recruiter_technical_assessment_with_answers WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = '${recruiterEmail}') AND assessment_name = '${assessmentName}' AND assessment_type_name = 'GENERAL'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            if(results.rows.length !== answers.length) {
+                reject("Unable to calculate score")
+            }
+
+            for(let idx = 0; idx < answers.length; idx++) {
                 if(results.rows[idx].correct_answer === answers[idx]) {
                     score += 1
                 }
@@ -327,5 +338,6 @@ module.exports = {
     getEQQuestions,
     calculateIQScore,
     calculateEQScore,
-    calculateTechnicalScore
+    calculateTechnicalScore,
+    calculateGeneralScore
 }

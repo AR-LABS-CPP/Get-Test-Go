@@ -133,9 +133,7 @@ assessmentsRouter.post("/eq/calculate_score", (req, res) => {
 })
 
 assessmentsRouter.post("/technical/calculate_score", async (req, res) => {
-    console.log(req.body.candidateAnswers[0][1])
-
-    let technicalAssessmentScores = []
+    let technicalAssessmentsScores = []
     let assessments = req.body.candidateAnswers
 
     for(let i = 0; i < assessments.length; i++) {
@@ -146,14 +144,36 @@ assessmentsRouter.post("/technical/calculate_score", async (req, res) => {
                 assessments[i][1] // candidate's answers
             )
 
-            technicalAssessmentScores.push([assessments[i][0], assessmentScore])
+            technicalAssessmentsScores.push([assessments[i][0], assessmentScore])
         }
         catch(err) {
             res.status(500).send("CANNOT CALCULATE SCORES, PLEASE TRY AGAIN.")
         }
     }
 
-    res.status(200).send(technicalAssessmentScores)
+    res.status(200).send(technicalAssessmentsScores)
+})
+
+assessmentModel.post("/general/calculate_score", async (req, res) => {
+    let generalAssessmentsScores = []
+    let assessments = req.body.candidateAnswers
+
+    for(let i = 0; i < assessments.length; i++) {
+        try {
+            const assessmentScore = await assessmentModel.calculateGeneralScore(
+                req.body.recruiterEmail, 
+                assessments[i][0], // Assessment Name 
+                assessments[i][1] // candidate's answers
+            )
+
+            generalAssessmentsScores.push([assessments[i][0], assessmentScore])
+        }
+        catch(err) {
+            res.status(500).send("CANNOT CALCULATE SCORES, PLEASE TRY AGAIN.")
+        }
+    }
+
+    res.status(200).send(generalAssessmentsScores)
 })
 
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {
