@@ -116,6 +116,18 @@ assessmentsRouter.post("/eq/questions", (req, res) => {
     })
 })
 
+assessmentsRouter.post("/technical/questions", (req, res) => {
+    userModel.emailExists(req.body.candidateEmail).then(_ => {
+        assessmentModel.getTechnicalQuestions(req.body.recruiterEmail, req.body.assessmentName).then(response => {
+            res.status(200).send(response)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+    }).catch(error => {
+        res.status(500).send(error)
+    })
+})
+
 assessmentsRouter.post("/iq/calculate_score", (req, res) => {
     assessmentModel.calculateIQScore(req.body.candidateAnswers).then(response => {
         res.status(200).send({score: response})
@@ -154,7 +166,7 @@ assessmentsRouter.post("/technical/calculate_score", async (req, res) => {
     res.status(200).send(technicalAssessmentsScores)
 })
 
-assessmentModel.post("/general/calculate_score", async (req, res) => {
+assessmentsRouter.post("/general/calculate_score", async (req, res) => {
     let generalAssessmentsScores = []
     let assessments = req.body.candidateAnswers
 

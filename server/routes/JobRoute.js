@@ -58,14 +58,9 @@ jobRoute.post("/assessments/questions", async (req, res) => {
     const recruiterJobAssessments = await jobModel.getRecruiterJobAssessments(req.body.recruiterEmail, req.body.jobName)
 
     for(let assessment of recruiterJobAssessments) {
-        console.log(assessment)
-
         const recruiterJobAssessmentMCQQuestions = await assessmentModel.getRecruiterAssessmentMCQQuestions(req.body.recruiterEmail, assessment.assessment_name)
         const recruiterJobAssessmentTFQuestions = await assessmentModel.getRecruiterAssessmentTrueFalseQuestions(req.body.recruiterEmail, assessment.assessment_name)
-
-        console.log(recruiterJobAssessmentMCQQuestions)
-        console.log(recruiterJobAssessmentTFQuestions)
-
+        
         if(recruiterJobAssessmentMCQQuestions && recruiterJobAssessmentTFQuestions) {
             assessmentQuestions.push([...recruiterJobAssessmentMCQQuestions, ...recruiterJobAssessmentTFQuestions])
         }
@@ -75,6 +70,7 @@ jobRoute.post("/assessments/questions", async (req, res) => {
         res.status(200).send(assessmentQuestions)
     }
     else {
+        console.log(assessmentQuestions)
         res.status(500).send("Unable to fetch questions")
     }
 })

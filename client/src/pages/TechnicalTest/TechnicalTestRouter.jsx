@@ -4,8 +4,6 @@ import { useLocation, useNavigate } from "react-router-dom"
 import TechnicalTest from "./TechnicalTest"
 
 const TechnicalTestRouter = () => {
-    const navigate = useNavigate()
-
     const { state } = useLocation()
 
     const [assessments, setAssessments] = useState([])
@@ -18,7 +16,11 @@ const TechnicalTestRouter = () => {
         }).then(response => {
             setAssessments(response.data)
 
-            if(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
+            if(localStorage.getItem("CANDIDATE_ANSWERS")) {
+                localStorage.removeItem("CANDIDATE_ANSWERS")
+            }
+
+            if (localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
                 localStorage.removeItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")
             }
         }).catch(error => {
@@ -32,8 +34,8 @@ const TechnicalTestRouter = () => {
     }
 
     const handleNextAssessment = () => {
-        if(activeAssessment === (assessments.length - 1)) {
-            if(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
+        if (activeAssessment === (assessments.length - 1)) {
+            if (localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
                 axios.post("http://localhost:4321/assessment/technical/calculate_score", {
                     recruiterEmail: state.recruiterEmail,
                     candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS"))
@@ -53,7 +55,7 @@ const TechnicalTestRouter = () => {
     }
 
     const storeAnswers = (assessmentName, answers) => {
-        if(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
+        if (localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
             let previousTestsAnswers = JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS"))
 
             previousTestsAnswers.push([assessmentName, answers])
@@ -70,15 +72,17 @@ const TechnicalTestRouter = () => {
 
     return (
         assessments.length > 0 && assessments.map((assessment, idx) => {
-            return <TechnicalTest
-            key={assessment + idx}
-            questions={assessment} 
-            visible={idx === activeAssessment}
-            assessmentName={assessment[0].assessment_name} 
-            totalQuestions={assessment.length}
-            setActiveAssessmentCB={handleNextAssessment} 
-            storeAnswersCB={storeAnswers}
-            />
+            return (
+                <TechnicalTest
+                    key={assessment + idx}
+                    questions={assessment}
+                    visible={idx === activeAssessment}
+                    assessmentName={assessment[0].assessment_name}
+                    totalQuestions={assessment.length}
+                    setActiveAssessmentCB={handleNextAssessment}
+                    storeAnswersCB={storeAnswers}
+                />
+            )
         })
     )
 }

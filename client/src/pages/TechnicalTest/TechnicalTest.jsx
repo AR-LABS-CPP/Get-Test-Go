@@ -1,11 +1,7 @@
-import axios from "axios"
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
 import QuestionBox from "../../components/QuestionBox/QuestionBox"
 
 const TechnicalTest = (props) => {
-    const navigate = useNavigate()
-
     const [questions, setQuestions] = useState(props.questions)
     const [activeQuestion, setActiveQuestion] = useState(0)
     const [mcqselectedOption, setMCQSelectedOption] = useState("")
@@ -13,19 +9,22 @@ const TechnicalTest = (props) => {
     const [buttonText, setButtonText] = useState("Next")
     const [errorText, setErrorText] = useState("")
     const assessmentInfo = {
-        sectionName: "TECHNICAL",
+        sectionName: `TECHNICAL / ${props.assessmentName}`,
         totalQuestions: props.totalQuestions,
     }
-    const [secondsLeft, setSecondsLeft] = useState(120)
+    const [secondsLeft, setSecondsLeft] = useState(10)
 
     useEffect(() => {
-        if (secondsLeft === 0) {
-            handleNextQuestion()
-        }
+        // Every second, handleTimeOver() is called to
+        // check whether 0 seconds are left and if so
+        // then move to the next question using this
+        // function and mark the currently selected
+        // answer of the user else mark NULL
+        handleTimeOver()
     }, [secondsLeft])
 
     useEffect(() => {
-        setSecondsLeft(120)
+        setSecondsLeft(10)
 
         if (activeQuestion === (props.questions.length - 1)) {
             setButtonText("Finish")
@@ -34,11 +33,14 @@ const TechnicalTest = (props) => {
             setButtonText("Next")
         }
 
+        setMCQSelectedOption("")
+        setTFSelectedOption(true)
+        setErrorText("")
+
         let intervalId = setInterval(() => {
             setSecondsLeft((prevSeconds) => prevSeconds - 1);
         }, 1000);
 
-        // cleanup function to clear interval when component unmounts
         return () => clearInterval(intervalId);
     }, [activeQuestion])
 
@@ -50,97 +52,99 @@ const TechnicalTest = (props) => {
             .padStart(2, "0")}`;
     };
 
+    const getSelectedOption = () => {
+        if(questions[activeQuestion].question_type_name === "MCQ") {
+            return mcqselectedOption
+        }
+        else if(questions[activeQuestion].question_type_name === "TrueFalse") {
+            return tfSelectedOption
+        }
+    }
+
+    const handleSelectOption = (evt) => {
+        if (questions[activeQuestion].question_type_name === "MCQ") {
+            setMCQSelectedOption(evt.target.value)
+        }
+        else if (questions[activeQuestion].question_type_name === "TrueFalse") {
+            setTFSelectedOption(evt.target.value)
+        }
+    }
+
     const handleNextQuestion = () => {
         if (buttonText === "Finish") {
-            if(questions[activeQuestion].question_type_name === "MCQ") {
-                let finalAsnwers = [...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")), mcqselectedOption]
-
-                props.storeAnswersCB(props.assessmentName, finalAsnwers)
-            }
-            else if(questions[activeQuestion].question_type_name === "TrueFalse") {
-                let finalAsnwers = [...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")), tfSelectedOption]
-
-                props.storeAnswersCB(props.assessmentName, finalAsnwers)
-            }
-
-            localStorage.removeItem("CANDIDATE_ANSWERS")
-
-            props.setActiveAssessmentCB()
+            handleFinish()
         }
         else {
-            if (secondsLeft === 0) {
+            if (questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption === "") {
+                setErrorText("Please select an option")
+            }
+            else {
                 if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                    newAnswers.push("NULL")
+                    newAnswers.push(getSelectedOption())
 
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
 
-                    setMCQSelectedOption("")
-                    setTFSelectedOption(true)
-                    setErrorText("")
                     setActiveQuestion(prevValue => prevValue + 1)
                 }
                 else {
-                    let answers = ["NULL"]
+                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify([getSelectedOption()]))
 
-                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
-
-                    setMCQSelectedOption("")
-                    setTFSelectedOption(true)
-                    setErrorText("")
                     setActiveQuestion(prevValue => prevValue + 1)
-                }
-            }
-            else {
-                if(questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption === "") {
-                    setErrorText("Please select an option")
-                }
-                else {
-                    if (localStorage.getItem("CANDIDATE_ANSWERS")) {
-                        let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                        
-                        if(questions[activeQuestion].question_type_name === "MCQ") {
-                            newAnswers.push(mcqselectedOption)
-                        }
-                        else if(questions[activeQuestion].question_type_name === "TrueFalse") {
-                            newAnswers.push(tfSelectedOption)
-                        }
-
-                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
-
-                        setMCQSelectedOption("")
-                        setTFSelectedOption(true)
-                        setErrorText("")
-                        setActiveQuestion(prevValue => prevValue + 1)
-                    }
-                    else {
-                        let answers = []
-
-                        if(questions[activeQuestion].question_type_name === "MCQ") {
-                            answers.push(mcqselectedOption)
-                        }
-                        else if(questions[activeQuestion].question_type_name === "TrueFalse") {
-                            answers.push(tfSelectedOption)
-                        }
-
-                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
-
-                        setMCQSelectedOption("")
-                        setTFSelectedOption(true)
-                        setErrorText("")
-                        setActiveQuestion(prevValue => prevValue + 1)
-                    }
                 }
             }
         }
     }
 
-    const handleSelectOption = (evt) => {
-        if (props.questions[activeQuestion].question_type_name === "MCQ") {
-            setMCQSelectedOption(evt.target.value)
-        }
-        else if (props.questions[activeQuestion].question_type_name === "TrueFalse") {
-            setTFSelectedOption(evt.target.value)
+    const handleFinish = () => {
+        let finalAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
+        finalAnswers.push(getSelectedOption())
+
+        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(finalAnswers))
+
+        props.storeAnswersCB(props.assessmentName, finalAnswers)
+
+        localStorage.removeItem("CANDIDATE_ANSWERS")
+
+        props.setActiveAssessmentCB()
+    }
+
+    const handleTimeOver = () => {
+        if(secondsLeft === 0) {
+            if (localStorage.getItem("CANDIDATE_ANSWERS")) {
+                let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
+                
+                if(questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption !== "") {
+                    newAnswers.push(mcqselectedOption)
+                }
+                else if(questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption === "") {
+                    newAnswers.push("NULL")
+                }
+                else if(questions[activeQuestion].question_type_name === "TrueFalse") {
+                    newAnswers.push(tfSelectedOption)
+                }
+    
+                localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
+    
+                setActiveQuestion(prevValue => prevValue + 1)
+            }
+            else {
+                let answers = []
+    
+                if(questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption !== "") {
+                    answers.push(mcqselectedOption)
+                }
+                else if(questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption === "") {
+                    answers.push("NULL")
+                }
+                else if(questions[activeQuestion].question_type_name === "TrueFalse") {
+                    answers.push(tfSelectedOption)
+                }
+    
+                localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
+    
+                setActiveQuestion(prevValue => prevValue + 1)
+            }
         }
     }
     
@@ -169,7 +173,7 @@ const TechnicalTest = (props) => {
             </div>
 
             {
-                props.questions.map((q, idx) => {
+                questions.map((q, idx) => {
                     if (q.question_type_name === "MCQ") {
                         return <QuestionBox
                             key={q + idx}
