@@ -651,6 +651,11 @@ VALUES
 	'The ability to accurately recognize and identify emotions in oneself and others'
 );
 
+SELECT *
+FROM get_test_go_recruiter
+JOIN get_test_go_recruiter_assessment
+	ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_assessment.recruiter_id
+
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE DUPLICATE BUT ARE COPED IN CASE IF SOMETHING IS MISSING FROM THE ABOVE CODE
 ----------------------------------------------------------------------------------------------------------------------

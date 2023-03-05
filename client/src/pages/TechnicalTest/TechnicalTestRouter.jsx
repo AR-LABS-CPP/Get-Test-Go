@@ -34,17 +34,18 @@ const TechnicalTestRouter = () => {
     const handleNextAssessment = () => {
         if(activeAssessment === (assessments.length - 1)) {
             if(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
-                console.log(JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")))
+                axios.post("http://localhost:4321/assessment/technical/calculate_score", {
+                    recruiterEmail: state.recruiterEmail,
+                    candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS"))
+                }).then(response => {
+                    console.log(response)
+                }).catch(error => {
+                    console.log(error)
+                })
             }
-
-            axios.post("http://localhost:4321/assessment/technical/calculate_score", {
-                recruiterEmail: state.recruiterEmail,
-                candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS"))
-            }).then(response => {
-                console.log(response)
-            }).catch(error => {
-                console.log(error)
-            })
+            else {
+                console.log("CANDIDATE ASSESSMENTS SOMEHOW GOT DELETED!")
+            }
         }
         else {
             setActiveAssessment((prevValue) => prevValue + 1)
