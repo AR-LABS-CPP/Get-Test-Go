@@ -159,11 +159,11 @@ assessmentsRouter.post("/technical/calculate_score", async (req, res) => {
             technicalAssessmentsScores.push([assessments[i][0], assessmentScore])
         }
         catch(err) {
-            res.status(500).send("CANNOT CALCULATE SCORES, PLEASE TRY AGAIN.")
+            return res.status(500).send("CANNOT CALCULATE SCORES, PLEASE TRY AGAIN.")
         }
     }
 
-    res.status(200).send(technicalAssessmentsScores)
+    return res.status(200).send(technicalAssessmentsScores)
 })
 
 assessmentsRouter.post("/general/calculate_score", async (req, res) => {
@@ -181,11 +181,11 @@ assessmentsRouter.post("/general/calculate_score", async (req, res) => {
             generalAssessmentsScores.push([assessments[i][0], assessmentScore])
         }
         catch(err) {
-            res.status(500).send("CANNOT CALCULATE SCORES, PLEASE TRY AGAIN.")
+            return res.status(500).send("CANNOT CALCULATE SCORES, PLEASE TRY AGAIN.")
         }
     }
 
-    res.status(200).send(generalAssessmentsScores)
+    return res.status(200).send(generalAssessmentsScores)
 })
 
 assessmentsRouter.post("/recruiter/assessments", (req, res) => {
