@@ -9,7 +9,7 @@ const TechnicalTest = () => {
   const candidateAnswers = useRef([])
   const [error, setError] = useState("")
   const [assessments, setAssessments] = useState([])
-  const [secondsLeft, setSecondsLeft] = useState(10)
+  const [secondsLeft, setSecondsLeft] = useState(5)
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [activeAssessment, setActiveAssessment] = useState(0)
   const [activeQuestionOption, setActiveQuestionOption] = useState("NULL")
@@ -35,9 +35,9 @@ const TechnicalTest = () => {
   }, [])
 
   useEffect(() => {
-    setSecondsLeft(10)
-    setError("")
+    setSecondsLeft(5)
     setActiveQuestionOption("NULL")
+    setError("")
 
     let intervalId = setInterval(() => {
       setSecondsLeft((prevSeconds) => prevSeconds - 1);
@@ -76,6 +76,11 @@ const TechnicalTest = () => {
         setActiveAssessmentAnswers(prevAnswers)
 
         candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
+        
+        setActiveAssessmentAnswers([])
+
+        console.log(candidateAnswers.current)
+        
         navigate("/candidate-main-page")
       }
     }
@@ -89,9 +94,9 @@ const TechnicalTest = () => {
         setActiveAssessmentAnswers(prevAnswers)
 
         candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
-
+        
         setActiveAssessmentAnswers([])
-
+        setActiveQuestion(0)
         setActiveAssessment(val => val + 1)
       }
     }
@@ -99,45 +104,49 @@ const TechnicalTest = () => {
       if (activeQuestionOption === "NULL") {
         setError("Please select an option")
       }
-      else {
+      else {        
         let prevAnswers = activeAssessmentAnswers
         prevAnswers.push(activeQuestionOption)
+        
         setActiveAssessmentAnswers(prevAnswers)
-
         setActiveQuestion(val => val + 1)
       }
     }
-
-    console.log(candidateAnswers.current)
   }
 
   const handleTimeFinished = () => {
+    // This is the last question of the last assessment
     if (activeAssessment === (assessments.length - 1) && activeQuestion === (assessments[activeAssessment].length - 1)) {
       let prevAnswers = activeAssessmentAnswers
       prevAnswers.push(activeQuestionOption)
-      
       setActiveAssessmentAnswers(prevAnswers)
 
       candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
+      
+      setActiveAssessmentAnswers([])
+
       console.log(candidateAnswers.current)
+
       navigate("/candidate-main-page")
     }
     else if (activeQuestion === assessments[activeAssessment].length - 1) {
       let prevAnswers = activeAssessmentAnswers
       prevAnswers.push(activeQuestionOption)
-      
       setActiveAssessmentAnswers(prevAnswers)
+
       candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
 
       setActiveAssessmentAnswers([])
-
+      setActiveQuestion(0)
       setActiveAssessment(val => val + 1)
     }
-    else {
+    else {      
+      let prevAnswers = activeAssessmentAnswers
+      prevAnswers.push(activeQuestionOption)
+
+      setActiveAssessmentAnswers(prevAnswers)
       setActiveQuestion(val => val + 1)
     }
-
-    console.log(candidateAnswers.current)
   }
 
   return (
