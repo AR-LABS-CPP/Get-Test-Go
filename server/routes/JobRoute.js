@@ -59,12 +59,7 @@ jobRoute.post("/assessments/questions", async (req, res) => {
 
     for(let assessment of recruiterJobAssessments) {
         const recruiterJobAssessmentMCQQuestions = await assessmentModel.getRecruiterAssessmentMCQQuestions(req.body.recruiterEmail, assessment.assessment_name)
-        // const recruiterJobAssessmentTFQuestions = await assessmentModel.getRecruiterAssessmentTrueFalseQuestions(req.body.recruiterEmail, assessment.assessment_name)
         
-        // if(recruiterJobAssessmentMCQQuestions && recruiterJobAssessmentTFQuestions) {
-        //     assessmentQuestions.push([...recruiterJobAssessmentMCQQuestions, ...recruiterJobAssessmentTFQuestions])
-        // }
-
         if(recruiterJobAssessmentMCQQuestions) {
             assessmentQuestions.push([...recruiterJobAssessmentMCQQuestions])
         }
