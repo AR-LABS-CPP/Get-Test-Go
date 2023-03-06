@@ -270,6 +270,10 @@ const calculateEQScore = (answers) => {
 }
 
 const calculateTechnicalScore = (recruiterEmail, assessmentName, answers) => {
+    console.log(recruiterEmail)
+    console.log(assessmentName)
+    console.log(answers)
+
     let score = 0
 
     return new Promise((resolve, reject) => {
@@ -279,12 +283,14 @@ const calculateTechnicalScore = (recruiterEmail, assessmentName, answers) => {
                 reject(error)
             }
 
-            if(results.rows.length !== answers.length) {
+            const data = results.rows
+
+            if(data.length !== answers.length) {
                 reject("Unable to calculate score")
             }
 
             for(let idx = 0; idx < answers.length; idx++) {
-                if(results.rows[idx].correct_answer === answers[idx]) {
+                if(data[idx].correct_answer === answers[idx]) {
                     score += 1
                 }
             }

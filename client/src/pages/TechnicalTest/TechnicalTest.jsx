@@ -72,9 +72,7 @@ const TechnicalTest = () => {
 
         setActiveAssessmentAnswers([])
 
-        console.log(candidateAnswers.current)
-
-        navigate("/candidate-main-page")
+        calculateScores()
       }
     }
     else if (activeQuestion === assessments[activeAssessment].length - 1) {
@@ -117,9 +115,7 @@ const TechnicalTest = () => {
 
       setActiveAssessmentAnswers([])
 
-      console.log(candidateAnswers.current)
-
-      navigate("/candidate-main-page")
+      calculateScores()
     }
     else if (activeQuestion === assessments[activeAssessment].length - 1) {
       let prevAnswers = activeAssessmentAnswers
@@ -139,6 +135,17 @@ const TechnicalTest = () => {
       setActiveAssessmentAnswers(prevAnswers)
       setActiveQuestion(val => val + 1)
     }
+  }
+
+  const calculateScores = () => {
+    axios.post("http://localhost:4321/assessment/technical/calculate_score", {
+      recruiterEmail: state.recruiterEmail,
+      candidateAnswers: candidateAnswers.current
+    }).then(response => {
+      console.log(response)
+    }).catch(error => {
+      console.log(error)
+    })
   }
 
   return (

@@ -33,6 +33,7 @@ import IQTest from "./pages/IQTest/IQTest"
 import EQTest from "./pages/EQTest/EQTest"
 import Scores from "./pages/Scores/Scores"
 import TechnicalTest from "./pages/TechnicalTest/TechnicalTest"
+import SubmissionNotice from "./components/SubmissionNotice/SubmissionNotice"
 
 const App = () => {
   const Auth = ({ children }) => {
@@ -76,6 +77,7 @@ const App = () => {
         <Route path='/recruiter-jobs' element={<Auth><Jobs /></Auth>} />
         <Route path='/candidate-jobs' element={<Auth><CandidateJobs /></Auth>} />
         <Route path='/apply-notice' element={<Auth><ApplyNotice /></Auth>} />
+        <Route path="/submission-notice" element={<Auth><SubmissionNotice /></Auth>} />
         <Route path='/iq-test' element={<Auth><IQTest /></Auth>} />
         <Route path='/eq-test' element={<Auth><EQTest /></Auth>} />
         <Route path='/technical-test' element={<Auth><TechnicalTest /></Auth>} />
