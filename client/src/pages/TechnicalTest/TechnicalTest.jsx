@@ -1,9 +1,10 @@
 import axios from "axios"
 import { useEffect, useRef, useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const TechnicalTest = () => {
   const { state } = useLocation()
+  const navigate = useNavigate()
 
   const [error, setError] = useState("")
   const [assessments, setAssessments] = useState([])
@@ -43,7 +44,7 @@ const TechnicalTest = () => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [activeQuestion])
+  }, [activeQuestion, activeAssessment])
 
   useEffect(() => {
     if (secondsLeft === 0) {
@@ -70,7 +71,9 @@ const TechnicalTest = () => {
         setError("Please select an option")
       }
       else {
-        console.log("Technical section finished")
+        candidateAnswers.current.push(activeAssessmentAnswers)
+        console.log(candidateAnswers.current)
+        navigate("/candidate-main-page")
       }
     }
     else if (activeQuestion === assessments[activeAssessment].length - 1) {
@@ -93,12 +96,27 @@ const TechnicalTest = () => {
   }
 
   const handleTimeFinished = () => {
-    if(activeQuestionOption === "") {
+    if (activeQuestionOption === "") {
       setActiveQuestionOption("NOT-SELECTED")
       setActiveAssessmentAnswers([...activeAssessmentAnswers, null])
     }
-    else if(activeQuestionOption !== "") {
+    else if (activeQuestionOption !== "") {
       setActiveAssessmentAnswers([...activeAssessmentAnswers, activeQuestionOption])
+    }
+
+    if (activeAssessment === (assessments.length - 1) && activeQuestion === (assessments[activeAssessment].length - 1)) {
+      candidateAnswers.current.push(activeAssessmentAnswers)
+      console.log(candidateAnswers.current)
+      navigate("/candidate-main-page")
+    }
+    else if (activeQuestion === assessments[activeAssessment].length - 1) {
+      console.log(`${assessments[activeAssessment][0].assessment_name} Finished`)
+      candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
+      setActiveAssessment(val => val + 1)
+    }
+    else {
+      console.log("Onto the next question!")
+      setActiveQuestion(val => val + 1)
     }
   }
 
