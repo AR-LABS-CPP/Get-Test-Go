@@ -6,14 +6,14 @@ const TechnicalTest = () => {
   const { state } = useLocation()
   const navigate = useNavigate()
 
+  const candidateAnswers = useRef([])
   const [error, setError] = useState("")
   const [assessments, setAssessments] = useState([])
   const [secondsLeft, setSecondsLeft] = useState(10)
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [activeAssessment, setActiveAssessment] = useState(0)
-  const [activeQuestionOption, setActiveQuestionOption] = useState("")
+  const [activeQuestionOption, setActiveQuestionOption] = useState("NULL")
   const [activeAssessmentAnswers, setActiveAssessmentAnswers] = useState([])
-  const candidateAnswers = useRef([])
 
   useEffect(() => {
     axios.post("http://localhost:4321/job/assessments/questions", {
@@ -37,7 +37,7 @@ const TechnicalTest = () => {
   useEffect(() => {
     setSecondsLeft(10)
     setError("")
-    setActiveQuestionOption("")
+    setActiveQuestionOption("NULL")
 
     let intervalId = setInterval(() => {
       setSecondsLeft((prevSeconds) => prevSeconds - 1);
@@ -67,57 +67,71 @@ const TechnicalTest = () => {
   const handleNextQuestion = () => {
     // This is the last question of the last assessment
     if (activeAssessment === (assessments.length - 1) && activeQuestion === (assessments[activeAssessment].length - 1)) {
-      if (activeQuestion === "") {
+      if (activeQuestionOption === "NULL") {
         setError("Please select an option")
       }
       else {
-        candidateAnswers.current.push(activeAssessmentAnswers)
-        console.log(candidateAnswers.current)
+        let prevAnswers = activeAssessmentAnswers
+        prevAnswers.push(activeQuestionOption)
+        setActiveAssessmentAnswers(prevAnswers)
+
+        candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
         navigate("/candidate-main-page")
       }
     }
     else if (activeQuestion === assessments[activeAssessment].length - 1) {
-      if (activeQuestionOption === "") {
+      if (activeQuestionOption === "NULL") {
         setError("Please select an option")
       }
       else {
+        let prevAnswers = activeAssessmentAnswers
+        prevAnswers.push(activeQuestionOption)
+        setActiveAssessmentAnswers(prevAnswers)
+
         candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
         setActiveAssessment(val => val + 1)
       }
     }
     else {
-      if (activeQuestionOption === "") {
+      if (activeQuestionOption === "NULL") {
         setError("Please select an option")
       }
       else {
+        let prevAnswers = activeAssessmentAnswers
+        prevAnswers.push(activeQuestionOption)
+        setActiveAssessmentAnswers(prevAnswers)
+
         setActiveQuestion(val => val + 1)
       }
     }
+
+    console.log(candidateAnswers.current)
   }
 
   const handleTimeFinished = () => {
-    if (activeQuestionOption === "") {
-      setActiveQuestionOption("NOT-SELECTED")
-      setActiveAssessmentAnswers([...activeAssessmentAnswers, null])
-    }
-    else if (activeQuestionOption !== "") {
-      setActiveAssessmentAnswers([...activeAssessmentAnswers, activeQuestionOption])
-    }
-
     if (activeAssessment === (assessments.length - 1) && activeQuestion === (assessments[activeAssessment].length - 1)) {
-      candidateAnswers.current.push(activeAssessmentAnswers)
+      let prevAnswers = activeAssessmentAnswers
+      prevAnswers.push(activeQuestionOption)
+      
+      setActiveAssessmentAnswers(prevAnswers)
+
+      candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
       console.log(candidateAnswers.current)
       navigate("/candidate-main-page")
     }
     else if (activeQuestion === assessments[activeAssessment].length - 1) {
-      console.log(`${assessments[activeAssessment][0].assessment_name} Finished`)
+      let prevAnswers = activeAssessmentAnswers
+      prevAnswers.push(activeQuestionOption)
+      
+      setActiveAssessmentAnswers(prevAnswers)
       candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
       setActiveAssessment(val => val + 1)
     }
     else {
-      console.log("Onto the next question!")
       setActiveQuestion(val => val + 1)
     }
+
+    console.log(candidateAnswers.current)
   }
 
   return (
