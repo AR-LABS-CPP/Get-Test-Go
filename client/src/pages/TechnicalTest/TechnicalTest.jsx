@@ -89,6 +89,9 @@ const TechnicalTest = () => {
         setActiveAssessmentAnswers(prevAnswers)
 
         candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
+
+        setActiveAssessmentAnswers([])
+
         setActiveAssessment(val => val + 1)
       }
     }
@@ -125,6 +128,9 @@ const TechnicalTest = () => {
       
       setActiveAssessmentAnswers(prevAnswers)
       candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentAnswers])
+
+      setActiveAssessmentAnswers([])
+
       setActiveAssessment(val => val + 1)
     }
     else {
