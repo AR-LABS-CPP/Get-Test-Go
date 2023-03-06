@@ -1,214 +1,117 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import QuestionBox from "../../components/QuestionBox/QuestionBox"
+import axios from "axios"
+import { useEffect, useRef, useState } from "react"
+import { useLocation } from "react-router-dom"
 
-const TechnicalTest = (props) => {
-    const navigate = useNavigate()
+const TechnicalTest = () => {
+  const { state } = useLocation()
 
-    const [questions, setQuestions] = useState(props.questions)
-    const [activeQuestion, setActiveQuestion] = useState(0)
-    const [mcqselectedOption, setMCQSelectedOption] = useState("")
-    const [tfSelectedOption, setTFSelectedOption] = useState(true)
-    const [buttonText, setButtonText] = useState("Next")
-    const [errorText, setErrorText] = useState("")
-    const assessmentInfo = {
-        sectionName: "TECHNICAL",
-        totalQuestions: props.totalQuestions,
+  const [error, setError] = useState("")
+  const [assessments, setAssessments] = useState([])
+  const [activeQuestion, setActiveQuestion] = useState(0)
+  const [activeAssessment, setActiveAssessment] = useState(0)
+  const [activeQuestionOption, setActiveQuestionOption] = useState("")
+  const [activeAssessmentMarks, setActiveAssessmentAnswers] = useState([])
+  const candidateAnswers = useRef([])
+
+  useEffect(() => {
+    axios.post("http://localhost:4321/job/assessments/questions", {
+      recruiterEmail: state.recruiterEmail,
+      jobName: state.jobName
+    }).then(response => {
+      setAssessments(response.data)
+
+      if (localStorage.getItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")) {
+        localStorage.removeItem("CANDIDATE_TECHNICAL_TESTS_ANSWERS")
+      }
+
+      candidateAnswers.current = []
+
+      console.log(response.data)
+    }).catch(error => {
+      console.log(error)
+    })
+  }, [])
+
+  const setOption = (evt) => {
+    setActiveQuestionOption(evt.target.value)
+  }
+
+  const handleNextQuestion = () => {
+    // This is the last question of the last assessment
+    if (activeAssessment === (assessments.length - 1) && activeQuestion === (assessments[activeAssessment].length - 1)) {
+      if(activeQuestion === "") {
+        setError("Please select an option")
+      }
+      else {
+        // Calculate the scores
+      }
     }
-    const [secondsLeft, setSecondsLeft] = useState(15)
-
-    useEffect(() => {
-        console.log("SECONDS LEFT, USE-EFFECT CALLED!")
-
-        if (secondsLeft === 0) {
-            handleNextQuestion()
-        }
-    }, [secondsLeft])
-
-    useEffect(() => {
-        console.log("ACTIVE QUESTION, USE-EFFECT CALLED!")
-
-        setSecondsLeft(15)
-
-        if (activeQuestion === (props.questions.length - 1)) {
-            setButtonText("Finish")
-        }
-        else {
-            setButtonText("Next")
-        }
-
-        let intervalId = setInterval(() => {
-            setSecondsLeft((prevSeconds) => prevSeconds - 1);
-        }, 1000);
-
-        // cleanup function to clear interval when component unmounts
-        return () => clearInterval(intervalId);
-    }, [activeQuestion])
-
-    const formatTime = (timeInSeconds) => {
-        const minutes = Math.floor(timeInSeconds / 60);
-        const seconds = timeInSeconds % 60;
-        return `${minutes.toString().padStart(2, "0")}:${seconds
-            .toString()
-            .padStart(2, "0")}`;
-    };
-
-    const handleNextQuestion = () => {
-        if (buttonText === "Finish") {
-            if(questions[activeQuestion].question_type_name === "MCQ") {
-                let finalAsnwers = [...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")), mcqselectedOption]
-
-                props.storeAnswersCB(props.assessmentName, finalAsnwers)
-            }
-            else if(questions[activeQuestion].question_type_name === "TrueFalse") {
-                let finalAsnwers = [...JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")), tfSelectedOption]
-
-                props.storeAnswersCB(props.assessmentName, finalAsnwers)
-            }
-
-            localStorage.removeItem("CANDIDATE_ANSWERS")
-
-            props.setActiveAssessmentCB()
-        }
-        else {
-            if (secondsLeft === 0) {
-                if (localStorage.getItem("CANDIDATE_ANSWERS")) {
-                    let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                    newAnswers.push("NULL")
-
-                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
-
-                    setMCQSelectedOption("")
-                    setTFSelectedOption(true)
-                    setErrorText("")
-                    setActiveQuestion(prevValue => prevValue + 1)
-                }
-                else {
-                    let answers = ["NULL"]
-
-                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
-
-                    setMCQSelectedOption("")
-                    setTFSelectedOption(true)
-                    setErrorText("")
-                    setActiveQuestion(prevValue => prevValue + 1)
-                }
-            }
-            else {
-                if(questions[activeQuestion].question_type_name === "MCQ" && mcqselectedOption === "") {
-                    setErrorText("Please select an option")
-                }
-                else {
-                    if (localStorage.getItem("CANDIDATE_ANSWERS")) {
-                        let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                        
-                        if(questions[activeQuestion].question_type_name === "MCQ") {
-                            newAnswers.push(mcqselectedOption)
-                        }
-                        else if(questions[activeQuestion].question_type_name === "TrueFalse") {
-                            newAnswers.push(tfSelectedOption)
-                        }
-
-                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
-
-                        setMCQSelectedOption("")
-                        setTFSelectedOption(true)
-                        setErrorText("")
-                        setActiveQuestion(prevValue => prevValue + 1)
-                    }
-                    else {
-                        let answers = []
-
-                        if(questions[activeQuestion].question_type_name === "MCQ") {
-                            answers.push(mcqselectedOption)
-                        }
-                        else if(questions[activeQuestion].question_type_name === "TrueFalse") {
-                            answers.push(tfSelectedOption)
-                        }
-
-                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
-
-                        setMCQSelectedOption("")
-                        setTFSelectedOption(true)
-                        setErrorText("")
-                        setActiveQuestion(prevValue => prevValue + 1)
-                    }
-                }
-            }
-        }
+    else if (activeQuestion === assessments[activeAssessment].length - 1) {
+      if(activeQuestionOption === "") {
+        setError("Please select an option")
+      }
+      else {
+        candidateAnswers.current.push([assessments[activeAssessment][0].assessment_name, activeAssessmentMarks])
+        setActiveAssessment(val => val + 1)
+      }
     }
-
-    const handleSelectOption = (evt) => {
-        if (props.questions[activeQuestion].question_type_name === "MCQ") {
-            setMCQSelectedOption(evt.target.value)
-        }
-        else if (props.questions[activeQuestion].question_type_name === "TrueFalse") {
-            setTFSelectedOption(evt.target.value)
-        }
+    else {
+      if(activeQuestionOption === "") {
+        setError("Please select an option")
+      }
+      else {
+        setActiveQuestion(val => val + 1)
+      }
     }
-    
-    return (
-        props.visible
+  }
+
+  return (
+    assessments.map((assessment, assessmentIndex) => {
+      return (
+        assessmentIndex === activeAssessment
         &&
         <div>
-            {/* Can make a separate component to avoid markup repitition */}
-            <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
-                <div className="flex flex-col">
-                    <p className="rounded-tr-lg rounded-tl-lg md:rounded-tr-none lg:rounded-tr-none bg-blue-500 w-full text-white text-center py-2 font-bold">Section</p>
-                    <p className="text-center py-2 font-bold">{assessmentInfo.sectionName}</p>
-                </div>
-                <div className="flex flex-col">
-                    <p className="bg-blue-500 w-full text-white text-center py-2 font-bold">Total Questions</p>
-                    <p className="text-center py-2 font-bold">{assessmentInfo.totalQuestions}</p>
-                </div>
-                <div className="flex flex-col">
-                    <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
-                    <p className="text-center py-2 font-bold">{formatTime(secondsLeft)}</p>
-                </div>
-            </div>
+          {
+            assessment.map((q, questionIndex) => {
+              return (
+                assessmentIndex === activeAssessment && questionIndex === activeQuestion
+                &&
+                <div>
+                  <span className="text-red-500 text-sm">{error}</span>
+                  <div className="m-5 flex gap-y-4 flex-col border-[1px] rounded-lg shadow-md">
+                    <p className="p-5 border-[1px] m-4 rounded-lg text-center">{q.question}</p>
+                    <div className="mx-4 flex items-center">
+                      <input type="radio" name="questionOption" onClick={setOption} value={q.option_one} />
+                      <p className="px-3 py-2 ml-2 border-[1px] w-full rounded-md shadow-md">{q.option_one}</p>
+                    </div>
+                    <div className="mx-4 flex items-center">
+                      <input type="radio" name="questionOption" onClick={setOption} value={q.option_two} />
+                      <p className="px-3 py-2 ml-2 border-[1px] w-full rounded-md shadow-md">{q.option_two}</p>
+                    </div>
+                    <div className="mx-4 flex items-center">
+                      <input type="radio" name="questionOption" onClick={setOption} value={q.option_three} />
+                      <p className="px-3 py-2 ml-2 border-[1px] w-full rounded-md shadow-md">{q.option_three}</p>
+                    </div>
+                    <div className="mx-4 flex items-center">
+                      <input type="radio" name="questionOption" onClick={setOption} value={q.option_four} />
+                      <p className="px-3 py-2 ml-2 border-[1px] w-full rounded-md shadow-md">{q.option_four}</p>
+                    </div>
+                    <span className="py-2"></span>
+                  </div>
 
-            <div className="w-full text-center">
-                <span className="text-sm text-red-500">{errorText}</span>
-            </div>
-
-            {
-                props.questions.map((q, idx) => {
-                    if (q.question_type_name === "MCQ") {
-                        return <QuestionBox
-                            key={q + idx}
-                            visible={idx === activeQuestion}
-                            mcq={true}
-                            truefalse={false}
-                            question={q.question}
-                            optionOne={q.option_one}
-                            optionTwo={q.option_two}
-                            optionThree={q.option_three}
-                            optionFour={q.option_four}
-                            handleQuestionOptionClick={handleSelectOption}
-                        />
-                    }
-                    else {
-                        return <QuestionBox
-                            key={q + idx}
-                            visible={idx === activeQuestion}
-                            mcq={false}
-                            truefalse={true}
-                            question={q.question}
-                            handleQuestionOptionClick={handleSelectOption}
-                        />
-                    }
-                })
-            }
-
-            <div className="w-full flex justify-center gap-x-3 text-white">
+                  <div className="w-full flex justify-center gap-x-3 text-white">
                 <button onClick={handleNextQuestion} className="bg-blue-600 hover:bg-blue-500 px-10 py-2 rounded-md">
-                    {
-                        buttonText
-                    }
+                    { questionIndex === assessment.length ? "Finish" : "Next"}
                 </button>
             </div>
+                </div>
+              )
+            })
+          }
         </div>
-    )
+      )
+    })
+  )
 }
 
 export default TechnicalTest

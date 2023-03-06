@@ -207,18 +207,7 @@ assessmentsRouter.post("/recruiter/questions", (req, res) => {
             recruiterQuestions.push(response)
         }
         
-        assessmentModel.getRecruiterAssessmentTrueFalseQuestions(
-            req.body.recruiterEmail,
-            req.body.assessmentName
-        ).then(response => {
-            if(response.length > 0) {
-                recruiterQuestions.push(response)
-            }
-            
-            res.status(200).send(recruiterQuestions)
-        }).catch(error => {
-            res.status(500).send(error)
-        })
+        res.status(200).send(recruiterQuestions)
     }).catch(error => {
         res.status(500).send(error)
     })
