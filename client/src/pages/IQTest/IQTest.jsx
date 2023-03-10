@@ -41,7 +41,7 @@ const IQTest = () => {
     }, [])
 
     useEffect(() => {
-        if(secondsLeft === 0) {
+        if (secondsLeft === 0) {
             handleNextQuestion()
         }
     }, [secondsLeft])
@@ -77,7 +77,7 @@ const IQTest = () => {
             handleFinish()
         }
         else {
-            if(secondsLeft === 0) {
+            if (secondsLeft === 0) {
                 if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
                     newAnswers.push(selectedOption)
@@ -97,23 +97,23 @@ const IQTest = () => {
                 }
             }
             else {
-                if (selectedOption == "") {
+                if (selectedOption == "NULL") {
                     setErrorText("Please select an option")
                 }
                 else {
                     if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                         let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
                         newAnswers.push(selectedOption)
-    
+
                         localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
-    
+
                         setSelectedOption("")
                         setErrorText("")
                         setActiveQuestion(prevValue => prevValue + 1)
                     }
-                    else {    
+                    else {
                         localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify([selectedOption]))
-    
+
                         setSelectedOption("")
                         setErrorText("")
                         setActiveQuestion(prevValue => prevValue + 1)
@@ -142,21 +142,21 @@ const IQTest = () => {
         axios.post("http://localhost:4321/assessment/iq/calculate_score", {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
-            if(localStorage.getItem("CANDIDATE_SCORES")) {
+            if (localStorage.getItem("CANDIDATE_SCORES")) {
                 console.log("CANDIDATE_SCORES")
                 localStorage.removeItem("CANDIDATE_SCORES")
             }
 
             localStorage.setItem("CANDIDATE_SCORES", JSON.stringify([["IQ", response.data.score]]))
 
-                navigate("/eq-test", {
-                    state: {
-                        jobName: state.jobName,
-                        candidateEmail: state.candidateEmail,
-                        recruiterEmail: state.recruiterEmail
-                    },
-                    replace: true
-                })
+            navigate("/eq-test", {
+                state: {
+                    jobName: state.jobName,
+                    candidateEmail: state.candidateEmail,
+                    recruiterEmail: state.recruiterEmail
+                },
+                replace: true
+            })
         }).catch(error => {
             console.log(error)
         })
@@ -165,7 +165,7 @@ const IQTest = () => {
     return (
         <div>
             {/* Can make a separate component to avoid markup repitition */}
-            <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
+            <div className="m-5 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 grid-rows-1 border-[1px] rounded-lg shadow-md">
                 <div className="flex flex-col">
                     <p className="rounded-tr-lg rounded-tl-lg md:rounded-tr-none lg:rounded-tr-none bg-blue-500 w-full text-white text-center py-2 font-bold">Section</p>
                     <p className="text-center py-2 font-bold">{assessmentInfo.sectionName}</p>
@@ -175,7 +175,11 @@ const IQTest = () => {
                     <p className="text-center py-2 font-bold">{assessmentInfo.totalQuestions}</p>
                 </div>
                 <div className="flex flex-col">
-                    <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
+                    <p className="bg-blue-500 w-full text-white text-center py-2 font-bold">Current Question</p>
+                    <p className="text-center py-2 font-bold">{activeQuestion + 1}</p>
+                </div>
+                <div className="flex flex-col">
+                    <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time</p>
                     <p className="text-center py-2 font-bold">{formatTime(secondsLeft)}</p>
                 </div>
             </div>

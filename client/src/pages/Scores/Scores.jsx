@@ -1,5 +1,6 @@
 import { useLocation } from "react-router-dom"
 import ScoreCard from "../../components/ScoreCard/ScoreCard"
+import { combineTwoElements, reduceDimensions } from "../../utils/REDUCE_ARR_DIM"
 
 const Scores = () => {
     const { state } = useLocation()
@@ -8,21 +9,11 @@ const Scores = () => {
         <div className="w-full flex gap-y-7 flex-col justify-center items-center h-[91vh]">
             <p className="font-bold text-4xl py-10">Your Result</p>
             {
-                state.scoresArray.map(s => {
-                    return Array.isArray(s[1]) ? 
-                        s[1].map(assessment_score => {
-                            return <ScoreCard 
-                                key={assessment_score}
-                                sectionName={assessment_score[0]}
-                                score={assessment_score[1]}
-                            />
-                        })
-                        :
-                        <ScoreCard
-                            key={s}
-                            sectionName={s[0]}
-                            score={s[1]}
-                        />
+                combineTwoElements(reduceDimensions(state.scoresArray)).map(score => {
+                    return <ScoreCard
+                        sectionName={score[0]}
+                        score={score[1]}
+                    />
                 })
             }
         </div>

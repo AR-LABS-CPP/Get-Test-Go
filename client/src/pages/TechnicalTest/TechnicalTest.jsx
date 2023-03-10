@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 import { TECHNICAL_TEST_QUESTION_TIME } from "../../utils/QUESTION_TIME"
+import { combineTwoElements, reduceDimensions } from "../../utils/REDUCE_ARR_DIM"
 
 const TechnicalTest = () => {
   const { state } = useLocation()
@@ -145,11 +146,16 @@ const TechnicalTest = () => {
       candidateAnswers: candidateAnswers.current
     }).then(response => {
       let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
-      scores.push(["TECHNICAL", response.data.score])
+      scores.push(response.data.score)
 
       localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
 
-      // TODO
+      axios.post("http://localhost:4321/assessment/candidate/score", {
+        recruiterEmail: state.recruiterEmail,
+        candidateEmail: state.candidateEmail,
+        jobName: state.jobName,
+        scores: combineTwoElements(reduceDimensions(scores))
+      })
       
       navigate("/scores", {
         state: {

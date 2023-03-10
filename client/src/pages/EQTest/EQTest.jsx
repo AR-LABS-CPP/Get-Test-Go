@@ -96,7 +96,7 @@ const EQTest = () => {
                 }
             }
             else {
-                if (selectedOption == "") {
+                if (selectedOption == "NULL") {
                     setErrorText("Please select an option")
                 }
                 else {
@@ -162,7 +162,7 @@ const EQTest = () => {
     return (
         <div>
             {/* Can make a separate component to avoid markup repitition */}
-            <div className="m-5 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 grid-rows-1 border-[1px] rounded-lg shadow-md">
+            <div className="m-5 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 grid-rows-1 border-[1px] rounded-lg shadow-md">
                 <div className="flex flex-col">
                     <p className="rounded-tr-lg rounded-tl-lg md:rounded-tr-none lg:rounded-tr-none bg-blue-500 w-full text-white text-center py-2 font-bold">Section</p>
                     <p className="text-center py-2 font-bold">{assessmentInfo.sectionName}</p>
@@ -172,7 +172,11 @@ const EQTest = () => {
                     <p className="text-center py-2 font-bold">{assessmentInfo.totalQuestions}</p>
                 </div>
                 <div className="flex flex-col">
-                    <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time remaining for this question</p>
+                    <p className="bg-blue-500 w-full text-white text-center py-2 font-bold">Current Question</p>
+                    <p className="text-center py-2 font-bold">{activeQuestion + 1}</p>
+                </div>
+                <div className="flex flex-col">
+                    <p className="rounded-tr-none md:rounded-tr-lg lg:rounded-tr-lg xl:rounded-tr-lg bg-blue-500 w-full text-white text-center py-2 font-bold">Time</p>
                     <p className="text-center py-2 font-bold">{formatTime(secondsLeft)}</p>
                 </div>
             </div>
