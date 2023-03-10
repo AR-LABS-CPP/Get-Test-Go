@@ -220,13 +220,32 @@ assessmentsRouter.post("/candidate/score", (req, res) => {
         req.body.jobName,
         req.body.scores
     ).then(response => {
-        // the value of response is "true"
+        // the returned value of response is "true" and so we
+        // are checking for truthness to determine if the 
+        // scores were saved in the database.
         if(response) {
             res.status(200).send("Scores saved successfully.")
         }
     }).catch(error => {
         res.status(500).send(error)
     })
+})
+
+assessmentsRouter.post("/candidate/scores", async (req, res) => {
+    try {
+        const candidateResults = await assessmentModel.getCandidateResults(req.body.candidateEmail)
+        const candidateIQResults = await assessmentModel.getCandidateIQResults(req.body.candidateEmail)
+        const candidateEQResults = await assessmentModel.getCandidateEQResults(req.body.candidateEmail)
+
+        res.status(200).send({
+            "candidateResults": candidateResults,
+            "candidateIqResults": candidateIQResults,
+            "candidateEqResults": candidateEQResults
+        })
+    }
+    catch(err) {
+        res.status(500).send(error)
+    }
 })
 
 module.exports = assessmentsRouter

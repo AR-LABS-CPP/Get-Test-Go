@@ -346,6 +346,45 @@ const calculateGeneralScore = (recruiterEmail, assessmentName, answers) => {
     })
 }
 
+const getCandidateResults = (candidateEmail) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_candidate_job_assessment_details WHERE candidate_email = '${candidateEmail}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
+const getCandidateIQResults = (candidateEmail) => {
+    return new Promise((resolve, reject) => {
+        addonPool.query(`SELECT * FROM candidate_score WHERE candidate_email = '${candidateEmail}' AND assessment_type = 'IQ'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
+const getCandidateEQResults = (candidateEmail) => {
+    return new Promise((resolve, reject) => {
+        addonPool.query(`SELECT * FROM candidate_score WHERE candidate_email = '${candidateEmail}' AND assessment_type = 'EQ'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -367,5 +406,8 @@ module.exports = {
     calculateIQScore,
     calculateEQScore,
     calculateTechnicalScore,
-    calculateGeneralScore
+    calculateGeneralScore,
+    getCandidateResults,
+    getCandidateIQResults,
+    getCandidateEQResults
 }
