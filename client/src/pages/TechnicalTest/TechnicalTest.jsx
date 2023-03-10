@@ -2,6 +2,8 @@ import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
+import { TECHNICAL_TEST_QUESTION_TIME } from "../../utils/QUESTION_TIME"
+
 const TechnicalTest = () => {
   const { state } = useLocation()
   const navigate = useNavigate()
@@ -9,7 +11,7 @@ const TechnicalTest = () => {
   const candidateAnswers = useRef([])
   const [error, setError] = useState("")
   const [assessments, setAssessments] = useState([])
-  const [secondsLeft, setSecondsLeft] = useState(5)
+  const [secondsLeft, setSecondsLeft] = useState(TECHNICAL_TEST_QUESTION_TIME)
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [activeAssessment, setActiveAssessment] = useState(0)
   const [activeQuestionOption, setActiveQuestionOption] = useState(null)
@@ -29,7 +31,7 @@ const TechnicalTest = () => {
   }, [])
 
   useEffect(() => {
-    setSecondsLeft(5)
+    setSecondsLeft(TECHNICAL_TEST_QUESTION_TIME)
     setActiveQuestionOption(null)
     setError("")
 
@@ -142,7 +144,12 @@ const TechnicalTest = () => {
       recruiterEmail: state.recruiterEmail,
       candidateAnswers: candidateAnswers.current
     }).then(response => {
-      console.log(response)
+      let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
+      scores.push(["TECHNICAL", response.data.score])
+
+      localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
+      
+      navigate("/candidate-main-page")
     }).catch(error => {
       console.log(error)
     })

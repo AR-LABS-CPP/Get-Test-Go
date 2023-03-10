@@ -163,7 +163,7 @@ assessmentsRouter.post("/technical/calculate_score", async (req, res) => {
         }
     }
 
-    return res.status(200).send(technicalAssessmentsScores)
+    return res.status(200).send({ score: technicalAssessmentsScores })
 })
 
 assessmentsRouter.post("/general/calculate_score", async (req, res) => {

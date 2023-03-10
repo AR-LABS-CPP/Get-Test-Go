@@ -2,6 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
+import { EQ_TEST_QUESTION_TIME } from "../../utils/QUESTION_TIME"
 
 const EQTest = () => {
     const navigate = useNavigate()
@@ -17,7 +18,7 @@ const EQTest = () => {
         sectionName: "EQ",
         totalQuestions: 0,
     })
-    const [secondsLeft, setSecondsLeft] = useState(120)
+    const [secondsLeft, setSecondsLeft] = useState(EQ_TEST_QUESTION_TIME)
 
     useEffect(() => {
         axios.post("http://localhost:4321/assessment/eq/questions", {
@@ -39,13 +40,13 @@ const EQTest = () => {
     }, [])
 
     useEffect(() => {
-        if(secondsLeft === 0) {
+        if (secondsLeft === 0) {
             handleNextQuestion()
         }
     }, [secondsLeft])
 
     useEffect(() => {
-        setSecondsLeft(120)
+        setSecondsLeft(EQ_TEST_QUESTION_TIME)
 
         if (activeQuestion === (questions.length - 1)) {
             setButtonText("Finish")
@@ -58,9 +59,6 @@ const EQTest = () => {
             setSecondsLeft((prevSeconds) => prevSeconds - 1);
         }, 1000);
 
-        console.log("ACTIVE QUESTION USE-EFFECT TRIGGERED")
-    
-        // cleanup function to clear interval when component unmounts
         return () => clearInterval(intervalId);
     }, [activeQuestion])
 
@@ -77,7 +75,7 @@ const EQTest = () => {
             handleFinish()
         }
         else {
-            if(secondsLeft === 0) {
+            if (secondsLeft === 0) {
                 if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
                     newAnswers.push("NULL")
@@ -89,9 +87,7 @@ const EQTest = () => {
                     setActiveQuestion(prevValue => prevValue + 1)
                 }
                 else {
-                    let answers = ["NULL"]
-
-                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
+                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(["NULL"]))
 
                     setSelectedOption("")
                     setErrorText("")
@@ -106,18 +102,16 @@ const EQTest = () => {
                     if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                         let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
                         newAnswers.push(selectedOption)
-    
+
                         localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
-    
+
                         setSelectedOption("")
                         setErrorText("")
                         setActiveQuestion(prevValue => prevValue + 1)
                     }
                     else {
-                        let answers = [selectedOption]
-    
-                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
-    
+                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify([selectedOption]))
+
                         setSelectedOption("")
                         setErrorText("")
                         setActiveQuestion(prevValue => prevValue + 1)
@@ -146,36 +140,19 @@ const EQTest = () => {
         axios.post("http://localhost:4321/assessment/eq/calculate_score", {
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
         }).then(response => {
-            if (response.data.score > 2) {
-                let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
-                scores.push(["EQ", response.data.score, "PASSED"])
+            let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
+            scores.push(["EQ", response.data.score])
 
-                localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
+            localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
 
-                navigate('/technical-test', {
-                    state: {
-                        jobName: state.jobName,
-                        candidateEmail: state.candidateEmail,
-                        recruiterEmail: state.recruiterEmail
-                    },
-                    replace: true
-                })
-            }
-            else if(response.data.score < 2) {
-                let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
-                scores.push(["EQ", response.data.score, "DIDN'T PASS"])
-
-                console.log(scores)
-
-                navigate("/scores", {
-                    state: {
-                        scoresArray: [
-                            scores
-                        ]
-                    },
-                    replace: true
-                })
-            }
+            navigate('/technical-test', {
+                state: {
+                    jobName: state.jobName,
+                    candidateEmail: state.candidateEmail,
+                    recruiterEmail: state.recruiterEmail
+                },
+                replace: true
+            })
         }).catch(error => {
             console.log(error)
         })

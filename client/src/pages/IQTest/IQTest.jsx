@@ -2,7 +2,8 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import AddonQuestionBox from "../../components/AddonQuestionBox/AddonQuestionBox"
-import Scores from "../Scores/Scores"
+
+import { IQ_TEST_QUESTION_TIME } from "../../utils/QUESTION_TIME"
 
 const IQTest = () => {
     const navigate = useNavigate()
@@ -18,7 +19,7 @@ const IQTest = () => {
         sectionName: "IQ",
         totalQuestions: 0,
     })
-    const [secondsLeft, setSecondsLeft] = useState(120)
+    const [secondsLeft, setSecondsLeft] = useState(IQ_TEST_QUESTION_TIME)
 
     useEffect(() => {
         axios.post("http://localhost:4321/assessment/iq/questions", {
@@ -46,7 +47,7 @@ const IQTest = () => {
     }, [secondsLeft])
 
     useEffect(() => {
-        setSecondsLeft(120)
+        setSecondsLeft(IQ_TEST_QUESTION_TIME)
 
         if (activeQuestion === (questions.length - 1)) {
             setButtonText("Finish")
@@ -59,9 +60,6 @@ const IQTest = () => {
             setSecondsLeft((prevSeconds) => prevSeconds - 1);
         }, 1000);
 
-        console.log("ACTIVE QUESTION USE-EFFECT TRIGGERED")
-    
-        // cleanup function to clear interval when component unmounts
         return () => clearInterval(intervalId);
     }, [activeQuestion])
 
@@ -90,9 +88,7 @@ const IQTest = () => {
                     setActiveQuestion(prevValue => prevValue + 1)
                 }
                 else {
-                    let answers = ["NULL"]
-
-                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
+                    localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(["NULL"]))
 
                     setSelectedOption("")
                     setErrorText("")
@@ -114,10 +110,8 @@ const IQTest = () => {
                         setErrorText("")
                         setActiveQuestion(prevValue => prevValue + 1)
                     }
-                    else {
-                        let answers = [selectedOption]
-    
-                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(answers))
+                    else {    
+                        localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify([selectedOption]))
     
                         setSelectedOption("")
                         setErrorText("")
@@ -150,11 +144,8 @@ const IQTest = () => {
             if(localStorage.getItem("CANDIDATE_SCORES")) {
                 localStorage.removeItem("CANDIDATE_SCORES")
             }
-
-            if (response.data.score > 2) {
-                let scores = [["IQ", response.data.score, "PASSED"]]
-
-                localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
+            
+            localStorage.setItem("CANDIDATE_SCORES", JSON.stringify([["IQ", response.data.score]]))
 
                 navigate("/eq-test", {
                     state: {
@@ -164,17 +155,6 @@ const IQTest = () => {
                     },
                     replace: true
                 })
-            }
-            else if(response.data.score < 2) {
-                navigate("/scores", {
-                    state: {
-                        scoresArray: [
-                            ["IQ", response.data.score, "DIDN'T PASS"] 
-                        ]
-                    },
-                    replace: true
-                })
-            }
         }).catch(error => {
             console.log(error)
         })

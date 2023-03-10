@@ -8,35 +8,20 @@ const ApplyNotice = (props) => {
     const { state } = useLocation()
 
     useEffect(() => {
-        if(answer === "YES") {
-            navigate('/technical-test', {
+        if (answer === "YES") {
+            navigate('/iq-test', {
                 state: {
                     jobName: state.jobName,
                     candidateEmail: state.candidateEmail,
                     recruiterEmail: state.recruiterEmail
                 },
+                replace: true
             })
         }
-        else if(answer === "NO") {
+        else if (answer === "NO") {
             navigate("/candidate-jobs")
         }
     }, [answer])
-
-    // const handleYes = () => {
-        // navigate('/iq-test', {
-        //     state: {
-        //         jobName: state.jobName,
-        //         candidateEmail: state.candidateEmail,
-        //         recruiterEmail: state.recruiterEmail
-        //     },
-        //     replace: true
-        // })
-        
-    // }
-
-    // const handleNo = () => {
-    //     navigate("/candidate-jobs")
-    // }
 
     return (
         <div className="pt-20 flex flex-col items-center justify-center">
