@@ -116,6 +116,18 @@ CREATE TABLE get_test_go_assessment_passing_threshold(
 	threshold INT NOT NULL
 );
 
+CREATE TABLE get_test_go_candidate_job_assessment_score(
+	candidate_id int4 NOT NULL,
+	recruiter_id int4 NOT NULL,
+	job_id int4 NOT NULL,
+	assessment_id int4 NOT NULL,
+	score int4 NOT NULL,
+	CONSTRAINT fk_candidate_id FOREIGN KEY (candidate_id) REFERENCES get_test_go_candidate(candidate_id),
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
+	CONSTRAINT fk_job_id FOREIGN KEY (job_id) REFERENCES get_test_go_recruiter_job(job_id),
+	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id)
+);
+
 INSERT INTO get_test_go_assessment_type(assessment_type_name, assessment_type_details)
 VALUES('GENERAL', 'general tests can include IQ test, EQ test etc.');
 
@@ -182,18 +194,6 @@ AS $procedure$
 	end;
 $procedure$;
 
-CREATE OR REPLACE PROCEDURE bind_candidate_and_assessment(IN candidate_email character varying, IN name_of_assessment character varying)
- LANGUAGE plpgsql
-AS $procedure$
-	begin
-		insert into get_test_go_candidate_assessment(candidate_id, assessment_id) 
-			values((select recruiter_id from get_test_go_candidate where email = candidate_email), (select assessment_id from get_test_go_assessment where assessment_name = name_of_assessment));
-		
-		commit;
-	end;
-	
-$procedure$;
-
 CREATE OR REPLACE PROCEDURE bind_recruiter_and_assessment(IN recruiter_email character varying, IN name_of_assessment character varying)
  LANGUAGE plpgsql
 AS $procedure$
@@ -203,6 +203,34 @@ AS $procedure$
 		
 		commit;
 	end;
+	
+$procedure$;
+
+CREATE OR REPLACE PROCEDURE save_candidate_scores(
+	IN recruiter_email CHARACTER VARYING,
+	IN candidate_email CHARACTER VARYING, 
+	IN name_of_job CHARACTER VARYING,
+	IN name_of_assessment CHARACTER VARYING,
+	IN assessment_score int4
+)
+ LANGUAGE plpgsql
+AS $procedure$
+	BEGIN
+		WITH CTE_recruiter_id AS (
+			SELECT recruiter_id FROM get_test_go_recruiter WHERE email = recruiter_email
+		)
+		INSERT INTO get_test_go_candidate_job_assessment_score(recruiter_id, candidate_id, job_id, assessment_id, score)
+		VALUES
+		(
+			(SELECT recruiter_id FROM CTE_recruiter_id),
+			(SELECT candidate_id FROM get_test_go_candidate WHERE email = candidate_email),
+			(SELECT job_id FROM get_test_go_recruiter_job WHERE recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id) AND job_name = name_of_job),	
+			(SELECT assessment_id FROM get_test_go_recruiter_assessment WHERE recruiter_id = (SELECT recruiter_id FROM CTE_recruiter_id) AND assessment_name = name_of_assessment),
+			assessment_score
+		);
+		
+		COMMIT;
+	END;
 	
 $procedure$;
 
@@ -478,6 +506,12 @@ CREATE TABLE eq_question(
 	option_three TEXT NOT NULL,
 	option_four TEXT NOT NULL,
 	correct_answer TEXT NOT NULL
+);
+
+CREATE TABLE candidate_score(
+	id SERIAL PRIMARY KEY,
+	assessment_type CHARACTER VARYING NOT NULL,
+	score int4 NOT NULL
 );
 
 INSERT INTO iq_question(

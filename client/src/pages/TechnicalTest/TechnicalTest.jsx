@@ -148,8 +148,14 @@ const TechnicalTest = () => {
       scores.push(["TECHNICAL", response.data.score])
 
       localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
+
+      // TODO
       
-      navigate("/candidate-main-page")
+      navigate("/scores", {
+        state: {
+          scoresArray: scores
+        }
+      })
     }).catch(error => {
       console.log(error)
     })

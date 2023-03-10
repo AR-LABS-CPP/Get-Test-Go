@@ -47,6 +47,7 @@ const EQTest = () => {
 
     useEffect(() => {
         setSecondsLeft(EQ_TEST_QUESTION_TIME)
+        setSelectedOption("NULL")
 
         if (activeQuestion === (questions.length - 1)) {
             setButtonText("Finish")

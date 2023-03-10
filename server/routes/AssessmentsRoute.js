@@ -213,4 +213,20 @@ assessmentsRouter.post("/recruiter/questions", (req, res) => {
     })
 })
 
+assessmentsRouter.post("/candidate/score", (req, res) => {
+    assessmentModel.bindCandidateAndAssessment(
+        req.body.recruiterEmail,
+        req.body.candidateEmail,
+        req.body.jobName,
+        req.body.scores
+    ).then(response => {
+        // the value of response is "true"
+        if(response) {
+            res.status(200).send("Scores saved successfully.")
+        }
+    }).catch(error => {
+        res.status(500).send(error)
+    })
+})
+
 module.exports = assessmentsRouter

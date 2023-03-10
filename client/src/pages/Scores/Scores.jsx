@@ -9,12 +9,20 @@ const Scores = () => {
             <p className="font-bold text-4xl py-10">Your Result</p>
             {
                 state.scoresArray.map(s => {
-                    return <ScoreCard
-                        key={s}
-                        sectionName={s[0]}
-                        score={s[1]}
-                        status={s[2]}
-                    />
+                    return Array.isArray(s[1]) ? 
+                        s[1].map(assessment_score => {
+                            return <ScoreCard 
+                                key={assessment_score}
+                                sectionName={assessment_score[0]}
+                                score={assessment_score[1]}
+                            />
+                        })
+                        :
+                        <ScoreCard
+                            key={s}
+                            sectionName={s[0]}
+                            score={s[1]}
+                        />
                 })
             }
         </div>
