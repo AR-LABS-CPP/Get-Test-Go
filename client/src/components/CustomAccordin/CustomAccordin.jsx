@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 
-const ResultRow = ({ title, children }) => {
+const CustomAccordin = ({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [height, setHeight] = useState(0);
   const contentRef = useRef(null);
@@ -11,7 +11,7 @@ const ResultRow = ({ title, children }) => {
   };
 
   return (
-    <div className="border-gray-200 border-[1px] rounded-md py-2 shadow">
+    <div className="border-gray-200 border-[1px] rounded-md py-2 shadow mb-4">
       <div
         className="flex justify-between items-center py-2 px-4 cursor-pointer"
         onClick={toggleAccordion}
@@ -40,4 +40,4 @@ const ResultRow = ({ title, children }) => {
   );
 }
 
-export default ResultRow;
+export default CustomAccordin;

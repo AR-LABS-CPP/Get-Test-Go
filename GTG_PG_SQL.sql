@@ -483,6 +483,35 @@ AS
 		ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_job.recruiter_id
 	JOIN get_test_go_job_types
 		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
+		
+CREATE OR REPLACE VIEW get_test_go_candidate_job_assessment_details
+AS
+	SELECT
+		get_test_go_recruiter.recruiter_id,
+		get_test_go_recruiter.email AS recruiter_email,
+		get_test_go_candidate.candidate_id,
+		get_test_go_candidate.email AS candidate_email,
+		get_test_go_recruiter_job.job_name,
+		get_test_go_recruiter_job.job_details,
+		get_test_go_recruiter_assessment.assessment_id,
+		get_test_go_recruiter_assessment.assessment_name,
+		get_test_go_recruiter_assessment.assessment_details,
+		get_test_go_assessment_type.assessment_type_name,
+		get_test_go_assessment_type.assessment_type_details,
+		score
+	FROM get_test_go_candidate_job_assessment_score
+	JOIN get_test_go_recruiter
+		ON get_test_go_candidate_job_assessment_score.recruiter_id = get_test_go_recruiter.recruiter_id
+	JOIN get_test_go_recruiter_assessment
+		ON get_test_go_candidate_job_assessment_score.assessment_id = get_test_go_recruiter_assessment.assessment_id
+	JOIN get_test_go_assessment_type
+		ON get_test_go_recruiter_assessment.assessment_type = get_test_go_assessment_type.assessment_type_id
+	JOIN get_test_go_candidate
+		ON get_test_go_candidate_job_assessment_score.candidate_id = get_test_go_candidate.candidate_id
+	JOIN get_test_go_recruiter_job
+		ON get_test_go_candidate_job_assessment_score.job_id = get_test_go_recruiter_job.job_id
+	JOIN get_test_go_job_types
+		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
 
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE FROM THE 'Get_test_Go_Addon' Database for IQ and EQ
@@ -510,6 +539,7 @@ CREATE TABLE eq_question(
 
 CREATE TABLE candidate_score(
 	id SERIAL PRIMARY KEY,
+	candidate_email CHARACTER VARYING NOT NULL,
 	assessment_type CHARACTER VARYING NOT NULL,
 	score int4 NOT NULL
 );

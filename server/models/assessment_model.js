@@ -76,7 +76,7 @@ const bindCandidateAndAssessment = (recruiter_email, candidate_email, job_name, 
     return new Promise((resolve, reject) => {
         for(let score of scores) {
             if(score[0] === "IQ" || score[0] === "EQ") {
-                addonPool.query(`INSERT INTO candidate_score(assessment_type, score) VALUES('${score[0]}', '${score[1]}')`, (error, _) => {
+                addonPool.query(`INSERT INTO candidate_score(candidate_email, assessment_type, score) VALUES('${candidate_email}', '${score[0]}', '${score[1]}')`, (error, _) => {
                     if(error) {
                         console.log(error)
                         reject(false)
