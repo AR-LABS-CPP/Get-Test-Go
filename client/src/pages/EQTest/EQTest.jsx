@@ -11,7 +11,7 @@ const EQTest = () => {
 
     const [questions, setQuestions] = useState([])
     const [activeQuestion, setActiveQuestion] = useState(0)
-    const [selectedOption, setSelectedOption] = useState("")
+    const [selectedOption, setSelectedOption] = useState("NULL")
     const [buttonText, setButtonText] = useState("Next")
     const [errorText, setErrorText] = useState("")
     const [assessmentInfo, setAssessmentInfo] = useState({
@@ -78,7 +78,7 @@ const EQTest = () => {
             if (secondsLeft === 0) {
                 if (localStorage.getItem("CANDIDATE_ANSWERS")) {
                     let newAnswers = JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-                    newAnswers.push("NULL")
+                    newAnswers.push(selectedOption)
 
                     localStorage.setItem("CANDIDATE_ANSWERS", JSON.stringify(newAnswers))
 
