@@ -15,9 +15,26 @@ jobRoute.get("/types", (_, res) => {
 
 jobRoute.post("/all", (req, res) => {
     userModel.emailExists(req.body.candidateEmail).then(_ => {
-        jobModel.getAllJobs()
-            .then(response => res.status(200).send(response))
-            .catch(error => res.status(500).send(error))
+        jobModel.getAllJobs().then(jobs => {
+            assessmentModel.getCandidateAppliedJobs(req.body.candidateEmail).then(appliedJobs => {
+                let unappliedJobs = []
+
+                for(let job of jobs) {
+                    for(let appliedJob of appliedJobs) {
+                        if(appliedJob.job_name !== job.job_name) {
+                            unappliedJobs.push(job)
+                        }
+                    }
+                }
+
+                res.status(200).send(unappliedJobs)
+            }).catch(error => {
+                res.status(500).send(error)
+            })
+
+        }).catch(error => {
+            res.status(500).send(error)
+        })
     })
 })
 

@@ -128,6 +128,26 @@ assessmentsRouter.post("/technical/questions", (req, res) => {
     })
 })
 
+assessmentsRouter.post("/iq/score_exists", (req, res) => {
+    userModel.emailExists(req.body.candidateEmail).then(_ => {
+        assessmentModel.candidateIQScoreExists(req.body.candidateEmail).then(response => {
+            res.status(200).send(response)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+    })
+})
+
+assessmentsRouter.post("/eq/score_exists", (req, res) => {
+    userModel.emailExists(req.body.candidateEmail).then(_ => {
+        assessmentModel.candidateEQScoreExists(req.body.candidateEmail).then(response => {
+            res.status(200).send(response)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+    })
+})
+
 assessmentsRouter.post("/iq/calculate_score", (req, res) => {
     assessmentModel.calculateIQScore(req.body.candidateAnswers).then(response => {
         res.status(200).send({score: response})

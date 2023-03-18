@@ -93,7 +93,7 @@ const bindCandidateAndAssessment = (recruiter_email, candidate_email, job_name, 
             }
         }
 
-        pool.query(`INSERT INTO get_test_go_candidate_applied_job(candidate_name, job_name) VALUES('${candidate_email}', '${job_name}')`, (error, _) => {
+        pool.query(`INSERT INTO get_test_go_candidate_applied_job(candidate_email, job_name) VALUES('${candidate_email}', '${job_name}')`, (error, _) => {
             if(error) {
                 console.log(error)
                 reject(false)
@@ -392,6 +392,45 @@ const getCandidateEQResults = (candidateEmail) => {
     })
 }
 
+const candidateIQScoreExists = (candidateEmail) => {
+    return new Promise((resolve, reject) => {
+        addonPool.query(`SELECT COUNT(*) FROM candidate_score WHERE candidate_email = '${candidateEmail}' AND assessment_type = 'IQ'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count > 0)
+        })
+    })
+}
+
+const candidateEQScoreExists = (candidateEmail) => {
+    return new Promise((resolve, reject) => {
+        addonPool.query(`SELECT COUNT(*) FROM candidate_score WHERE candidate_email = '${candidateEmail}' AND assessment_type = 'EQ'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count > 0)
+        })
+    })
+}
+
+const getCandidateAppliedJobs = (candidateEmail) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_candidate_applied_job WHERE candidate_email = '${candidateEmail}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -416,5 +455,8 @@ module.exports = {
     calculateGeneralScore,
     getCandidateResults,
     getCandidateIQResults,
-    getCandidateEQResults
+    getCandidateEQResults,
+    candidateIQScoreExists,
+    candidateEQScoreExists,
+    getCandidateAppliedJobs
 }

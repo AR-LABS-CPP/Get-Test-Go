@@ -22,21 +22,40 @@ const IQTest = () => {
     const [secondsLeft, setSecondsLeft] = useState(IQ_TEST_QUESTION_TIME)
 
     useEffect(() => {
-        axios.post("http://localhost:4321/assessment/iq/questions", {
+        axios.post("http://localhost:4321/assessment/iq/score_exists", {
             candidateEmail: state.candidateEmail
         }).then(response => {
-            setQuestions(response.data)
-
-            setAssessmentInfo({
-                ...assessmentInfo,
-                totalQuestions: response.data.length
-            })
-
-            if (localStorage.getItem("CANDIDATE_ANSWERS")) {
-                localStorage.removeItem("CANDIDATE_ANSWERS")
+            // If the candidate has already taken the IQ test
+            // when applying for another job then forward the
+            // candidate to EQ test since he/she cannot retake
+            if (response.data === true) {
+                navigate("/eq-test", {
+                    state: {
+                        jobName: state.jobName,
+                        candidateEmail: state.candidateEmail,
+                        recruiterEmail: state.recruiterEmail
+                    },
+                    replace: true
+                })
             }
-        }).catch(error => {
-            console.log(error)
+            else {
+                axios.post("http://localhost:4321/assessment/iq/questions", {
+                    candidateEmail: state.candidateEmail
+                }).then(response => {
+                    setQuestions(response.data)
+
+                    setAssessmentInfo({
+                        ...assessmentInfo,
+                        totalQuestions: response.data.length
+                    })
+
+                    if (localStorage.getItem("CANDIDATE_ANSWERS")) {
+                        localStorage.removeItem("CANDIDATE_ANSWERS")
+                    }
+                }).catch(error => {
+                    console.log(error)
+                })
+            }
         })
     }, [])
 
