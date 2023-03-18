@@ -12,6 +12,12 @@ CREATE TABLE get_test_go_candidate(
 	"password" text NOT NULL
 );
 
+CREATE TABLE get_test_go_candidate_applied_job(
+	id SERIAL4 PRIMARY KEY,
+	candidate_email CHARACTER VARYING,
+	job_name CHARACTER VARYING
+);
+
 CREATE TABLE get_test_go_job_types(
 	job_type_id serial4 PRIMARY KEY,
 	job_type_name varchar(50) UNIQUE NOT NULL,
@@ -32,9 +38,9 @@ CREATE TABLE get_test_go_recruiter(
 );
 
 CREATE TABLE get_test_go_candidate_assessment(
-	candidate_id int4 NULL,
-	recruiter_id int4 NULL,
-	assessment_id int4 NULL,
+	candidate_id int4 NOT NULL,
+	recruiter_id int4 NOT NULL,
+	assessment_id int4 NOT NULL,
 	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id),
 	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
 	CONSTRAINT fk_candidate_id FOREIGN KEY (candidate_id) REFERENCES get_test_go_candidate(candidate_id)
@@ -512,6 +518,8 @@ AS
 		ON get_test_go_candidate_job_assessment_score.job_id = get_test_go_recruiter_job.job_id
 	JOIN get_test_go_job_types
 		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
+		
+SELECT * FROM get_test_go_candidate_job_assessment_score
 
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE FROM THE 'Get_test_Go_Addon' Database for IQ and EQ

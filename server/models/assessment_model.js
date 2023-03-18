@@ -93,6 +93,13 @@ const bindCandidateAndAssessment = (recruiter_email, candidate_email, job_name, 
             }
         }
 
+        pool.query(`INSERT INTO get_test_go_candidate_applied_job(candidate_name, job_name) VALUES('${candidate_email}', '${job_name}')`, (error, _) => {
+            if(error) {
+                console.log(error)
+                reject(false)
+            }
+        })
+
         resolve(true)
     })
 }
