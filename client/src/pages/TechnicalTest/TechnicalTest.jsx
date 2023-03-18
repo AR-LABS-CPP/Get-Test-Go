@@ -155,12 +155,19 @@ const TechnicalTest = () => {
         candidateEmail: state.candidateEmail,
         jobName: state.jobName,
         scores: combineTwoElements(reduceDimensions(scores))
-      })
-      
-      navigate("/scores", {
-        state: {
-          scoresArray: scores
+      }).then(response => {
+        if(response) {
+          navigate("/scores", {
+            state: {
+              scoresArray: scores
+            }
+          })
         }
+        else {
+          navigate("/error")
+        }
+      }).catch(error => {
+        navigate("/error")
       })
     }).catch(error => {
       console.log(error)

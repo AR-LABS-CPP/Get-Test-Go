@@ -34,6 +34,7 @@ import EQTest from "./pages/EQTest/EQTest"
 import Scores from "./pages/Scores/Scores"
 import TechnicalTest from "./pages/TechnicalTest/TechnicalTest"
 import SubmissionNotice from "./components/SubmissionNotice/SubmissionNotice"
+import Error from "./pages/Error/Error"
 
 const App = () => {
   const Auth = ({ children }) => {
@@ -87,6 +88,7 @@ const App = () => {
         <Route path='/view-recruiter-job' element={<Auth><ViewJob /></Auth>} />
         <Route path='/recruiter-main-page' element={<Auth><RecruiterMainPage /></Auth>} />
         <Route path='/candidate-main-page' element={<Auth><CandidateMainPage /></Auth>} />
+        <Route path='/error' element={<Error />} />
       </Routes>
     </BrowserRouter>
   )

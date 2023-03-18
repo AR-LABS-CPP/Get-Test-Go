@@ -238,13 +238,13 @@ assessmentsRouter.post("/candidate/scores", async (req, res) => {
         const candidateEQResults = await assessmentModel.getCandidateEQResults(req.body.candidateEmail)
 
         res.status(200).send({
-            "candidateResults": candidateResults,
             "candidateIqResults": candidateIQResults,
-            "candidateEqResults": candidateEQResults
+            "candidateEqResults": candidateEQResults,
+            "candidateResults": candidateResults,
         })
     }
     catch(err) {
-        res.status(500).send(error)
+        res.status(500).send(err)
     }
 })
 
