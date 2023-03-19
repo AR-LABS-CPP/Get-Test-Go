@@ -39,6 +39,8 @@ const Results = () => {
             setCandidateIQResults(res.data.candidateIqResults[0])
             setCandidateEQResults(res.data.candidateEqResults[0])
             setCandidateTechnicalResults(groupResultsByJobName(res.data.candidateResults))
+
+            console.log(candidateTechnicalResults)
         }
         catch (err) {
             toast.error("Unable to get results")
@@ -82,10 +84,6 @@ const Results = () => {
                                 {results.map((result, index) => (
                                     <div key={index} className="mt-5 shadow-md w-50 border-[1px]">
                                         <p className="bg-blue-500 text-white text-lg text-center font-medium py-3">{result.assessment_name}</p>
-                                        <p className="text-center bg-gray-100 py-3 text-sm">{result.assessment_details}</p>
-                                        <div className="flex justify-center mt-3">
-                                            <p className="text-center bg-green-400 w-fit px-5 py-2 rounded-md ">{result.assessment_type_name}</p>
-                                        </div>
                                         <p className="text-center py-5 text-2xl"><span className="pr-2">Score:</span>{result.score}</p>
                                     </div>
                                 ))}

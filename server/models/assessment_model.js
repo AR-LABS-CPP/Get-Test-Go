@@ -84,7 +84,7 @@ const bindCandidateAndAssessment = (recruiter_email, candidate_email, job_name, 
                 })
             }
             else {
-                pool.query(`call save_candidate_scores('${recruiter_email}', '${candidate_email}', '${job_name}', '${score[0]}', ${score[1]})`, (error, _) => {
+                pool.query(`INSERT INTO get_test_go_candidate_job_assessment_score(candidate_email, recruiter_email, job_name, assessment_name, score) VALUES('${candidate_email}', '${recruiter_email}', '${job_name}', '${score[0]}', '${score[1]}')`, (error, _) => {
                     if(error) {
                         console.log(error)
                         reject(false)
@@ -355,7 +355,7 @@ const calculateGeneralScore = (recruiterEmail, assessmentName, answers) => {
 
 const getCandidateResults = (candidateEmail) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM get_test_go_candidate_job_assessment_details WHERE candidate_email = '${candidateEmail}'`, (error, results) => {
+        pool.query(`SELECT * FROM get_test_go_candidate_job_assessment_score WHERE candidate_email = '${candidateEmail}'`, (error, results) => {
             if(error) {
                 console.log(error)
                 reject(error)

@@ -122,17 +122,25 @@ CREATE TABLE get_test_go_assessment_passing_threshold(
 	threshold INT NOT NULL
 );
 
+--CREATE TABLE get_test_go_candidate_job_assessment_score(
+--	candidate_id int4 NOT NULL,
+--	recruiter_id int4 NOT NULL,
+--	job_id int4 NOT NULL,
+--	assessment_id int4 NOT NULL,
+--	score int4 NOT NULL,
+--	CONSTRAINT fk_candidate_id FOREIGN KEY (candidate_id) REFERENCES get_test_go_candidate(candidate_id),
+--	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
+--	CONSTRAINT fk_job_id FOREIGN KEY (job_id) REFERENCES get_test_go_recruiter_job(job_id),
+--	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id)
+--);
+
 CREATE TABLE get_test_go_candidate_job_assessment_score(
-	candidate_id int4 NOT NULL,
-	recruiter_id int4 NOT NULL,
-	job_id int4 NOT NULL,
-	assessment_id int4 NOT NULL,
-	score int4 NOT NULL,
-	CONSTRAINT fk_candidate_id FOREIGN KEY (candidate_id) REFERENCES get_test_go_candidate(candidate_id),
-	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id),
-	CONSTRAINT fk_job_id FOREIGN KEY (job_id) REFERENCES get_test_go_recruiter_job(job_id),
-	CONSTRAINT fk_assessment_id FOREIGN KEY (assessment_id) REFERENCES get_test_go_recruiter_assessment(assessment_id)
-);
+	candidate_email CHARACTER VARYING NOT NULL,
+	recruiter_email CHARACTER VARYING NOT NULL,
+	job_name CHARACTER VARYING NOT NULL,
+	assessment_name CHARACTER VARYING NOT NULL,
+	score int4 NOT NULL
+)
 
 INSERT INTO get_test_go_assessment_type(assessment_type_name, assessment_type_details)
 VALUES('GENERAL', 'general tests can include IQ test, EQ test etc.');
@@ -975,15 +983,6 @@ AS
 	question,
 	correct_answer
 	FROM get_test_go_recruiter_assessment_mcq_question_with_answer
-	UNION ALL
-	SELECT
-		recruiter_id, 
-		assessment_name, 
-		assessment_type_name, 
-		question_type_name, 
-		question,
-		CAST(answer AS VARCHAR) AS correct_answer
-	FROM get_test_go_recruiter_assessment_tf_question_with_answer
 	ORDER BY question_type_name
 
 ----------------------------------------------------------------------------------------------------------------------

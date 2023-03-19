@@ -145,21 +145,20 @@ const TechnicalTest = () => {
       recruiterEmail: state.recruiterEmail,
       candidateAnswers: candidateAnswers.current
     }).then(response => {
-      let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
-      scores.push(response.data.score)
-
-      localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
-
+      localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(response.data.score))
+      
       axios.post("http://localhost:4321/assessment/candidate/score", {
         recruiterEmail: state.recruiterEmail,
         candidateEmail: state.candidateEmail,
         jobName: state.jobName,
-        scores: combineTwoElements(reduceDimensions(scores))
+        scores: JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
       }).then(response => {
+        console.log(response)
+
         if(response) {
           navigate("/scores", {
             state: {
-              scoresArray: scores
+              scoresArray: JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
             }
           })
         }
@@ -172,6 +171,8 @@ const TechnicalTest = () => {
     }).catch(error => {
       console.log(error)
     })
+
+    console.log(candidateAnswers.current)
   }
 
   return (

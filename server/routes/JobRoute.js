@@ -15,26 +15,36 @@ jobRoute.get("/types", (_, res) => {
 
 jobRoute.post("/all", (req, res) => {
     userModel.emailExists(req.body.candidateEmail).then(_ => {
-        jobModel.getAllJobs().then(jobs => {
-            assessmentModel.getCandidateAppliedJobs(req.body.candidateEmail).then(appliedJobs => {
-                let unappliedJobs = []
+        assessmentModel.getCandidateAppliedJobs(req.body.candidateEmail).then(appliedJobs => {
+            if(appliedJobs.length > 0) {
+                jobModel.getAllJobs().then(jobs => {
+                    let unappliedJobs = []
 
-                for(let job of jobs) {
-                    for(let appliedJob of appliedJobs) {
-                        if(appliedJob.job_name !== job.job_name) {
-                            unappliedJobs.push(job)
+                    for (let job of jobs) {
+                        for (let appliedJob of appliedJobs) {
+                            if (appliedJob.job_name !== job.job_name) {
+                                console.log(job)
+                                unappliedJobs.push(job)
+                            }
                         }
                     }
-                }
 
-                res.status(200).send(unappliedJobs)
-            }).catch(error => {
-                res.status(500).send(error)
-            })
+                    console.log(appliedJobs)
 
-        }).catch(error => {
-            res.status(500).send(error)
+                    res.status(200).send(unappliedJobs)
+                }).catch(error => {
+                    res.status(500).send(error)
+                })
+            }
+            else {
+                jobModel.getAllJobs().then(jobs => {
+                    res.status(200).send(jobs)
+                }).catch(error => {
+                    res.status(500).send(error)
+                })
+            }
         })
+
     })
 })
 
@@ -67,9 +77,9 @@ jobRoute.post("/applied", (req, res) => {
             assessmentModel.getCandidateAppliedJobs(req.body.candidateEmail).then(appliedJobs => {
                 let candidateAppliedJobs = []
 
-                for(let job of jobs) {
-                    for(let appliedJob of appliedJobs) {
-                        if(appliedJob.job_name === job.job_name) {
+                for (let job of jobs) {
+                    for (let appliedJob of appliedJobs) {
+                        if (appliedJob.job_name === job.job_name) {
                             candidateAppliedJobs.push(job)
                         }
                     }
@@ -99,15 +109,15 @@ jobRoute.post("/assessments/questions", async (req, res) => {
 
     const recruiterJobAssessments = await jobModel.getRecruiterJobAssessments(req.body.recruiterEmail, req.body.jobName)
 
-    for(let assessment of recruiterJobAssessments) {
+    for (let assessment of recruiterJobAssessments) {
         const recruiterJobAssessmentMCQQuestions = await assessmentModel.getRecruiterAssessmentMCQQuestions(req.body.recruiterEmail, assessment.assessment_name)
-        
-        if(recruiterJobAssessmentMCQQuestions) {
+
+        if (recruiterJobAssessmentMCQQuestions) {
             assessmentQuestions.push([...recruiterJobAssessmentMCQQuestions])
         }
     }
 
-    if(assessmentQuestions.length !== 0) {
+    if (assessmentQuestions.length !== 0) {
         res.status(200).send(assessmentQuestions)
     }
     else {
