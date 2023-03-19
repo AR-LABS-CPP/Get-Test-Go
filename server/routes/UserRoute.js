@@ -2,6 +2,7 @@ const express = require("express")
 const userRoute = express.Router()
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const Mailjet = require("node-mailjet")
 
 const userModel = require("../models/user_model")
 
@@ -16,6 +17,53 @@ const emailServiceAPIKey = "MSG9oqVVyT9n4rbyQH43svegDU4In7ix"
     this thing is used when generating the tokens.
 */
 const JWT_SECRET = "as-i-stared-into-the-abyss-of-darkness-i-saw-nothing-but-tom-and-jerry-fighting-with-each-other-while-wearing-night-vision-goggles-but-then-something-happened-something-that-i-will-never-forget"
+
+const mailjet = Mailjet.Client.apiConnect(
+    '33f061b48ef3f92f42f8e814a06108a8',
+    '0a4f586ff0254df929c68d35453f65c6'
+)
+
+userRoute.post("/mail", async (req, res) => {
+    const {
+        recruiterEmail,
+        candidateEmail,
+    } = req.body
+
+    try {
+        await mailjet.post('send', {version: 'v3.1'}).request({
+            Messages: [
+                {
+                    From: {
+                        Email: recruiterEmail,
+                        Name: 'Get Test Go'
+                    },
+                    To: [
+                        {
+                            Email: candidateEmail,
+                            Name: 'Candidate'
+                        },
+                    ],
+
+                    Subject: 'Get Test Go',
+                    HTMLPart: `
+                        <h3>Dear Candidate</h3>, \n\n
+                        The recruiter has found you interesting and \n
+                        would like to discuss things further using the given email \n\n
+
+                        Email: ${recruiterEmail}
+
+                        Please mail the recruiter with your details and Resume.
+                    `
+                }
+            ]
+        })
+
+        res.status(200).send("Email sent successfully!")
+    }
+    catch(err) {
+        res.status(500).send("Error sending email")
+    }
+})
 
 userRoute.post("/users", (req, res) => {
     userModel.getUsers(req.body.userType).then(response => {
