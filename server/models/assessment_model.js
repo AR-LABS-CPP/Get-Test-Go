@@ -431,6 +431,19 @@ const getCandidateAppliedJobs = (candidateEmail) => {
     })
 }
 
+const getCandidatesForJobs = (recruiterEmail) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_candidate_job_assessment_score WHERE recruiter_email = '${recruiterEmail}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -458,5 +471,6 @@ module.exports = {
     getCandidateEQResults,
     candidateIQScoreExists,
     candidateEQScoreExists,
-    getCandidateAppliedJobs
+    getCandidateAppliedJobs,
+    getCandidatesForJobs
 }
