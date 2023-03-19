@@ -61,6 +61,31 @@ jobRoute.post("/new", (req, res) => {
     })
 })
 
+jobRoute.post("/applied", (req, res) => {
+    userModel.emailExists(req.body.candidateEmail).then(_ => {
+        jobModel.getAllJobs().then(jobs => {
+            assessmentModel.getCandidateAppliedJobs(req.body.candidateEmail).then(appliedJobs => {
+                let candidateAppliedJobs = []
+
+                for(let job of jobs) {
+                    for(let appliedJob of appliedJobs) {
+                        if(appliedJob.job_name === job.job_name) {
+                            candidateAppliedJobs.push(job)
+                        }
+                    }
+                }
+
+                res.status(200).send(candidateAppliedJobs)
+            }).catch(error => {
+                res.status(500).send(error)
+            })
+
+        }).catch(error => {
+            res.status(500).send(error)
+        })
+    })
+})
+
 jobRoute.post("/recruiter/jobs", (req, res) => {
     jobModel.getRecruiterJobs(req.body.recruiter_email).then(response => {
         res.status(200).send(response)
