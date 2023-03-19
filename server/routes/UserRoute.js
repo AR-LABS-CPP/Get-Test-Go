@@ -30,7 +30,7 @@ userRoute.post("/mail", async (req, res) => {
     } = req.body
 
     try {
-        await mailjet.post('send', {version: 'v3.1'}).request({
+        const response = await mailjet.post('send', {version: 'v3.1'}).request({
             Messages: [
                 {
                     From: {
@@ -57,6 +57,8 @@ userRoute.post("/mail", async (req, res) => {
                 }
             ]
         })
+
+        console.log(response)
 
         res.status(200).send("Email sent successfully!")
     }

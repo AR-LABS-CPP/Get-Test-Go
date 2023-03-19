@@ -56,17 +56,17 @@ const Recruit = () => {
 
     return (
         <>
-            <Toaster />
+        <Toaster />
             <div className="mt-10 mx-10">
                 {
                     Object.entries(candidates).map(([jobName, data]) => {
                         return <CustomAccordin title={jobName}>
                             {
-                                <div className="shadow-md m-3 border-[1px] rounded-md">
+                                <div>
                                     {
                                         Object.entries(data).map(([candidateEmail, assessments]) => {
                                             return (
-                                                <div className="flex flex-col">
+                                                <div className="flex flex-col border-[1px] border-gray-400 m-10 rounded-md">
                                                     <p className="rounded-tr-md rounded-tl-md bg-blue-500 text-white text-center text-xl py-2">{candidateEmail}</p>
 
                                                     {
