@@ -19,9 +19,34 @@ const emailServiceAPIKey = "MSG9oqVVyT9n4rbyQH43svegDU4In7ix"
 const JWT_SECRET = "as-i-stared-into-the-abyss-of-darkness-i-saw-nothing-but-tom-and-jerry-fighting-with-each-other-while-wearing-night-vision-goggles-but-then-something-happened-something-that-i-will-never-forget"
 
 const mailjet = Mailjet.Client.apiConnect(
-    '33f061b48ef3f92f42f8e814a06108a8',
-    '0a4f586ff0254df929c68d35453f65c6'
-)
+    'c204d514798db6c2d3d61f9b12bcb756',
+    'd3a5e94c9716e0e261555fde9b6456b6'
+);
+
+const sendEmail = async (fromEmail, fromName, toEmail, toName, subject, body) => {
+    mailjet.post('send', { version: 'v3.1' }).request({
+        Messages: [
+            {
+                From: {
+                    Email: fromEmail,
+                    Name: fromName,
+                },
+                To: [
+                    {
+                        Email: toEmail,
+                        Name: toName,
+                    },
+                ],
+                Subject: subject,
+                HTMLPart: body
+            },
+        ],
+    }).then(result => {
+        console.log(result)
+    }).catch(err => {
+        console.log(err)
+    })
+}
 
 userRoute.post("/mail", async (req, res) => {
     const {
@@ -29,42 +54,30 @@ userRoute.post("/mail", async (req, res) => {
         candidateEmail,
     } = req.body
 
-    try {
-        const response = await mailjet.post('send', {version: 'v3.1'}).request({
-            Messages: [
-                {
-                    From: {
-                        Email: recruiterEmail,
-                        Name: 'Get Test Go'
-                    },
-                    To: [
-                        {
-                            Email: candidateEmail,
-                            Name: 'Candidate'
-                        },
-                    ],
+    let body = `
+    <h1>Dear Candidate</h1>,
+    <br><br>
+    The recruiter has found you interesting and
+    <br>
+    would like to discuss things further using the given email
+    <br><br>
 
-                    Subject: 'Get Test Go',
-                    HTMLPart: `
-                        <h3>Dear Candidate</h3>, \n\n
-                        The recruiter has found you interesting and \n
-                        would like to discuss things further using the given email \n\n
+    Email: ${recruiterEmail}
+    <br>
 
-                        Email: ${recruiterEmail}
+    Please mail the recruiter with your details and Resume.
+    `
 
-                        Please mail the recruiter with your details and Resume.
-                    `
-                }
-            ]
-        })
+    sendEmail(
+        recruiterEmail,
+        "Get Test Go",
+        candidateEmail,
+        "Candidate",
+        "Get Test Go",
+        body
+    )
 
-        console.log(response)
-
-        res.status(200).send("Email sent successfully!")
-    }
-    catch(err) {
-        res.status(500).send("Error sending email")
-    }
+    res.status(200).send("Email sent successfully")
 })
 
 userRoute.post("/users", (req, res) => {
