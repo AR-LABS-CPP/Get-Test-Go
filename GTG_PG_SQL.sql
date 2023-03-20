@@ -529,6 +529,20 @@ AS
 		
 SELECT * FROM get_test_go_candidate_job_assessment_score
 
+CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_count
+AS
+	SELECT get_test_go_recruiter.email, COUNT(*) FROM get_test_go_recruiter
+	JOIN get_test_go_recruiter_assessment
+		ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_assessment.recruiter_id
+	GROUP BY get_test_go_recruiter.email
+	
+CREATE OR REPLACE VIEW get_test_go_recruiter_job_count
+AS
+	SELECT get_test_go_recruiter.email, COUNT(*) FROM get_test_go_recruiter
+	JOIN get_test_go_recruiter_job
+		ON get_test_go_recruiter_job.recruiter_id = get_test_go_recruiter.recruiter_id
+	GROUP BY get_test_go_recruiter.email
+
 ----------------------------------------------------------------------------------------------------------------------
 -- BELOW QUERIES ARE FROM THE 'Get_test_Go_Addon' Database for IQ and EQ
 ----------------------------------------------------------------------------------------------------------------------

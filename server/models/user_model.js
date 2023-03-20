@@ -105,9 +105,41 @@ const createUser = (userType, firstName, lastName, email, password) => {
     })
 }
 
+const getRecruiterAssessmentCount = (email) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_recruiter_assessment_count WHERE email = '${email}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve({
+                assessmentCount: results.rows[0].count
+            })
+        })
+    })
+}
+
+const getRecruiterJobCount = (email) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM get_test_go_recruiter_job_count WHERE email = '${email}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+            
+            resolve({
+                jobCount: results.rows[0].count
+            })
+        })
+    })
+}
+
 module.exports = {
     getUsers,
     getUser,
     emailExists,
     createUser,
+    getRecruiterAssessmentCount,
+    getRecruiterJobCount
 }

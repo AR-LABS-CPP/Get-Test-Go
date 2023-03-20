@@ -90,9 +90,9 @@ userRoute.post("/users", (req, res) => {
 
 userRoute.post("/user/get", (req, res) => {
     userModel.getUser(req.body.userType, req.body.email).then(response => {
-        if(response === false) {
+        if (response === false) {
             res.status(404).send("Email or password is incorrect")
-        } 
+        }
         else {
             res.status(200).send(response)
         }
@@ -104,12 +104,12 @@ userRoute.post("/user/get", (req, res) => {
 userRoute.post("/user/register", (req, res) => {
     userModel.emailExists(req.body.email, req.body.userType).then(response => {
         // Response is boolean indicating whether the email exists or not
-        if(response) {
+        if (response) {
             res.status(409).send("Account already exists with the given email")
         }
         else {
             bcrypt.hash(req.body.password, 10, (err, hashed) => {
-                if(err) {
+                if (err) {
                     res.status(500).send(err)
                 }
                 else {
@@ -129,15 +129,15 @@ userRoute.post("/user/register", (req, res) => {
 userRoute.post("/user/login", (req, res) => {
     userModel.getUser(req.body.userType, req.body.email).then(response => {
         // Response is null if the user is not in the database
-        if(!response) {
+        if (!response) {
             res.status(404).send("Email or password is incorrect")
         }
         else {
             bcrypt.compare(req.body.password, response[0].password, (err, result) => {
-                if(err) {
+                if (err) {
                     res.status(500).send(err)
                 }
-                else if(result === false) {
+                else if (result === false) {
                     res.status(401).send("Email or password is incorrect")
                 }
                 else {
@@ -147,7 +147,7 @@ userRoute.post("/user/login", (req, res) => {
                         email: req.body.email,
                         userType: req.body.userType
                     }, JWT_SECRET)
-        
+
                     res.status(200).send(token)
                 }
             })
@@ -155,6 +155,23 @@ userRoute.post("/user/login", (req, res) => {
     }).catch(error => {
         res.status(500).send(error)
     })
+})
+
+userRoute.post("/recruiter/stats", async (req, res) => {
+    let recruiterStats = []
+
+    try {
+        const assessmentCount = await userModel.getRecruiterAssessmentCount(req.body.recruiterEmail)
+        const jobCount = await userModel.getRecruiterJobCount(req.body.recruiterEmail)
+
+        recruiterStats.push(assessmentCount)
+        recruiterStats.push(jobCount)
+
+        res.status(200).send(recruiterStats)
+    }
+    catch(err) {
+        res.status(500).send(error)
+    }
 })
 
 userRoute.post("/user/validate_email", (req, res) => {
