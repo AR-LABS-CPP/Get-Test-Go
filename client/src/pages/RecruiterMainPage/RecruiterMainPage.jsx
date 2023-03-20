@@ -40,12 +40,12 @@ const RecruiterMainPage = () => {
                 {
                     stats
                     &&
-                    <DashboardCard title={stats[0].assessmentCount.count} subTitle="Assessments Created" style="bg-red-500 text-white col-span-6" />
+                    <DashboardCard title={6} subTitle="Assessments Created" style="bg-red-500 text-white col-span-6" />
                 }
                 {
                     stats
                     &&
-                    <DashboardCard title={stats[1].jobCount.count} subTitle="Jobs Created" style="bg-green-500 text-white col-span-6" />
+                    <DashboardCard title={6} subTitle="Jobs Created" style="bg-green-500 text-white col-span-6" />
                 }
             </div>
 
