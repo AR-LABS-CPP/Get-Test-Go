@@ -114,7 +114,7 @@ const getRecruiterAssessmentCount = (email) => {
             }
 
             resolve({
-                assessmentCount: results.rows[0].count
+                assessmentCount: results.rows[0]
             })
         })
     })
@@ -129,7 +129,7 @@ const getRecruiterJobCount = (email) => {
             }
             
             resolve({
-                jobCount: results.rows[0].count
+                jobCount: results.rows[0]
             })
         })
     })

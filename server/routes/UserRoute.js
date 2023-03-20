@@ -169,8 +169,8 @@ userRoute.post("/recruiter/stats", async (req, res) => {
 
         res.status(200).send(recruiterStats)
     }
-    catch(err) {
-        res.status(500).send(error)
+    catch (err) {
+        res.status(500).send(err)
     }
 })
 

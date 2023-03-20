@@ -1,11 +1,13 @@
+import axios from "axios"
 import jwt from "jsonwebtoken"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import DashboardCard from "../../components/DashboardCard/DashboardCard"
 
-const RecruiterMainPage = () => {    
+const RecruiterMainPage = () => {
+    const [stats, setStats] = useState([])
     
-
     const navigate = useNavigate()
 
     let firstName = ''
@@ -18,17 +20,33 @@ const RecruiterMainPage = () => {
         lastName = user.lastName
     }
 
+    useEffect(() => {
+        axios.post("http://localhost:4321/recruiter/stats", {
+            recruiterEmail: user.email 
+        }).then(response => {
+            setStats(response.data)
+        }).catch(error => {
+            console.log(error)
+        })
+    }, [])
+
     return (
         <>
             <div className="pt-6 flex justify-center items-center">
                 <p className="text-5xl text-gray-700 font-bold">Welcome {`${firstName} ${lastName}`}</p>
             </div>
 
-            <div className="mt-10 grid gap-y-3 place-items-center grid-cols-2 md:grid-flow-col lg:grid-flow-col md:grid-cols-none lg:grid-cols-none">
-                <DashboardCard title="6" subTitle="Assessments" style="bg-red-500 text-white" />
-                <DashboardCard title="3" subTitle="Jobs Posted" style="bg-green-500 text-white" />
-                <DashboardCard title="4" subTitle="Candidates Selected" style="bg-amber-500 text-white" />
-                <DashboardCard title="10" subTitle="Total Candidates" style="bg-sky-500 text-white" />
+            <div className="mt-10 grid gap-y-3 gap-x-5 mx-10 place-items-center grid-cols-2 md:grid-flow-col lg:grid-flow-col md:grid-cols-none lg:grid-cols-none">
+                {
+                    stats
+                    &&
+                    <DashboardCard title={stats[0].assessmentCount.count} subTitle="Assessments Created" style="bg-red-500 text-white col-span-6" />
+                }
+                {
+                    stats
+                    &&
+                    <DashboardCard title={stats[1].jobCount.count} subTitle="Jobs Created" style="bg-green-500 text-white col-span-6" />
+                }
             </div>
 
             <div className="flex justify-center">
