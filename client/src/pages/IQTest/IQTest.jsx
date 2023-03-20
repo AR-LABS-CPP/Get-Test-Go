@@ -159,15 +159,9 @@ const IQTest = () => {
         console.log(JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")))
 
         axios.post("http://localhost:4321/assessment/iq/calculate_score", {
+            candidateEmail: state.candidateEmail,
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-        }).then(response => {
-            if (localStorage.getItem("CANDIDATE_SCORES")) {
-                console.log("CANDIDATE_SCORES")
-                localStorage.removeItem("CANDIDATE_SCORES")
-            }
-
-            localStorage.setItem("CANDIDATE_SCORES", JSON.stringify([["IQ", response.data.score]]))
-
+        }).then(_ => {
             navigate("/eq-test", {
                 state: {
                     jobName: state.jobName,

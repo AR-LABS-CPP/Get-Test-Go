@@ -21,10 +21,10 @@ const EQTest = () => {
     const [secondsLeft, setSecondsLeft] = useState(EQ_TEST_QUESTION_TIME)
 
     useEffect(() => {
-        axios.post("http://localhost:4321/assessment/iq/score_exists", {
+        axios.post("http://localhost:4321/assessment/eq/score_exists", {
             candidateEmail: state.candidateEmail
         }).then(response => {
-            // If the candidate has already taken the IQ test
+            // If the candidate has already taken the EQ test
             // when applying for another job then forward the
             // candidate to EQ test since he/she cannot retake
             if (response.data === true) {
@@ -158,13 +158,9 @@ const EQTest = () => {
         console.log(JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS")))
 
         axios.post("http://localhost:4321/assessment/eq/calculate_score", {
+            candidateEmail: state.candidateEmail,
             candidateAnswers: JSON.parse(localStorage.getItem("CANDIDATE_ANSWERS"))
-        }).then(response => {
-            let scores = JSON.parse(localStorage.getItem("CANDIDATE_SCORES"))
-            scores.push(["EQ", response.data.score])
-
-            localStorage.setItem("CANDIDATE_SCORES", JSON.stringify(scores))
-
+        }).then(_ => {
             navigate('/technical-test', {
                 state: {
                     jobName: state.jobName,

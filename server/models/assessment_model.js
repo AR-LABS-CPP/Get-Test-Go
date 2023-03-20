@@ -72,6 +72,32 @@ const bindRecruiterAndAssessment = (recruiter_email, assessment_name) => {
     })
 }
 
+const saveIQScore = (candidateEmail, score) => {
+    return new Promise((resolve, reject) => {
+        addonPool.query(`INSERT INTO candidate_score(candidate_email, assessment_type, score) VALUES('${candidateEmail}', 'IQ', '${score}')`, (error, _) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(`IQ score of ${candidateEmail} saved successfully`)
+        })
+    })
+}
+
+const saveEQScore = (candidateEmail, score) => {
+    return new Promise((resolve, reject) => {
+        addonPool.query(`INSERT INTO candidate_score(candidate_email, assessment_type, score) VALUES('${candidateEmail}', 'EQ', '${score}')`, (error, _) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(`EQ score of ${candidateEmail} saved successfully`)
+        })
+    })
+}
+
 const bindCandidateAndAssessment = (recruiter_email, candidate_email, job_name, scores) => {
     return new Promise((resolve, reject) => {
         for(let score of scores) {
@@ -472,5 +498,7 @@ module.exports = {
     candidateIQScoreExists,
     candidateEQScoreExists,
     getCandidateAppliedJobs,
-    getCandidatesForJobs
+    getCandidatesForJobs,
+    saveIQScore,
+    saveEQScore
 }

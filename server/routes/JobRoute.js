@@ -16,37 +16,38 @@ jobRoute.get("/types", (_, res) => {
 jobRoute.post("/all", (req, res) => {
     userModel.emailExists(req.body.candidateEmail).then(_ => {
         assessmentModel.getCandidateAppliedJobs(req.body.candidateEmail).then(appliedJobs => {
-            if(appliedJobs.length > 0) {
+            if (appliedJobs.length > 0) {
                 jobModel.getAllJobs().then(jobs => {
-                    let unappliedJobs = []
+                    let unappliedJobs = [];
 
                     for (let job of jobs) {
+                        let isApplied = false;
                         for (let appliedJob of appliedJobs) {
-                            if (appliedJob.job_name !== job.job_name) {
-                                console.log(job)
-                                unappliedJobs.push(job)
+                            if (appliedJob.job_name === job.job_name) {
+                                isApplied = true;
+                                break;
                             }
+                        }
+                        if (!isApplied) {
+                            unappliedJobs.push(job);
                         }
                     }
 
-                    console.log(appliedJobs)
-
-                    res.status(200).send(unappliedJobs)
+                    res.status(200).send(unappliedJobs);
                 }).catch(error => {
-                    res.status(500).send(error)
-                })
-            }
-            else {
+                    res.status(500).send(error);
+                });
+            } else {
                 jobModel.getAllJobs().then(jobs => {
-                    res.status(200).send(jobs)
+                    res.status(200).send(jobs);
                 }).catch(error => {
-                    res.status(500).send(error)
-                })
+                    res.status(500).send(error);
+                });
             }
-        })
+        });
+    });
+});
 
-    })
-})
 
 jobRoute.post("/new", (req, res) => {
     jobModel.jobAlreadyExists(req.body.recruiterEmail, req.body.jobName).then(response => {

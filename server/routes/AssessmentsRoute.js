@@ -150,7 +150,11 @@ assessmentsRouter.post("/eq/score_exists", (req, res) => {
 
 assessmentsRouter.post("/iq/calculate_score", (req, res) => {
     assessmentModel.calculateIQScore(req.body.candidateAnswers).then(response => {
-        res.status(200).send({score: response})
+        assessmentModel.saveIQScore(req.body.candidateEmail, response).then(response => {
+            res.status(200).send(response)
+        }).catch(error => {
+            res.status(500).send(error)
+        })
     }).catch(error => {
         res.status(500).send(error)
     })
@@ -158,7 +162,9 @@ assessmentsRouter.post("/iq/calculate_score", (req, res) => {
 
 assessmentsRouter.post("/eq/calculate_score", (req, res) => {
     assessmentModel.calculateEQScore(req.body.candidateAnswers).then(response => {
-        res.status(200).send({score: response})
+        assessmentModel.saveEQScore(req.body.candidateEmail, response).then(response => {
+            res.status(200).send(response)
+        })
     }).catch(error => {
         res.status(500).send(error)
     })
