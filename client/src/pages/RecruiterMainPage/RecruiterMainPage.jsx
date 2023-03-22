@@ -45,6 +45,24 @@ const RecruiterMainPage = () => {
         })
     }
 
+    const handleViewAssessmentDetails = (assessment_name) => {
+        navigate("/view-assessment", {
+            state: {
+                assessmentName: assessment_name,
+                recruiterEmail: user.email
+            }
+        })
+    }
+
+    const handleViewJobDetails = (job_name) => {
+        navigate("/view-recruiter-job", {
+            state: {
+                jobName: job_name,
+                recruiterEmail: user.email
+            }
+        })
+    }
+
     useEffect(() => {
         axios.post("http://localhost:4321/recruiter/stats", {
             recruiterEmail: jwt.decode(localStorage.getItem("token")).email

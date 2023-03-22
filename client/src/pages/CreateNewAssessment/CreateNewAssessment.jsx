@@ -17,7 +17,7 @@ const CreateNewAssessment = () => {
     const initialValues = {
         assessmentName: "",
         assessmentDetails: "",
-        assessmentType: "GENERAL"
+        assessmentType: "TECHNICAL"
     }
 
     const [formVals, setFormVals] = useState(initialValues)
@@ -104,14 +104,14 @@ const CreateNewAssessment = () => {
                 <textarea value={formVals.assessmentDetails} onChange={handleFormChange} name="assessmentDetails" id="" cols="30" rows="5" className="mt-1 border-[1px] rounded-md px-1"></textarea>
                 <small className="text-red-500">{errors.assessmentDetails}</small>
 
-                <label htmlFor="assessmentType" className="font-semibold mt-3">Assessment Type</label>
+                {/* <label htmlFor="assessmentType" className="font-semibold mt-3">Assessment Type</label>
                 <select onChange={handleFormChange} name="assessmentType" id="assessmentCategory" className="mt-1 border-[1px] py-2 px-1">
                     {
                         assessmentTypes.map(assessmentType => {
                             return <option key={assessmentType.assessment_type_name} value={assessmentType.assessment_type_name}>{assessmentType.assessment_type_name}</option>
                         })
                     }
-                </select>
+                </select> */}
             </form>
 
             <div className="flex w-[70%] md:w-[50%] lg:w-[50%] justify-center mt-10">
