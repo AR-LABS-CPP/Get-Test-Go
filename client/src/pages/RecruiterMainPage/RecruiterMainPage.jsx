@@ -30,7 +30,7 @@ const RecruiterMainPage = () => {
             recruiter_email: user.email
         }).then(response => {
             setRecruiterAssessments(response.data)
-        }).catch(error => {
+        }).catch(_ => {
             toast.error("Unable to get recruiter assessments")
         })
     }
@@ -40,7 +40,7 @@ const RecruiterMainPage = () => {
             recruiter_email: user.email
         }).then(response => {
             setRecruiterJobs(response.data)
-        }).catch(error => {
+        }).catch(_ => {
             toast.error("Unable to get recruiter jobs")
         })
     }
@@ -89,12 +89,31 @@ const RecruiterMainPage = () => {
                 {
                     stats.length > 0 
                     &&
-                    <DashboardCard title={stats[0].assessmentCount.count} subTitle="Assessments Created" style="bg-orange-400 text-white flex-1" />
+                    <DashboardCard title={stats[0].assessmentCount.count} subTitle="Assessment(s) Created" style="bg-orange-400 text-white flex-1" />
                 }
                 {
                     stats.length > 0
                     &&
-                    <DashboardCard title={stats[1].jobCount.count} subTitle="Jobs Created" style="bg-green-500 text-white col-span-6 flex-1" />
+                    <DashboardCard title={stats[1].jobCount.count} subTitle="Job(s) Created" style="bg-green-500 text-white col-span-6 flex-1" />
+                }
+            </div>
+
+            <div className="border-b-[1px] mt-10 mb-5 mx-7 border-gray-400"></div>
+
+            <div className="text-2xl text-center font-medium col-span-12 mb-7">Assessment(s) created by you</div>
+            <div className="container m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 place-items-center gap-x-3 gap-y-7">
+                {
+                    recruiterAssessments.length === 0 ? <div className="text-xl font-bold col-span-12 text-center">You haven't created any assessment(s) yet</div>
+                        :
+                        recruiterAssessments.map(assessment => {
+                            return <AssessmentCard
+                                cardTitle={assessment.assessment_name}
+                                cardDescription={assessment.assessment_details}
+                                badgeText={assessment.assessment_type_name}
+                                additionalStyling="max-w-xs"
+                                viewClickHandler={() => handleViewAssessmentDetails(assessment.assessment_name)}
+                                key={assessment.assessment_name} />
+                        })
                 }
             </div>
 
@@ -111,25 +130,6 @@ const RecruiterMainPage = () => {
                                 badgeText={recruiterJob.job_type_name}
                                 cardTitle={recruiterJob.job_name}
                                 viewClickHandler={() => handleViewJobDetails(recruiterJob.job_name)} />
-                        })
-                }
-            </div>
-
-            <div className="border-b-[1px] mt-10 mb-5 mx-7 border-gray-400"></div>
-
-            <div className="text-2xl text-center font-medium col-span-12 mb-7">Assessment(s) created by you</div>
-            <div className="container m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 place-items-center gap-3">
-                {
-                    recruiterAssessments.length === 0 ? <div className="text-xl font-bold col-span-12 text-center">You haven't created any assessment(s) yet</div>
-                        :
-                        recruiterAssessments.map(assessment => {
-                            return <AssessmentCard
-                                cardTitle={assessment.assessment_name}
-                                cardDescription={assessment.assessment_details}
-                                badgeText={assessment.assessment_type_name}
-                                additionalStyling="max-w-xs"
-                                viewClickHandler={() => handleViewAssessmentDetails(assessment.assessment_name)}
-                                key={assessment.assessment_name} />
                         })
                 }
             </div>

@@ -500,5 +500,5 @@ module.exports = {
     getCandidateAppliedJobs,
     getCandidatesForJobs,
     saveIQScore,
-    saveEQScore
+    saveEQScore,
 }

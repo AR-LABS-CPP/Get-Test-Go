@@ -97,6 +97,14 @@ jobRoute.post("/applied", (req, res) => {
     })
 })
 
+jobRoute.get("/count", (_, res) => {
+    jobModel.getSystemJobCount().then(response => {
+        res.status(200).send({ count: response })
+    }).catch(err => {
+        res.status(500).send(err)
+    })
+})
+
 jobRoute.post("/recruiter/jobs", (req, res) => {
     jobModel.getRecruiterJobs(req.body.recruiter_email).then(response => {
         res.status(200).send(response)

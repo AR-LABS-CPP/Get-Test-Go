@@ -117,6 +117,19 @@ const getJobDetails = (job_name, recruiter_email) => {
     })
 }
 
+const getSystemJobCount = () => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT COUNT(*) FROM get_test_go_recruiter_job`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count)
+        })
+    })
+}
+
 module.exports = {
     getJobTypes,
     getAllJobs,
@@ -125,5 +138,6 @@ module.exports = {
     jobAlreadyExists,
     getRecruiterJobs,
     getJobDetails,
-    getRecruiterJobAssessments
+    getRecruiterJobAssessments,
+    getSystemJobCount
 }
