@@ -197,4 +197,53 @@ userRoute.post("/recruiter/stats", async (req, res) => {
     }
 })
 
+userRoute.get("/recruiters", async (req, res) => {
+    try {
+        const recruiters = await userModel.getUsers("RECRUITER")
+
+        const convertedData = Object.values(recruiters).map(obj => Object.values(obj));
+
+        res.status(200).send(convertedData)
+    }
+    catch(err) {
+        res.status(500).send(err)
+    }
+})
+
+userRoute.get("/candidates", async (req, res) => {
+    try {
+        const recruiters = await userModel.getUsers("CANDIDATE")
+
+        const convertedData = Object.values(recruiters).map(obj => Object.values(obj));
+
+        res.status(200).send(convertedData)
+    }
+    catch(err) {
+        res.status(500).send(err)
+    }
+})
+
+userRoute.get("/system_stats", async (req, res) => {
+    try {
+        const recruiterCount = await userModel.getRecruiterCount()
+        const candidateCount = await userModel.getCandidateCount()
+        const jobCount = await userModel.getJobCount()
+        const assessmentCount = await userModel.getAssessmentCount()
+        const iqQuestionsCount = await userModel.getIqQuestionCount()
+        const eqQuestionsCount = await userModel.getEqQuestionCount()
+
+        res.status(200).send({
+            recruiterCount: recruiterCount,
+            candidateCount: candidateCount,
+            jobCount: jobCount,
+            assessmentCount: assessmentCount,
+            iqQuestionsCount: iqQuestionsCount,
+            eqQuestionsCount: eqQuestionsCount
+        })
+    }
+    catch(err) {
+        res.status(500).send(err)
+    }
+})
+
 module.exports = userRoute

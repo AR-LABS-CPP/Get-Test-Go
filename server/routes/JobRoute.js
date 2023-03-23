@@ -151,4 +151,17 @@ jobRoute.post("/recruiter/details", (req, res) => {
     })
 })
 
+jobRoute.get("/all_jobs", async (req, res) => {
+    try {
+        const jobs = await jobModel.getAllJobs()
+
+        const filteredData = jobs.map(obj => [obj.job_name, obj.job_type_name, obj.job_type_details]);
+    
+        res.status(200).send(filteredData)
+    }
+    catch(err) {
+        res.status(500).send(err)
+    }
+})
+
 module.exports = jobRoute

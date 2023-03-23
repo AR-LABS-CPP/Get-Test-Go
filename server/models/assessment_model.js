@@ -496,6 +496,19 @@ const getAllIQEQScores = () => {
     })
 }
 
+const getAllAssessments = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT assessment_name, assessment_details FROM get_test_go_recruiter_assessment", (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -528,5 +541,6 @@ module.exports = {
     saveIQScore,
     saveEQScore,
     deleteAssessmentQuestion,
-    getAllIQEQScores
+    getAllIQEQScores,
+    getAllAssessments
 }

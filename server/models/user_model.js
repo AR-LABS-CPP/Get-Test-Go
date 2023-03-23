@@ -1,29 +1,41 @@
-const {pool} = require("../db")
+const {pool, addonPool} = require("../db")
 
 const setTableName = (user) => {
     if(user === "RECRUITER") {
         return "get_test_go_recruiter"
     }
     else if(user === "CANDIDATE") {
-        return "get_test_go_recruiter"
+        return "get_test_go_candidate"
     }
 
     return ""
 }
 
 const getUsers = (userType) => {
-    let table_name = setTableName(userType)
-
-    return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM ${table_name}`, (error, results) => {
-            if(error) {
-                console.log(error)
-                reject(error)
-            }
-
-            resolve(results.rows)
+    if(userType === "RECRUITER") {
+        return new Promise((resolve, reject) => {
+            pool.query(`SELECT recruiter_id, first_name, last_name, email FROM get_test_go_recruiter`, (error, results) => {
+                if(error) {
+                    console.log(error)
+                    reject(error)
+                }
+    
+                resolve(results.rows)
+            })
         })
-    })
+    }
+    else if(userType === "CANDIDATE") {
+        return new Promise((resolve, reject) => {
+            pool.query(`SELECT candidate_id, first_name, last_name, email FROM get_test_go_candidate`, (error, results) => {
+                if(error) {
+                    console.log(error)
+                    reject(error)
+                }
+    
+                resolve(results.rows)
+            })
+        })
+    }
 }
 
 const getUser = (userType, email) => {
@@ -149,11 +161,95 @@ const getRecruiterJobCount = (email) => {
     })
 }
 
+const getRecruiterCount = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT COUNT(*) FROM get_test_go_recruiter", (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count)
+        })
+    })
+}
+
+const getCandidateCount = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT COUNT(*) FROM get_test_go_candidate", (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count)
+        })
+    })
+}
+
+const getAssessmentCount = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT COUNT(*) FROM get_test_go_recruiter_assessment", (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count)
+        })
+    })
+}
+
+const getJobCount = () => {
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT COUNT(*) FROM get_test_go_recruiter_job", (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count)
+        })
+    })
+}
+
+const getIqQuestionCount = () => {
+    return new Promise((resolve, reject) => {
+        addonPool.query("SELECT COUNT(*) FROM iq_question", (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count)
+        })
+    })
+}
+
+const getEqQuestionCount = () => {
+    return new Promise((resolve, reject) => {
+        addonPool.query("SELECT COUNT(*) FROM eq_question", (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows[0].count)
+        })
+    })
+}
+
 module.exports = {
     getUsers,
     getUser,
     emailExists,
     createUser,
     getRecruiterAssessmentCount,
-    getRecruiterJobCount
+    getRecruiterJobCount,
+    getRecruiterCount,
+    getCandidateCount,
+    getAssessmentCount,
+    getJobCount,
+    getIqQuestionCount,
+    getEqQuestionCount
 }

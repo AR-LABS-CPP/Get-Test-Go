@@ -318,4 +318,17 @@ assessmentsRouter.get("/candidate/iq_eq_scores", async (req, res) => {
     }
 })
 
+assessmentsRouter.get("/all", async (req, res) => {
+    try {
+        const assessments = await assessmentModel.getAllAssessments()
+
+        const convertedData = Object.values(assessments).map(obj => Object.values(obj));
+
+        res.status(200).send(convertedData)
+    }
+    catch(err) {
+        res.status(500).send(err)
+    }
+})
+
 module.exports = assessmentsRouter
