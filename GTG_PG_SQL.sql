@@ -50,7 +50,7 @@ CREATE TABLE get_test_go_question(
 	question_id serial4 PRIMARY KEY,
 	question_type int4 NOT NULL,
 	question TEXT NOT NULL,
-	CONSTRAINT fk_question_type FOREIGN KEY (question_type) REFERENCES get_test_go_question_type(question_type_id)
+	CONSTRAINT fk_question_type FOREIGN KEY (question_type) REFERENCES get_test_go_question_type(question_type_id) ON DELETE CASCADE
 );
 
 CREATE TABLE get_test_go_recruiter_assessment(
