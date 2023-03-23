@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios"
 import { useLocation, useNavigate } from "react-router-dom";
+import CustomAccordin from "../../components/CustomAccordin/CustomAccordin";
 
 const ViewAssessment = (props) => {
     const navigate = useNavigate()
@@ -25,7 +26,7 @@ const ViewAssessment = (props) => {
     return (
         <div className="flex flex-col items-center mt-5">
             <div className="w-full px-6">
-                <div className="bg-white border-[1px] border-gray-300 shadow-md rounded-md text-4xl font-semibold py-8 text-center">
+                <div className="mb-7 bg-white border-[1px] border-gray-300 shadow-md rounded-md text-4xl font-semibold py-8 text-center">
                     {state.assessmentName}
                 </div>
 
@@ -38,14 +39,34 @@ const ViewAssessment = (props) => {
                             return (
                                 assessmentQuestionsSet.map(q => {
                                     if (q.question_type_name === "MCQ") {
-                                        return <div key={q.question} className="border-[1px]">
-                                            <p>{q.question}</p>
-                                            <p>{q.option_one}</p>
-                                            <p>{q.option_two}</p>
-                                            <p>{q.option_three}</p>
-                                            <p>{q.option_four}</p>
-                                            <p>{q.correct_answer}</p>
-                                        </div>
+                                        return <CustomAccordin key={q.question} title={q.question}>
+                                            <div key={q.question} className="border-[1px] border-gray-300 my-5 pb-5 rounded-md">
+                                                <div className="flex items-center shadow-md mx-5 mt-5 border-[1px] border-gray-300 rounded">
+                                                    <p className="border-r-[1px] border-gray-300 bg-blue-500 text-white w-44 py-3 text-center font-medium">Option One</p>
+                                                    <p className="flex-grow text-center">{q.option_one}</p>
+                                                </div>
+
+                                                <div className="flex items-center shadow-md mx-5 mt-5 border-[1px] border-gray-300 rounded">
+                                                    <p className="border-r-[1px] border-gray-300 bg-blue-500 text-white w-44 py-3 text-center font-medium">Option Two</p>
+                                                    <p className="flex-grow text-center">{q.option_two}</p>
+                                                </div>
+
+                                                <div className="flex items-center shadow-md mx-5 mt-5 border-[1px] border-gray-300 rounded">
+                                                    <p className="border-r-[1px] border-gray-300 bg-blue-500 text-white w-44 py-3 text-center font-medium">Option Three</p>
+                                                    <p className="flex-grow text-center">{q.option_three}</p>
+                                                </div>
+
+                                                <div className="flex items-center shadow-md mx-5 mt-5 border-[1px] border-gray-300 rounded">
+                                                    <p className="border-r-[1px] border-gray-300 bg-blue-500 text-white w-44 py-3 text-center font-medium">Option Four</p>
+                                                    <p className="flex-grow text-center">{q.option_four}</p>
+                                                </div>
+
+                                                <div className="flex items-center shadow-md mx-5 mt-5 border-[1px] border-gray-300 rounded">
+                                                    <p className="border-r-[1px] border-gray-300 bg-blue-500 text-white w-44 py-3 text-center font-medium">Correct Answer</p>
+                                                    <p className="flex-grow text-center">{q.correct_answer}</p>
+                                                </div>
+                                            </div>
+                                        </CustomAccordin>
                                     }
                                     else if (q.question_type_name === "TrueFalse") {
                                         return <div key={q.question} className="border-[1px]">
