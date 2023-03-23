@@ -113,9 +113,16 @@ const getRecruiterAssessmentCount = (email) => {
                 reject(error)
             }
 
-            resolve({
-                assessmentCount: results.rows[0]
-            })
+            if(results.rows[0]) {
+                resolve({
+                    assessmentCount: results.rows[0]
+                })
+            }
+            else {
+                resolve({
+                    assessmentCount: 0
+                })
+            }
         })
     })
 }
@@ -128,9 +135,16 @@ const getRecruiterJobCount = (email) => {
                 reject(error)
             }
             
-            resolve({
-                jobCount: results.rows[0]
-            })
+            if(results.rows[0]) {
+                resolve({
+                    jobCount: results.rows[0]
+                })
+            }
+            else {
+                resolve({
+                    jobCount: 0
+                })
+            }
         })
     })
 }

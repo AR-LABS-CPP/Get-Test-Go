@@ -89,7 +89,7 @@ const verifyEmail = (req, res, next) => {
             "apikey": emailServiceAPIKey
         }
     }).then(response => response.json()).then(result => {
-        if(result.mx_found && result.smtp_check && !result.disposable) {
+        if (result.mx_found && result.smtp_check && !result.disposable) {
             next()
         }
         else {
@@ -183,6 +183,9 @@ userRoute.post("/recruiter/stats", async (req, res) => {
     try {
         const assessmentCount = await userModel.getRecruiterAssessmentCount(req.body.recruiterEmail)
         const jobCount = await userModel.getRecruiterJobCount(req.body.recruiterEmail)
+
+        console.log(assessmentCount)
+        console.log(jobCount)
 
         recruiterStats.push(assessmentCount)
         recruiterStats.push(jobCount)

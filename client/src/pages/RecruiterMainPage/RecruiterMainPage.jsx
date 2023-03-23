@@ -89,12 +89,12 @@ const RecruiterMainPage = () => {
                 {
                     stats.length > 0
                     &&
-                    <DashboardCard title={0} subTitle="Assessment(s) Created" style="bg-orange-400 text-white flex-1" />
+                    <DashboardCard title={stats[0].assessmentCount.count} subTitle="Assessment(s) Created" style="bg-orange-400 text-white flex-1" />
                 }
                 {
                     stats.length > 0
                     &&
-                    <DashboardCard title={0} subTitle="Job(s) Created" style="bg-green-500 text-white col-span-6 flex-1" />
+                    <DashboardCard title={stats[1].jobCount.count} subTitle="Job(s) Created" style="bg-green-500 text-white col-span-6 flex-1" />
                 }
             </div>
 
