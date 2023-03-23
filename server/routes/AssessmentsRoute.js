@@ -70,6 +70,12 @@ assessmentsRouter.post("/question/add/mcq", (req, res) => {
     })
 })
 
+assessmentsRouter.post("/question/delete", (req, res) => {
+    assessmentModel.deleteAssessmentQuestion(req.body.questionText)
+        .then(response => { res.status(200).send(response) })
+        .catch(err => { res.status(500).send(err) })
+})
+
 assessmentsRouter.post("/question/add/truefalse", (req, res) => {
     assessmentModel.assessmentQuestionExists(req.body.recruiterEmail, req.body.assessmentName, req.body.assessmentQuestion).then(response => {
         if(response) {

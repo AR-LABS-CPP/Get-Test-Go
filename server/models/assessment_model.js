@@ -470,6 +470,19 @@ const getCandidatesForJobs = (recruiterEmail) => {
     })
 }
 
+const deleteAssessmentQuestion = (questionText) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`DELETE FROM get_test_go_question WHERE question = '${questionText}'`, (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve("Question deleted successfully")
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -501,4 +514,5 @@ module.exports = {
     getCandidatesForJobs,
     saveIQScore,
     saveEQScore,
+    deleteAssessmentQuestion
 }
