@@ -37,6 +37,16 @@ CREATE TABLE get_test_go_recruiter(
 	"password" text NOT NULL
 );
 
+CREATE TABLE get_test_go_recruiter_assessment(
+	recruiter_id int4 NOT NULL,
+	assessment_id serial UNIQUE NOT NULL,
+	assessment_name TEXT UNIQUE NOT NULL,
+	assessment_details TEXT DEFAULT 'No details provided',
+	assessment_type int4 NOT NULL,
+	CONSTRAINT fk_assessment_type FOREIGN KEY (assessment_type) REFERENCES get_test_go_assessment_type(assessment_type_id),
+	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
+);
+
 CREATE TABLE get_test_go_candidate_assessment(
 	candidate_id int4 NOT NULL,
 	recruiter_id int4 NOT NULL,
@@ -51,16 +61,6 @@ CREATE TABLE get_test_go_question(
 	question_type int4 NOT NULL,
 	question TEXT NOT NULL,
 	CONSTRAINT fk_question_type FOREIGN KEY (question_type) REFERENCES get_test_go_question_type(question_type_id) ON DELETE CASCADE
-);
-
-CREATE TABLE get_test_go_recruiter_assessment(
-	recruiter_id int4 NOT NULL,
-	assessment_id serial UNIQUE NOT NULL,
-	assessment_name TEXT UNIQUE NOT NULL,
-	assessment_details TEXT DEFAULT 'No details provided',
-	assessment_type int4 NOT NULL,
-	CONSTRAINT fk_assessment_type FOREIGN KEY (assessment_type) REFERENCES get_test_go_assessment_type(assessment_type_id),
-	CONSTRAINT fk_recruiter_id FOREIGN KEY (recruiter_id) REFERENCES get_test_go_recruiter(recruiter_id)
 );
 
 CREATE TABLE get_test_go_recruiter_assessment_question(
@@ -140,7 +140,7 @@ CREATE TABLE get_test_go_candidate_job_assessment_score(
 	job_name CHARACTER VARYING NOT NULL,
 	assessment_name CHARACTER VARYING NOT NULL,
 	score int4 NOT NULL
-)
+);
 
 INSERT INTO get_test_go_assessment_type(assessment_type_name, assessment_type_details)
 VALUES('GENERAL', 'general tests can include IQ test, EQ test etc.');
@@ -172,7 +172,7 @@ AS
 	JOIN get_test_go_recruiter_assessment
 		ON get_test_go_recruiter_assessment.assessment_id = get_test_go_recruiter_assessment_question.assessment_id
 	JOIN get_test_go_question
-		ON get_test_go_question.question_id = get_test_go_recruiter_assessment_question.question_id
+		ON get_test_go_question.question_id = get_test_go_recruiter_assessment_question.question_id;
 
 CREATE OR REPLACE PROCEDURE add_assessment_mcq(IN recruiter_email VARCHAR(150), IN name_of_assessment character varying, IN mcq_question text, IN option_one text, IN option_two text, IN option_three text, IN option_four text, IN correct_answer text)
 LANGUAGE plpgsql
@@ -351,7 +351,7 @@ $$
 	SELECT * FROM CTE_recruiter_mcq_questions
 	JOIN get_test_go_mcq_answer
 		ON get_test_go_mcq_answer.question_id  = CTE_recruiter_mcq_questions.question_id
-$$ LANGUAGE SQL STABLE
+$$ LANGUAGE SQL STABLE;
 
 CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_mcq_question_with_answer
 AS
@@ -394,7 +394,7 @@ AS
 	JOIN get_test_go_mcq_answer
 		ON CTE_recruiter_assessments_questions.question_id = get_test_go_mcq_answer.question_id
 	JOIN get_test_go_question_type
-		ON CTE_recruiter_assessments_questions.question_type = get_test_go_question_type.question_type_id
+		ON CTE_recruiter_assessments_questions.question_type = get_test_go_question_type.question_type_id;
 
 CREATE OR REPLACE VIEW get_test_go_recruiter_assessment_tf_question_with_answer
 AS
@@ -433,13 +433,13 @@ AS
 	JOIN get_test_go_true_false_answer
 		ON CTE_recruiter_assessments_questions.question_id = get_test_go_true_false_answer.question_id
 	JOIN get_test_go_question_type
-		ON CTE_recruiter_assessments_questions.question_type = get_test_go_question_type.question_type_id
+		ON CTE_recruiter_assessments_questions.question_type = get_test_go_question_type.question_type_id;
 
 SELECT * FROM get_test_go_recruiter_assessment_mcq_question_with_answer
-WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')
+WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com');
 
 SELECT * FROM get_test_go_recruiter_assessment_tf_question_with_answer
-WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com')
+WHERE recruiter_id = (SELECT recruiter_id FROM get_test_go_recruiter WHERE email = 'ali@gmail.com');
 
 CREATE OR REPLACE VIEW get_test_go_recruiter_job_with_type_name
 AS
@@ -455,7 +455,7 @@ AS
 	JOIN get_test_go_recruiter_job
 		ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_job.recruiter_id
 	JOIN get_test_go_job_types
-		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
+		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id;
 
 CREATE OR REPLACE VIEW get_test_go_recruiter_job_with_required_assessments
 AS
@@ -478,7 +478,7 @@ AS
 	JOIN get_test_go_recruiter_job_assessment
 		ON get_test_go_recruiter_job.job_id = get_test_go_recruiter_job_assessment.job_id
 	JOIN get_test_go_recruiter_assessment
-		ON get_test_go_recruiter_job_assessment.assessment_id = get_test_go_recruiter_assessment.assessment_id
+		ON get_test_go_recruiter_job_assessment.assessment_id = get_test_go_recruiter_assessment.assessment_id;
 		
 CREATE OR REPLACE VIEW get_test_go_recruiter_job_with_details
 AS 
@@ -496,36 +496,36 @@ AS
 	JOIN get_test_go_recruiter_job
 		ON get_test_go_recruiter.recruiter_id = get_test_go_recruiter_job.recruiter_id
 	JOIN get_test_go_job_types
-		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
+		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id;
 		
-CREATE OR REPLACE VIEW get_test_go_candidate_job_assessment_details
-AS
-	SELECT
-		get_test_go_recruiter.recruiter_id,
-		get_test_go_recruiter.email AS recruiter_email,
-		get_test_go_candidate.candidate_id,
-		get_test_go_candidate.email AS candidate_email,
-		get_test_go_recruiter_job.job_name,
-		get_test_go_recruiter_job.job_details,
-		get_test_go_recruiter_assessment.assessment_id,
-		get_test_go_recruiter_assessment.assessment_name,
-		get_test_go_recruiter_assessment.assessment_details,
-		get_test_go_assessment_type.assessment_type_name,
-		get_test_go_assessment_type.assessment_type_details,
-		score
-	FROM get_test_go_candidate_job_assessment_score
-	JOIN get_test_go_recruiter
-		ON get_test_go_candidate_job_assessment_score.recruiter_id = get_test_go_recruiter.recruiter_id
-	JOIN get_test_go_recruiter_assessment
-		ON get_test_go_candidate_job_assessment_score.assessment_id = get_test_go_recruiter_assessment.assessment_id
-	JOIN get_test_go_assessment_type
-		ON get_test_go_recruiter_assessment.assessment_type = get_test_go_assessment_type.assessment_type_id
-	JOIN get_test_go_candidate
-		ON get_test_go_candidate_job_assessment_score.candidate_id = get_test_go_candidate.candidate_id
-	JOIN get_test_go_recruiter_job
-		ON get_test_go_candidate_job_assessment_score.job_id = get_test_go_recruiter_job.job_id
-	JOIN get_test_go_job_types
-		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
+--CREATE OR REPLACE VIEW get_test_go_candidate_job_assessment_details
+--AS
+--	SELECT
+--		get_test_go_recruiter.recruiter_id,
+--		get_test_go_recruiter.email AS recruiter_email,
+--		get_test_go_candidate.candidate_id,
+--		get_test_go_candidate.email AS candidate_email,
+--		get_test_go_recruiter_job.job_name,
+--		get_test_go_recruiter_job.job_details,
+--		get_test_go_recruiter_assessment.assessment_id,
+--		get_test_go_recruiter_assessment.assessment_name,
+--		get_test_go_recruiter_assessment.assessment_details,
+--		get_test_go_assessment_type.assessment_type_name,
+--		get_test_go_assessment_type.assessment_type_details,
+--		score
+--	FROM get_test_go_candidate_job_assessment_score
+--	JOIN get_test_go_recruiter
+--		ON get_test_go_candidate_job_assessment_score.recruiter_id = get_test_go_recruiter.recruiter_id
+--	JOIN get_test_go_recruiter_assessment
+--		ON get_test_go_candidate_job_assessment_score.assessment_id = get_test_go_recruiter_assessment.assessment_id
+--	JOIN get_test_go_assessment_type
+--		ON get_test_go_recruiter_assessment.assessment_type = get_test_go_assessment_type.assessment_type_id
+--	JOIN get_test_go_candidate
+--		ON get_test_go_candidate_job_assessment_score.candidate_id = get_test_go_candidate.candidate_id
+--	JOIN get_test_go_recruiter_job
+--		ON get_test_go_candidate_job_assessment_score.job_id = get_test_go_recruiter_job.job_id
+--	JOIN get_test_go_job_types
+--		ON get_test_go_recruiter_job.job_type = get_test_go_job_types.job_type_id
 		
 SELECT * FROM get_test_go_candidate_job_assessment_score
 

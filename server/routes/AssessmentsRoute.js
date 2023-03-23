@@ -269,7 +269,24 @@ assessmentsRouter.post("/candidate/scores", async (req, res) => {
         const candidateIQResults = await assessmentModel.getCandidateIQResults(req.body.candidateEmail)
         const candidateEQResults = await assessmentModel.getCandidateEQResults(req.body.candidateEmail)
 
-        res.status(200).send({
+        if(candidateEQResults.length === 0 && candidateIQResults.length === 0 && candidateResults.length === 0) {
+            return res.status(200).send({
+                "candidateIqResults": [
+                    {
+                        assessment_type: "IQ",
+                        score: "Not Present"
+                    }
+                ],
+                "candidateEqResults": [
+                    {
+                        assessment_type: "EQ",
+                        score: "Not Present"
+                    }
+                ]
+            })
+        }
+
+        return res.status(200).send({
             "candidateIqResults": candidateIQResults,
             "candidateEqResults": candidateEQResults,
             "candidateResults": candidateResults,

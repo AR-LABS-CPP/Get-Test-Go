@@ -68,14 +68,14 @@ const RecruiterMainPage = () => {
             recruiterEmail: jwt.decode(localStorage.getItem("token")).email
         }).then(response => {
             setStats(response.data)
-
-            console.log(stats)
-        }).catch(error => {
+        }).catch(_ => {
             toast.error("Unable to get recruiter stats")
         })
 
         getRecruiterAssessments()
         getRecruiterJobs()
+
+        console.log(stats)
     }, [])
 
     return (
@@ -87,14 +87,14 @@ const RecruiterMainPage = () => {
 
             <div className="mt-10 flex flex-wrap gap-x-7 mx-10">
                 {
-                    stats.length > 0 
+                    stats.length > 0
                     &&
-                    <DashboardCard title={stats[0].assessmentCount.count} subTitle="Assessment(s) Created" style="bg-orange-400 text-white flex-1" />
+                    <DashboardCard title={0} subTitle="Assessment(s) Created" style="bg-orange-400 text-white flex-1" />
                 }
                 {
                     stats.length > 0
                     &&
-                    <DashboardCard title={stats[1].jobCount.count} subTitle="Job(s) Created" style="bg-green-500 text-white col-span-6 flex-1" />
+                    <DashboardCard title={0} subTitle="Job(s) Created" style="bg-green-500 text-white col-span-6 flex-1" />
                 }
             </div>
 

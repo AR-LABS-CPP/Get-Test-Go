@@ -14,6 +14,16 @@ const CandidateMainPage = () => {
     const [candidateIQResults, setCandidateIQResults] = useState("No score")
     const [candidateEQResults, setCandidateEQResults] = useState("No score")
 
+    let firstName = ''
+    let lastName = ''
+
+    const user = jwt.decode(localStorage.getItem("token"))
+
+    if (user) {
+        firstName = user.firstName
+        lastName = user.lastName
+    }
+
     const getCandidateEmail = () => {
         return jwt.decode(localStorage.getItem("token"))
             && jwt.decode(localStorage.getItem("token")).email
@@ -71,6 +81,9 @@ const CandidateMainPage = () => {
     return (
         <>
             <Toaster />
+            <div className="pt-6 flex justify-center items-center">
+                <p className="text-5xl text-gray-700 font-bold">Welcome {`${firstName} ${lastName}`}</p>
+            </div>
             <div className="flex flex-col justify-center items-center pt-10 mx-10">
                 <div className="flex w-full gap-x-5">
                     <DashboardCard title={appliedJobs.length} subTitle="Job(s) applied" style="bg-orange-400 text-white" />
