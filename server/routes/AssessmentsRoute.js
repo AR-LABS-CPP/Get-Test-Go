@@ -297,4 +297,25 @@ assessmentsRouter.post("/candidate/scores", async (req, res) => {
     }
 })
 
+assessmentsRouter.get("/candidate/iq_eq_scores", async (req, res) => {
+    try {
+        const scores = await assessmentModel.getAllIQEQScores()
+
+        const result = scores.reduce((acc, assessment) => {
+            const { candidate_email, assessment_type, score } = assessment;
+            if (acc[candidate_email]) {
+              acc[candidate_email].push({ assessment_type, score });
+            } else {
+              acc[candidate_email] = [{ assessment_type, score }];
+            }
+            return acc;
+          }, {});
+
+        res.status(200).send(result)
+    }
+    catch(err) {
+        res.status(500).send(err)
+    }
+})
+
 module.exports = assessmentsRouter

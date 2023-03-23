@@ -87,7 +87,7 @@ const CandidateMainPage = () => {
             <div className="flex flex-col justify-center items-center pt-10 mx-10">
                 <div className="flex w-full gap-x-5">
                     <DashboardCard title={appliedJobs.length} subTitle="Job(s) applied" style="bg-orange-400 text-white" />
-                    <DashboardCard title={jobCount} subTitle="Total Job(s) in the system" style="bg-green-500 text-white" />
+                    <DashboardCard title={jobCount} subTitle="Job(s) in the system" style="bg-green-500 text-white" />
                 </div>
 
                 <div className="flex w-full justify-center gap-x-5 mt-10">
@@ -107,7 +107,7 @@ const CandidateMainPage = () => {
 
             <div className="text-2xl text-center font-medium col-span-12 mb-7">Your applied jobs</div>
             <div className="flex flex-col justify-center items-center">
-                <div className="container mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 place-items-center gap-3">
+                <div className="mb-7 container mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 place-items-center gap-3">
                     {
                         appliedJobs.length === 0 ? <div className="text-xl font-bold col-span-12">You haven't applied for any job yet.</div>
                             :

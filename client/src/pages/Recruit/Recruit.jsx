@@ -6,11 +6,31 @@ import CustomAccordin from "../../components/CustomAccordin/CustomAccordin"
 
 const Recruit = () => {
     const [candidates, setCandidates] = useState([])
+    const [candidatesIQEQResults, setCandidatesIQEQResults] = useState([])
+
+    const getCandidateIQEQScores = async (email) => {
+        let scores = null
+
+        try {
+            const res = await axios.post("http://localhost:4321/assessment/candidate/scores", {
+                candidateEmail: email
+            })
+
+            scores = res.data
+        }
+        catch(err) {
+            toast.error("Unable to get IQ and EQ scores")
+        }
+
+        return scores
+    }
 
     useEffect(() => {
         axios.post("http://localhost:4321/job/candidates", {
             recruiterEmail: jwt.decode(localStorage.getItem("token")).email
         }).then(response => {
+            console.log(response.data)
+
             let groupedData = {};
 
             response.data.forEach(record => {
@@ -34,6 +54,7 @@ const Recruit = () => {
             setCandidates(groupedData)
 
             console.log(candidates)
+            console.log(candidatesIQEQResults)
 
         }).catch(error => {
             console.log(error)
@@ -81,6 +102,8 @@ const Recruit = () => {
                                                             )
                                                         })
                                                     }
+
+                                                    <div></div>
 
                                                     <div className="flex justify-center">
                                                         <button onClick={() => handleSendEmail(candidateEmail)} className="bg-blue-500 hover:bg-blue-400 py-2 px-10 rounded-md my-5 text-white">Send Email</button>

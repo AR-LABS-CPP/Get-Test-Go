@@ -483,6 +483,19 @@ const deleteAssessmentQuestion = (questionText) => {
     })
 }
 
+const getAllIQEQScores = () => {
+    return new Promise((resolve, reject) => {
+        addonPool.query('SELECT candidate_email, assessment_type, score FROM candidate_score', (error, results) => {
+            if(error) {
+                console.log(error)
+                reject(error)
+            }
+
+            resolve(results.rows)
+        })
+    })
+}
+
 module.exports = {
     getAssessmentTypes,
     getQuestionTypes,
@@ -514,5 +527,6 @@ module.exports = {
     getCandidatesForJobs,
     saveIQScore,
     saveEQScore,
-    deleteAssessmentQuestion
+    deleteAssessmentQuestion,
+    getAllIQEQScores
 }

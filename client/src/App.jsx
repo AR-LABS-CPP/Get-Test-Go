@@ -36,6 +36,7 @@ import TechnicalTest from "./pages/TechnicalTest/TechnicalTest"
 import SubmissionNotice from "./components/SubmissionNotice/SubmissionNotice"
 import AppliedJobs from "./pages/AppliedJobs/AppliedJobs"
 import Error from "./pages/Error/Error"
+import CandidateIQEQResults from "./pages/CandidateIQEQResults/CandidateIQEQResults"
 
 const App = () => {
   const Auth = ({ children }) => {
@@ -90,6 +91,7 @@ const App = () => {
         <Route path='/recruiter-main-page' element={<Auth><RecruiterMainPage /></Auth>} />
         <Route path='/candidate-main-page' element={<Auth><CandidateMainPage /></Auth>} />
         <Route path='/applied-jobs' element={<Auth><AppliedJobs /></Auth>} />
+        <Route path='/iq-eq-scores' element={<Auth><CandidateIQEQResults /> </Auth>} />
         <Route path='/error' element={<Error />} />
       </Routes>
     </BrowserRouter>
