@@ -99,12 +99,7 @@ const SignUp = () => {
           navigate("/login-screen")
         })
       }).catch(error => {
-        if(error.response.status === 403) {
-          toast.error(error.response.data)
-        }
-        else {
-          toast.error("Something wrong with the signup")
-        }
+        toast.error(error.response.data)
       })
     }
   }, [formErrors])

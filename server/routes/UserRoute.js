@@ -80,6 +80,25 @@ userRoute.post("/mail", async (req, res) => {
     res.status(200).send("Email sent successfully")
 })
 
+const verifyEmail = (req, res, next) => {
+    fetch(`https://api.apilayer.com/email_verification/check?email=${req.body.email}`, {
+        method: "GET",
+        redirect: "follow",
+        headers: {
+            "apikey": emailServiceAPIKey
+        }
+    }).then(response => response.json()).then(result => {
+        if(result.mx_found && result.smtp_check && !result.disposable) {
+            next()
+        }
+        else {
+            res.status(422).send("Invalid email, please try again")
+        }
+    }).catch(error => {
+        res.status(500).send(error)
+    })
+}
+
 userRoute.post("/users", (req, res) => {
     userModel.getUsers(req.body.userType).then(response => {
         res.status(200).send(response)
@@ -101,7 +120,7 @@ userRoute.post("/user/get", (req, res) => {
     })
 })
 
-userRoute.post("/user/register", (req, res) => {
+userRoute.post("/user/register", verifyEmail, (req, res) => {
     userModel.emailExists(req.body.email, req.body.userType).then(response => {
         // Response is boolean indicating whether the email exists or not
         if (response) {
@@ -174,18 +193,23 @@ userRoute.post("/recruiter/stats", async (req, res) => {
     }
 })
 
-userRoute.post("/user/validate_email", (req, res) => {
-    fetch(`https://api.apilayer.com/email_verification/check?email=${req.body.email}`, {
-        method: "GET",
-        redirect: "follow",
-        headers: {
-            "apikey": emailServiceAPIKey
-        }
-    }).then(response => response.json()).then(result => {
-        res.status(200).send(result)
-    }).catch(error => {
-        res.status(500).send(error)
-    })
-})
+// userRoute.post("/user/validate_email", (req, res) => {
+//     fetch(`https://api.apilayer.com/email_verification/check?email=${req.body.email}`, {
+//         method: "GET",
+//         redirect: "follow",
+//         headers: {
+//             "apikey": emailServiceAPIKey
+//         }
+//     }).then(response => response.json()).then(result => {
+//         if(result.mx_found && result.smtp_check && !result.disposable) {
+//             res.status(200).send("Valid email, can continue")
+//         }
+//         else {
+//             res.status(422).send("Invalid email, please try again")
+//         }
+//     }).catch(error => {
+//         res.status(500).send(error)
+//     })
+// })
 
 module.exports = userRoute
