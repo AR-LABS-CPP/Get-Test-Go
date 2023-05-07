@@ -543,7 +543,7 @@ AS
 		ON get_test_go_recruiter_job.recruiter_id = get_test_go_recruiter.recruiter_id
 	GROUP BY get_test_go_recruiter.email
 
-CREATE OR REPLACE VIEW public.get_test_go_recruiter_technical_assessment_with_answers
+CREATE OR REPLACE VIEW get_test_go_recruiter_technical_assessment_with_answers
 AS SELECT get_test_go_recruiter_assessment_mcq_question_with_answer.recruiter_id,
     get_test_go_recruiter_assessment_mcq_question_with_answer.assessment_name,
     get_test_go_recruiter_assessment_mcq_question_with_answer.assessment_type_name,
