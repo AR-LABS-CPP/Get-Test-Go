@@ -1,14 +1,3 @@
-/*
-    Initial-Creation: 20-October-2022
-    Latest-Modification-Date: 11-December-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * Nothing
-*/
-
 const express = require("express")
 const cors = require("cors")
 

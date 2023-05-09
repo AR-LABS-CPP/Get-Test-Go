@@ -1,14 +1,3 @@
-/*
-    Initial-Creation: 20-October-2022
-    Latest-Modification-Date: 20-October-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * Nothing
-*/
-
 const InputBox = props => {
     return (
         <div className="mb-2">

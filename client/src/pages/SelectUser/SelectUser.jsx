@@ -1,14 +1,3 @@
-/*
-    Initial-Creation: 26-October-2022
-    Latest-Modification-Date: 26-October-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * Nothing
-*/
-
 import UserCard from "../../components/UserCard/UserCard"
 import CANDIDATE_ICON from "../../assets/CANDIDATE_ICON.png"
 import RECRUITER_ICON from "../../assets/RECRUITER_ICON.png"

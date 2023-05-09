@@ -15,6 +15,10 @@ const Results = () => {
     }
 
     const groupResultsByJobName = (results) => {
+        if(!results) {
+            return
+        }
+
         const resultsByJob = {}
 
         results.forEach(result => {

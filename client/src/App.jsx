@@ -1,14 +1,3 @@
-/*
-    Initial-Creation: 20-October-2022
-    Latest-Modification-Date: 29-October-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * Nothing
-*/
-
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
 import jwt from "jsonwebtoken"
 import AnimatedText from "./components/AnimatedText/AnimatedText"
@@ -37,6 +26,7 @@ import SubmissionNotice from "./components/SubmissionNotice/SubmissionNotice"
 import AppliedJobs from "./pages/AppliedJobs/AppliedJobs"
 import Error from "./pages/Error/Error"
 import CandidateIQEQResults from "./pages/CandidateIQEQResults/CandidateIQEQResults"
+import LandingPage from "./pages/LandingPage/LandingPage"
 
 const App = () => {
   const Auth = ({ children }) => {

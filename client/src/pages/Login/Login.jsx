@@ -1,14 +1,3 @@
-/*
-    Initial-Creation: 20-October-2022
-    Latest-Modification-Date: 24-December-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * nothing
-*/
-
 import { useNavigate } from "react-router-dom"
 import StyledButton from "../../components/StyledButton/StyledButton"
 import InputBox from "../../components/InputBox/InputBox"

@@ -1,14 +1,3 @@
-/*
-    Initial-Creation: 29-October-2022
-    Latest-Modification-Date: 29-October-2022
-
-    Programmers: 
-        Aliraza, Zakaria
-        
-    TODO:
-        * Nothing
-*/
-
 import { useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "./AnimatedText.css"
