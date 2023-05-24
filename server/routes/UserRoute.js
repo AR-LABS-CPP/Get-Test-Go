@@ -1,16 +1,14 @@
 const express = require("express")
 const userRoute = express.Router()
 const bcrypt = require("bcrypt")
-const axios = require("axios")
 const jwt = require("jsonwebtoken")
-const Mailjet = require("node-mailjet")
+const mailGen = require('mailgen')
+const nodeOutlook = require('nodejs-nodemailer-outlook')
 
 const userModel = require("../models/user_model")
 
 /*  The preferable way of storing API Keys or any other sensitive
-    data is to store it in environment variables but because we 
-    are still testing this system, we decided to put it here as
-    it will make our testing easier.
+    data is to store it in environment variables.
 */
 const emailServiceAPIKey = "MSG9oqVVyT9n4rbyQH43svegDU4In7ix"
 
@@ -19,33 +17,36 @@ const emailServiceAPIKey = "MSG9oqVVyT9n4rbyQH43svegDU4In7ix"
 */
 const JWT_SECRET = "as-i-stared-into-the-abyss-of-darkness-i-saw-nothing-but-tom-and-jerry-fighting-with-each-other-while-wearing-night-vision-goggles-but-then-something-happened-something-that-i-will-never-forget"
 
-const mailjet = Mailjet.Client.apiConnect(
-    'c204d514798db6c2d3d61f9b12bcb756',
-    'd3a5e94c9716e0e261555fde9b6456b6'
-);
+const sendEmail = async (fromEmail, toEmail, subject) => {
+    const MailGenerator = new mailGen({
+        theme: "default",
+        product : {
+            name: "Get Test Go Team",
+            link: 'localhost:5173'
+        }
+    })
 
-const sendEmail = async (fromEmail, fromName, toEmail, toName, subject, body) => {
-    mailjet.post('send', { version: 'v3.1' }).request({
-        Messages: [
-            {
-                From: {
-                    Email: fromEmail,
-                    Name: fromName,
-                },
-                To: [
-                    {
-                        Email: toEmail,
-                        Name: toName,
-                    },
-                ],
-                Subject: subject,
-                HTMLPart: body
-            },
-        ],
-    }).then(result => {
-        console.log(result)
-    }).catch(err => {
-        console.log(err)
+    const emailInput = {
+        body : {
+            name: "Candidate",
+            intro : 'The recruiter wants to connect with you',
+            outro: `Please send your updated resume and any other details that you think may be necessary to ${fromEmail}`
+        }
+    }
+
+    const emailBody = MailGenerator.generate(emailInput)
+
+    nodeOutlook.sendEmail({
+        auth: {
+            user: 'GetTestGo@outlook.com',
+            pass: '809C699b02489513'
+        },
+        from: 'GetTestGo@outlook.com',
+        to: toEmail,
+        subject: subject,
+        html: emailBody,
+        onError: (err) => console.log(err),
+        onSuccess: (info) => console.log(info)
     })
 }
 
@@ -55,30 +56,15 @@ userRoute.post("/mail", async (req, res) => {
         candidateEmail,
     } = req.body
 
-    let body = `
-    <h1>Dear Candidate</h1>,
-    <br><br>
-    The recruiter has found you interesting and
-    <br>
-    would like to discuss things further using the given email
-    <br><br>
-
-    Email: ${recruiterEmail}
-    <br>
-
-    Please mail the recruiter with your details and Resume.
-    `
-
     sendEmail(
         recruiterEmail,
-        "Get Test Go",
         candidateEmail,
-        "Candidate",
         "Get Test Go",
-        body
     )
 
-    res.status(200).send("Email sent successfully")
+    setTimeout(() => {
+        res.status(200).send("Email sent successfully")
+    }, 6000)
 })
 
 const verifyEmail = (req, res, next) => {
