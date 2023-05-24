@@ -64,7 +64,7 @@ userRoute.post("/mail", async (req, res) => {
 
     setTimeout(() => {
         res.status(200).send("Email sent successfully")
-    }, 6000)
+    }, 4000)
 })
 
 const verifyEmail = (req, res, next) => {
