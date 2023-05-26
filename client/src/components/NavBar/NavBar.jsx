@@ -25,6 +25,15 @@ const NavBar = () => {
         return jwt.decode(localStorage.getItem("token")) !== null
     }
 
+    const navigateToMainPage = () => {
+        if(getUserType() == "CANDIDATE") {
+            navigate("/candidate-main-page")
+        }
+        else if(getUserType() == "RECRUITER") {
+            navigate("/recruiter-main-page")
+        }
+    }
+
     useEffect(() => {
         setIsUserLoggedIn(isLoggedIn())
     }, [document.location.href])
@@ -34,7 +43,7 @@ const NavBar = () => {
         &&
         <nav className="w-full flex flex-wrap flex-col md:flex-row justify-between items-center py-4 text-gray-500 hover:text-gray-700 focus:text-gray-700 shadow-lg">
             <div className="navbar-logo px-4">
-                <p className="ml-5 text-5xl font-bold text-blue-500">GTG</p>
+                <p className="ml-5 text-5xl font-bold text-blue-500 hover:cursor-pointer" onClick={() => navigateToMainPage()}>GTG</p>
             </div>
 
             {

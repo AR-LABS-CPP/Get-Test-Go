@@ -53,8 +53,8 @@ const Recruit = () => {
 
             setCandidates(groupedData)
 
-            console.log(candidates)
-            console.log(candidatesIQEQResults)
+            // console.log(candidates)
+            // console.log(candidatesIQEQResults)
 
         }).catch(error => {
             console.log(error)
@@ -62,10 +62,11 @@ const Recruit = () => {
         })
     }, [])
 
-    const handleSendEmail = (candidateEmail) => {
+    const handleSendEmail = (jobName, candidateEmail) => {
         const sendEmail = axios.post("http://localhost:4321/mail", {
             candidateEmail: candidateEmail,
-            recruiterEmail: jwt.decode(localStorage.getItem("token")).email
+            recruiterEmail: jwt.decode(localStorage.getItem("token")).email,
+            jobName: jobName
         })
 
         toast.promise(sendEmail, {
@@ -106,7 +107,7 @@ const Recruit = () => {
                                                     <div></div>
 
                                                     <div className="flex justify-center">
-                                                        <button onClick={() => handleSendEmail(candidateEmail)} className="bg-blue-500 hover:bg-blue-400 py-2 px-10 rounded-md my-5 text-white">Send Email</button>
+                                                        <button onClick={() => handleSendEmail(jobName, candidateEmail)} className="bg-blue-500 hover:bg-blue-400 py-2 px-10 rounded-md my-5 text-white">Send Email</button>
                                                     </div>
                                                 </div>
                                             )

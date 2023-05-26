@@ -17,7 +17,7 @@ const emailServiceAPIKey = "MSG9oqVVyT9n4rbyQH43svegDU4In7ix"
 */
 const JWT_SECRET = "as-i-stared-into-the-abyss-of-darkness-i-saw-nothing-but-tom-and-jerry-fighting-with-each-other-while-wearing-night-vision-goggles-but-then-something-happened-something-that-i-will-never-forget"
 
-const sendEmail = async (fromEmail, toEmail, subject) => {
+const sendEmail = async (jobName, fromEmail, toEmail, subject) => {
     const MailGenerator = new mailGen({
         theme: "default",
         product : {
@@ -28,9 +28,11 @@ const sendEmail = async (fromEmail, toEmail, subject) => {
 
     const emailInput = {
         body : {
+            greeting: "Dear",
             name: "Candidate",
-            intro : 'The recruiter wants to connect with you',
-            outro: `Please send your updated resume and any other details that you think may be necessary to ${fromEmail}`
+            intro : `The recruiter wants to connect with you for the ${jobName} job`,
+            outro: `Please send your updated resume and any other details that you think may be necessary to ${fromEmail}`,
+            signature: "Best Regards"
         }
     }
 
@@ -54,13 +56,10 @@ userRoute.post("/mail", async (req, res) => {
     const {
         recruiterEmail,
         candidateEmail,
+        jobName
     } = req.body
 
-    sendEmail(
-        recruiterEmail,
-        candidateEmail,
-        "Get Test Go",
-    )
+    sendEmail(jobName, recruiterEmail, candidateEmail, "Get Test Go")
 
     setTimeout(() => {
         res.status(200).send("Email sent successfully")

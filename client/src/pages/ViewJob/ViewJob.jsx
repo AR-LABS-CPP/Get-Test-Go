@@ -1,14 +1,25 @@
 import axios from "axios"
+import jwt from "jsonwebtoken"
 import { useState, useEffect } from "react"
 import { toast, Toaster } from "react-hot-toast"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const ViewJob = () => {
+    const navigate = useNavigate()
     const { state } = useLocation()
 
     const [jobDetails, setJobDetails] = useState([])
     const [jobDesc, setJobDesc] = useState("")
     const [recruiterEmail, setRecruiterEmail] = useState("")
+
+    const handleViewAssessmentDetails = (assessment_name) => {
+        navigate("/view-assessment", {
+            state: {
+                assessmentName: assessment_name,
+                recruiterEmail: jwt.decode(localStorage.getItem("token")).email
+            }
+        })
+    }
 
     useEffect(() => {
         axios.post("http://localhost:4321/job/recruiter/details", {
@@ -48,7 +59,7 @@ const ViewJob = () => {
                 <div className="flex gap-x-2 justify-center">
                     {
                         jobDetails.map(jobDetail => {
-                            return <div key={`${jobDetail.assessment_name} + 1`} className="border-[1px] min-w-[250px] flex justify-center p-4 rounded-md shadow-md">
+                            return <div key={`${jobDetail.assessment_name} + 1`} className="border-[1px] min-w-[250px] flex justify-center p-4 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-100" onClick={() => handleViewAssessmentDetails(jobDetail.assessment_name)}>
                                 {jobDetail.assessment_name}
                             </div>
                         })
