@@ -59,7 +59,7 @@ const App = () => {
     <BrowserRouter>
       <NavBar />
       <Routes>
-        <Route path='/' element={<AnimatedText text="Get Test Go" />} />
+        <Route path='/' element={<CheckLogin><LandingPage /></CheckLogin>} />
         <Route path='/login-screen' element={<CheckLogin><Login /></CheckLogin>} />
         <Route path='/signup-screen' element={<CheckLogin><SignUp /></CheckLogin>} />
         <Route path='/assessments' element={<Auth><Assessments /></Auth>} />
