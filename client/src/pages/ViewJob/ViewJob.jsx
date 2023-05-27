@@ -12,13 +12,19 @@ const ViewJob = () => {
     const [jobDesc, setJobDesc] = useState("")
     const [recruiterEmail, setRecruiterEmail] = useState("")
 
+    const getUserType = () => {
+        return localStorage.getItem("token") && jwt.decode(localStorage.getItem("token")).userType
+    }
+
     const handleViewAssessmentDetails = (assessment_name) => {
-        navigate("/view-assessment", {
-            state: {
-                assessmentName: assessment_name,
-                recruiterEmail: jwt.decode(localStorage.getItem("token")).email
-            }
-        })
+        if(getUserType() == 'RECRUITER') {
+            navigate("/view-assessment", {
+                state: {
+                    assessmentName: assessment_name,
+                    recruiterEmail: jwt.decode(localStorage.getItem("token")).email
+                }
+            })
+        }
     }
 
     useEffect(() => {
@@ -59,7 +65,7 @@ const ViewJob = () => {
                 <div className="flex gap-x-2 justify-center">
                     {
                         jobDetails.map(jobDetail => {
-                            return <div key={`${jobDetail.assessment_name} + 1`} className="border-[1px] min-w-[250px] flex justify-center p-4 rounded-md shadow-md hover:cursor-pointer hover:bg-blue-100" onClick={() => handleViewAssessmentDetails(jobDetail.assessment_name)}>
+                            return <div key={`${jobDetail.assessment_name} + 1`} className={`border-[1px] min-w-[250px] flex justify-center p-4 rounded-md shadow-md ${getUserType() == 'RECRUITER' ? 'hover:cursor-pointer hover:bg-blue-100' : ''}`} onClick={() => handleViewAssessmentDetails(jobDetail.assessment_name)}>
                                 {jobDetail.assessment_name}
                             </div>
                         })
