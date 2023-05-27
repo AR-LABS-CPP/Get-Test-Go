@@ -6,8 +6,6 @@ import { useNavigate } from "react-router-dom"
 import NavBarLink from "../NavBarLink/NavBarLink"
 
 const NavBar = () => {
-    
-
     const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
     const navigate = useNavigate()
